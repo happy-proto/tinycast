@@ -178,7 +178,9 @@ matches, and is learned, under the same key. ASCII text skips ICU entirely on a 
 `BundleLocalization` reads both `InfoPlist.loctable` and `<code>.lproj/InfoPlist.strings` for
 `Locale.preferredLanguages` plus English. This matters because `CFBundle` resolves only
 `InfoPlist.strings`, and every app under `/System/Applications` translates in the loctable alone — so
-all 65 of them read English on every Mac, whatever language it is set to.
+all 65 of them read English on every Mac, whatever language it is set to. Foundation's bundle
+localization selection ranks the codes that actually exist: `zh-Hans-CN` reaches both Apple's
+`zh_CN` tables and the `zh-Hans.lproj` folders common in third-party bundles.
 
 A tag carrying a script is read under two more codes, because no one folder name covers it: a
 `zh-Hans-CN` Mac also reads `zh-Hans`, the folder most third-party apps ship, then `zh_CN`, the key
