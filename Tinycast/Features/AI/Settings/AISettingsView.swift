@@ -616,7 +616,7 @@ private struct AIConnectionRow: View {
 
     var body: some View {
         SettingsRow(
-            title: connection.title,
+            verbatimTitle: connection.title,
             subtitle: "\(connection.provider.title) · \(keyStatus) · \(modelCount)"
         ) {
             Image(systemName: "sparkles")

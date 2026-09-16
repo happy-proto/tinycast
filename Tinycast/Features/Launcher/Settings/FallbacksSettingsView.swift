@@ -66,7 +66,10 @@ private struct FallbackRow: View {
 
     var body: some View {
         if let entry = core.fallbackCoordinator.entry(for: fallback) {
-            SettingsRow(title: entry.name, subtitle: entry.kindLabel) {
+            SettingsRow(
+                verbatimTitle: entry.name,
+                subtitle: SettingsLocalization.string(entry.kindLabel)
+            ) {
                 AppIconView(app: entry)
                     .frame(width: Theme.Size.settingsRowIcon, height: Theme.Size.settingsRowIcon)
             } trailing: {

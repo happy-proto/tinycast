@@ -176,7 +176,7 @@ private struct SnippetSettingsRow: View {
     let onDelete: () -> Void
 
     var body: some View {
-        SettingsRow(title: record.snippet.name, subtitle: metadata) {
+        SettingsRow(verbatimTitle: record.snippet.name, subtitle: metadata) {
             Image(systemName: "doc.text")
         } trailing: {
             Button(action: onEdit) {

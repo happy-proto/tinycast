@@ -71,7 +71,7 @@ private struct WindowLayoutSettingsRow: View {
     @Environment(VisibilityStore.self) private var visibility
 
     var body: some View {
-        SettingsRow(title: layout.name, subtitle: layout.summary) {
+        SettingsRow(verbatimTitle: layout.name, subtitle: layout.summary) {
             SymbolImage(name: layout.symbol, size: 13)
         } trailing: {
             ShortcutRecorder(action: .windowLayout(id: layout.id))

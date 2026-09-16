@@ -207,7 +207,7 @@ private struct CalendarRow: View {
     @Environment(CalendarStore.self) private var store
 
     var body: some View {
-        SettingsRow(title: calendar.title, subtitle: calendar.accountName) {
+        SettingsRow(verbatimTitle: calendar.title, subtitle: calendar.accountName) {
             Toggle("", isOn: binding)
                 .labelsHidden()
                 .toggleStyle(.checkbox)

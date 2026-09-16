@@ -99,7 +99,7 @@ struct ExtensionRegistriesSheet: View {
     }
 
     private func registryRow(_ registry: ExtensionRegistry) -> some View {
-        SettingsRow(title: registry.name, subtitle: registry.subtitle) {
+        SettingsRow(verbatimTitle: registry.name, subtitle: registry.subtitle) {
             registryIcon(registry)
         } trailing: {
             Toggle("", isOn: binding(for: registry))

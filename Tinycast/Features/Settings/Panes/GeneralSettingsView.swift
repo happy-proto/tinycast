@@ -9,7 +9,7 @@ struct GeneralSettingsView: View {
     @AppStorage(SettingsKey.showInMenuBar) private var showInMenuBar = true
     @State private var confirmingRankingReset = false
     @State private var inputSources: [InputSourceSwitcher.Option] = []
-    @State private var appLanguage = AppLanguage.current
+    @State private var appLanguage = AppLanguage.current()
 
     /// The Hyper modifier chord as prose glyphs, tracking the Include Shift toggle.
     private var hyperGlyphs: String { settings.hyperKeyIncludesShift ? "⌃⌥⇧⌘" : "⌃⌥⌘" }
@@ -236,38 +236,6 @@ struct GeneralSettingsView: View {
 
     private func refreshInputSources() {
         inputSources = core.inputSourceSwitcher.options(selecting: settings.autoSwitchInputSourceID)
-    }
-}
-
-private enum AppLanguage: String, CaseIterable, Identifiable {
-    case system
-    case english = "en"
-    case simplifiedChinese = "zh-Hans"
-
-    var id: String { rawValue }
-
-    var title: String {
-        switch self {
-        case .system: "Follow System"
-        case .english: "English"
-        case .simplifiedChinese: "简体中文"
-        }
-    }
-
-    static var current: AppLanguage {
-        guard let language = UserDefaults.standard.stringArray(forKey: "AppleLanguages")?.first
-        else { return .system }
-        if language.hasPrefix("zh") { return .simplifiedChinese }
-        if language.hasPrefix("en") { return .english }
-        return .system
-    }
-
-    func apply() {
-        if self == .system {
-            UserDefaults.standard.removeObject(forKey: "AppleLanguages")
-        } else {
-            UserDefaults.standard.set([rawValue], forKey: "AppleLanguages")
-        }
     }
 }
 

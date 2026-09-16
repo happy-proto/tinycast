@@ -164,7 +164,7 @@ private struct QuicklinkSettingsRow: View {
     let onDelete: () -> Void
 
     var body: some View {
-        SettingsRow(title: quicklink.name, subtitle: quicklink.link) {
+        SettingsRow(verbatimTitle: quicklink.name, subtitle: quicklink.link) {
             SymbolImage(name: quicklink.symbol, size: 13)
         } trailing: {
             if quicklink.isPinned {

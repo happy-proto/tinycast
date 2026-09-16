@@ -101,7 +101,7 @@ private struct CustomCommandSettingsRow: View {
     let onDelete: () -> Void
 
     var body: some View {
-        SettingsRow(title: command.name, subtitle: command.command) {
+        SettingsRow(verbatimTitle: command.name, subtitle: command.command) {
             Image(systemName: command.symbol)
         } trailing: {
             // An alias only reaches the ranker through the launcher slice, so it dims with it.

@@ -2,12 +2,15 @@
 /// result carries the anchor, the pane's `.settingsAnchor(_:)` marks the section it scrolls to.
 struct SettingsAnchor: Hashable, Sendable {
     let tab: SettingsTab
-    /// The `Section`'s own header text, which is also what a result's breadcrumb reads.
-    let title: String
+    /// Stable source key; localization is presentation and must never change target identity.
+    let key: String
+
+    /// The `Section`'s displayed header text, which is also what a result's breadcrumb reads.
+    var title: String { SettingsLocalization.string(key) }
 
     init(tab: SettingsTab, title: String) {
         self.tab = tab
-        self.title = SettingsLocalization.string(title)
+        self.key = title
     }
 }
 
@@ -115,7 +118,7 @@ extension SettingsAnchor {
 /// Where a search result lands: a whole section, or one row inside it.
 enum SettingsTarget: Hashable, Sendable {
     case section(SettingsAnchor)
-    /// The row's visible title, which is also the catalog entry's — they are the same string.
+    /// The row's untranslated source key, matching the view that registers the target.
     case row(SettingsAnchor, String)
 
     var anchor: SettingsAnchor {

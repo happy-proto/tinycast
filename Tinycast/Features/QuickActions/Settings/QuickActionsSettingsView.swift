@@ -89,7 +89,9 @@ struct QuickActionsSettingsView: View {
         Section {
             ForEach(BuiltInQuickAction.allCases, content: builtInRow)
             ForEach(customActions.actions) { action in
-                SettingsRow(title: action.name, subtitle: subtitle(for: .custom(action))) {
+                SettingsRow(
+                    verbatimTitle: action.name, subtitle: subtitle(for: .custom(action))
+                ) {
                     SymbolImage(name: action.symbol, size: Theme.Size.quickActionHeaderIcon)
                         .frame(width: Theme.Size.settingsRowIcon)
                 } trailing: {
