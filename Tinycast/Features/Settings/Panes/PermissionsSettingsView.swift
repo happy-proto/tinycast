@@ -12,7 +12,9 @@ struct PermissionsSettingsView: View {
             Section {
                 LabeledContent {
                     Label(
-                        accessibilityTrusted ? "Granted" : "Not granted",
+                        SettingsLocalization.string(
+                            accessibilityTrusted ? "Granted" : "Not granted"
+                        ),
                         systemImage: accessibilityTrusted
                             ? "checkmark.circle.fill" : "exclamationmark.triangle.fill"
                     )
@@ -42,7 +44,10 @@ struct PermissionsSettingsView: View {
 
             Section {
                 LabeledContent {
-                    Label(calendarStatus.title, systemImage: calendarStatus.symbol)
+                    Label(
+                        SettingsLocalization.string(calendarStatus.title),
+                        systemImage: calendarStatus.symbol
+                    )
                         .foregroundStyle(calendarStatus.tint)
                 } label: {
                     SettingsRowTitle(.permissionsCalendars, "Calendars")
@@ -62,10 +67,11 @@ struct PermissionsSettingsView: View {
                     Text(SettingsLocalization.string(
                         calendarNeedsPrompt ? "Grant access" : "Manage in System Settings"
                     ))
-                    Text(
+                    Text(SettingsLocalization.string(
                         calendarNeedsPrompt
                             ? "Turns the calendar on, then asks macOS for access."
-                            : "Opens Privacy & Security › Calendars.")
+                            : "Opens Privacy & Security › Calendars."
+                    ))
                 }
             } header: {
                 SettingsSectionHeader(.permissionsCalendars)

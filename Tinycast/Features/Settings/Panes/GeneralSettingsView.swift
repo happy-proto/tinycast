@@ -9,6 +9,7 @@ struct GeneralSettingsView: View {
     @AppStorage(SettingsKey.showInMenuBar) private var showInMenuBar = true
     @State private var confirmingRankingReset = false
     @State private var inputSources: [InputSourceSwitcher.Option] = []
+    @State private var appLanguage = AppLanguage.current
 
     /// The Hyper modifier chord as prose glyphs, tracking the Include Shift toggle.
     private var hyperGlyphs: String { settings.hyperKeyIncludesShift ? "⌃⌥⇧⌘" : "⌃⌥⌘" }
@@ -16,12 +17,19 @@ struct GeneralSettingsView: View {
     /// The missing-permission half is its own row, so it can carry the button that fixes it.
     private var hyperSubtitle: String {
         guard settings.hyperKey != .none else {
-            return
-                "Select a physical key to remap to the \(hyperGlyphs) modifier keys simultaneously."
+            return String(
+                localized:
+                    "Select a physical key to remap to the \(hyperGlyphs) modifier keys simultaneously."
+            )
         }
-        return
-            "Pressing \(settings.hyperKey.title) will trigger the left \(hyperGlyphs) modifier keys."
-            + " Hyper Key shortcuts are shown in Tinycast with ✦."
+        return String(
+            format: SettingsLocalization.string(
+                "Pressing %@ will trigger the left %@ modifier keys. "
+                    + "Hyper Key shortcuts are shown in Tinycast with ✦."
+            ),
+            settings.hyperKey.title,
+            hyperGlyphs
+        )
     }
 
     var body: some View {
@@ -51,9 +59,10 @@ struct GeneralSettingsView: View {
             } header: {
                 SettingsSectionHeader(.generalSearch)
             } footer: {
-                Text(
-                    "Tinycast privately learns which results you choose for each query. Reset all learned choices to restore the default order."
-                )
+                Text(SettingsLocalization.string(
+                    "Tinycast privately learns which results you choose for each query. "
+                        + "Reset all learned choices to restore the default order."
+                ))
                 .font(.caption)
                 .foregroundStyle(.secondary)
             }
@@ -111,6 +120,19 @@ struct GeneralSettingsView: View {
             }
 
             Section {
+                Picker(selection: $appLanguage) {
+                    ForEach(AppLanguage.allCases) { language in
+                        Text(SettingsLocalization.string(language.title)).tag(language)
+                    }
+                } label: {
+                    SettingsRowTitle(.generalAppearance, "Application language")
+                    Text("Relaunches Tinycast to apply the selected language everywhere.")
+                }
+                .onChange(of: appLanguage) { _, language in
+                    language.apply()
+                    RelaunchRunner.relaunchAfterExit(Bundle.main.bundleURL)
+                    NSApp.terminate(nil)
+                }
                 Picker(selection: $settings.appearance) {
                     ForEach(AppAppearance.allCases) { appearance in
                         Text(SettingsLocalization.string(appearance.title)).tag(appearance)
@@ -217,6 +239,38 @@ struct GeneralSettingsView: View {
     }
 }
 
+private enum AppLanguage: String, CaseIterable, Identifiable {
+    case system
+    case english = "en"
+    case simplifiedChinese = "zh-Hans"
+
+    var id: String { rawValue }
+
+    var title: String {
+        switch self {
+        case .system: "Follow System"
+        case .english: "English"
+        case .simplifiedChinese: "简体中文"
+        }
+    }
+
+    static var current: AppLanguage {
+        guard let language = UserDefaults.standard.stringArray(forKey: "AppleLanguages")?.first
+        else { return .system }
+        if language.hasPrefix("zh") { return .simplifiedChinese }
+        if language.hasPrefix("en") { return .english }
+        return .system
+    }
+
+    func apply() {
+        if self == .system {
+            UserDefaults.standard.removeObject(forKey: "AppleLanguages")
+        } else {
+            UserDefaults.standard.set([rawValue], forKey: "AppleLanguages")
+        }
+    }
+}
+
 /// Three glyph steps read as a legend; a true-to-scale "Aa" would look identical at 1.1.
 private struct InterfaceSizeRow: View {
     @Environment(AppSettings.self) private var settings
@@ -255,9 +309,9 @@ private struct InterfaceSizeRow: View {
                 .background(shape.fill(selected ? Theme.Colors.controlSurface : Color.clear))
         }
         .buttonStyle(.plain)
-        .accessibilityLabel(size.title)
+        .accessibilityLabel(SettingsLocalization.string(size.title))
         .accessibilityAddTraits(selected ? [.isSelected] : [])
-        .help(size.title)
+        .help(SettingsLocalization.string(size.title))
     }
 }
 

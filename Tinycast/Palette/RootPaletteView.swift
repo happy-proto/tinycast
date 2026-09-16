@@ -180,13 +180,20 @@ struct RootPaletteView: View {
     /// The bottom-left app menu content (About / Support / Settings).
     private var appMenuContent: PopoverMenuContent {
         PopoverMenuContent(items: [
-            PopoverMenuItem(title: "About Tinycast", systemImage: "info.circle") {
+            PopoverMenuItem(
+                title: SettingsLocalization.string("About Tinycast"), systemImage: "info.circle"
+            ) {
                 core.settingsCoordinator.showAbout()
             },
-            PopoverMenuItem(title: "Support Tinycast", systemImage: "heart") {
+            PopoverMenuItem(
+                title: SettingsLocalization.string("Support Tinycast"), systemImage: "heart"
+            ) {
                 core.supportCoordinator.showSupport()
             },
-            PopoverMenuItem(title: "Settings", systemImage: "gearshape", shortcut: "⌘,") {
+            PopoverMenuItem(
+                title: SettingsLocalization.string("Settings"), systemImage: "gearshape",
+                shortcut: "⌘,"
+            ) {
                 core.settingsCoordinator.showSettings()
             }
         ])
@@ -254,7 +261,8 @@ struct RootPaletteView: View {
                 .safeAreaInset(edge: .bottom, spacing: 0) {
                     if !isCollapsed {
                         bottomBar(
-                            pillLabel: screen.primaryActionTitle, showActionGroup: showActionGroup,
+                            pillLabel: SettingsLocalization.string(screen.primaryActionTitle),
+                            showActionGroup: showActionGroup,
                             formPrimaryShortcut: isExtensionForm,
                             showActions: screen.hasActions(at: sel))
                     }
@@ -764,13 +772,14 @@ struct RootPaletteView: View {
         // Squeezed to the caret, the field has no room for a prompt; beside one it keeps it.
         if headerAccessory?.placement == .afterQuery, vm.mode != .ai { return "" }
         if vm.mode == .customCommandArguments {
-            return customCommandArguments.prompt ?? vm.mode.placeholder
+            return customCommandArguments.prompt
+                ?? SettingsLocalization.string(vm.mode.placeholder)
         }
         // Inside a running command the search bar belongs to the extension.
         if vm.mode == .extensionCommand, let placeholder = extensionScreen.searchPlaceholder {
             return placeholder
         }
-        return vm.mode.placeholder
+        return SettingsLocalization.string(vm.mode.placeholder)
     }
 
     /// The one search field — empty it's a drag handle, and any text hands every press to editing.

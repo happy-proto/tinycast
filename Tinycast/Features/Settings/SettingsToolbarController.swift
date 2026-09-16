@@ -105,11 +105,12 @@ final class SettingsToolbarController: NSObject, WindowChrome, NSToolbarDelegate
 
     /// The directional pair, not `chevron.left/right`, so the control mirrors in RTL.
     private static func makeButton(_ symbol: String, _ label: String) -> NSButton {
-        let image = NSImage(systemSymbolName: symbol, accessibilityDescription: label)
+        let localizedLabel = SettingsLocalization.string(label)
+        let image = NSImage(systemSymbolName: symbol, accessibilityDescription: localizedLabel)
         let button = NSButton(image: image ?? NSImage(), target: nil, action: nil)
         button.bezelStyle = .toolbar
-        button.setAccessibilityLabel(label)
-        button.toolTip = label
+        button.setAccessibilityLabel(localizedLabel)
+        button.toolTip = localizedLabel
         return button
     }
 }

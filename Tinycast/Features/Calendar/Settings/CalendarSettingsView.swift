@@ -11,9 +11,12 @@ struct CalendarSettingsView: View {
             FeatureSwitchSection(
                 anchor: .calendarCalendar,
                 enableTitle: "Join meetings from Tinycast",
-                enableSubtitle:
-                    "Reads \(core.calendarCoordinator.span.possessivePhrase) events to find join "
-                    + "links. Nothing leaves this Mac.",
+                enableSubtitle: String(
+                    format: SettingsLocalization.string(
+                        "Reads %@ events to find join links. Nothing leaves this Mac."
+                    ),
+                    core.calendarCoordinator.span.possessivePhrase
+                ),
                 launcherSubtitle: "List individual meetings alongside apps and commands.",
                 isEnabled: enabledBinding,
                 showsInLauncher: $settings.calendarShowInLauncher)
