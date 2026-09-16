@@ -86,7 +86,9 @@ struct MCPServerEditor: View {
                     }
                     field("Connection") {
                         Picker("Connection", selection: $kind) {
-                            ForEach(Kind.allCases) { Text($0.title).tag($0) }
+                            ForEach(Kind.allCases) {
+                                Text(SettingsLocalization.string($0.title)).tag($0)
+                            }
                         }
                         .labelsHidden()
                         .pickerStyle(.segmented)
@@ -119,7 +121,9 @@ struct MCPServerEditor: View {
                         }
                     }
                 } header: {
-                    Text(target.isNew ? "Add MCP Server" : "Edit MCP Server")
+                    Text(SettingsLocalization.string(
+                        target.isNew ? "Add MCP Server" : "Edit MCP Server"
+                    ))
                 } footer: {
                     Text(
                         kind == .http
@@ -136,7 +140,9 @@ struct MCPServerEditor: View {
                     Toggle("Offer this server's tools", isOn: $isEnabled)
                     field("Trust") {
                         Picker("Trust", selection: $trust) {
-                            ForEach(MCPTrust.allCases) { Text($0.title).tag($0) }
+                            ForEach(MCPTrust.allCases) {
+                                Text(SettingsLocalization.string($0.title)).tag($0)
+                            }
                         }
                         .labelsHidden()
                     }

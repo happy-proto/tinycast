@@ -74,7 +74,9 @@ struct AIConnectionEditorSheet: View {
                         Text(error).foregroundStyle(.orange)
                     }
                 } header: {
-                    Text(target.isNew ? "Add API Connection" : "Edit API Connection")
+                    Text(SettingsLocalization.string(
+                        target.isNew ? "Add API Connection" : "Edit API Connection"
+                    ))
                 }
 
                 Section {

@@ -21,7 +21,7 @@ struct CalendarSettingsView: View {
             Section {
                 Picker(selection: $settings.calendarLauncherLimit) {
                     ForEach(CalendarLauncherLimit.allCases) { limit in
-                        Text(limit.title).tag(limit)
+                        Text(SettingsLocalization.string(limit.title)).tag(limit)
                     }
                 } label: {
                     SettingsRowTitle(.calendarSchedule, "Upcoming meetings in launcher")
@@ -65,7 +65,7 @@ struct CalendarSettingsView: View {
             Section {
                 Picker(selection: $settings.joinWindowMinutes) {
                     ForEach(JoinWindow.allCases) { window in
-                        Text(window.title).tag(window)
+                        Text(SettingsLocalization.string(window.title)).tag(window)
                     }
                 } label: {
                     SettingsRowTitle(.calendarJoining, "Show the join card")
@@ -92,7 +92,7 @@ struct CalendarSettingsView: View {
             Section {
                 Picker(selection: $settings.calendarMenuBarDisplay) {
                     ForEach(CalendarMenuBarDisplay.allCases) { display in
-                        Text(display.title).tag(display)
+                        Text(SettingsLocalization.string(display.title)).tag(display)
                     }
                 } label: {
                     SettingsRowTitle(.calendarMenuBar, "Calendar in Menu Bar")
@@ -102,7 +102,7 @@ struct CalendarSettingsView: View {
                 }
                 Picker(selection: $settings.menuBarEvents) {
                     ForEach(MenuBarEvents.allCases) { lead in
-                        Text(lead.title).tag(lead)
+                        Text(SettingsLocalization.string(lead.title)).tag(lead)
                     }
                 } label: {
                     SettingsRowTitle(.calendarMenuBar, "Show Upcoming Events")
@@ -119,7 +119,7 @@ struct CalendarSettingsView: View {
                 .settingsEnabled(settings.calendarMenuBarDisplay != .disabled)
                 Picker(selection: $settings.hideCurrentEvent) {
                     ForEach(HideCurrentEvent.allCases) { hide in
-                        Text(hide.title).tag(hide)
+                        Text(SettingsLocalization.string(hide.title)).tag(hide)
                     }
                 } label: {
                     SettingsRowTitle(.calendarMenuBar, "Hide Current Event")

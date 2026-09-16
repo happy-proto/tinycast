@@ -67,7 +67,9 @@ struct SnippetsSettingsView: View {
     private var library: some View {
         Section {
             if sortedSnippets.isEmpty {
-                Text(snippetsStore.state == .loading ? "Loading snippets…" : "No snippets yet.")
+                Text(SettingsLocalization.string(
+                    snippetsStore.state == .loading ? "Loading snippets…" : "No snippets yet."
+                ))
                     .foregroundStyle(.secondary)
             } else {
                 ForEach(sortedSnippets) { record in
@@ -231,7 +233,7 @@ private struct SnippetEditorSheet: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.xl) {
-            Text(record == nil ? "Add Snippet" : "Edit Snippet")
+            Text(SettingsLocalization.string(record == nil ? "Add Snippet" : "Edit Snippet"))
                 .font(.title2.weight(.bold))
 
             field(

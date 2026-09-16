@@ -4,6 +4,11 @@ struct SettingsAnchor: Hashable, Sendable {
     let tab: SettingsTab
     /// The `Section`'s own header text, which is also what a result's breadcrumb reads.
     let title: String
+
+    init(tab: SettingsTab, title: String) {
+        self.tab = tab
+        self.title = SettingsLocalization.string(title)
+    }
 }
 
 // Named `<pane><Section>` throughout, so the constant for a section is always guessable from it.

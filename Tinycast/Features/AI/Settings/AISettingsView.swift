@@ -142,21 +142,27 @@ struct AISettingsView: View {
         @Bindable var settings = settings
         return Section {
             Picker(selection: $settings.opensTo) {
-                ForEach(AIOpensTo.allCases) { Text($0.title).tag($0) }
+                ForEach(AIOpensTo.allCases) {
+                    Text(SettingsLocalization.string($0.title)).tag($0)
+                }
             } label: {
                 SettingsRowTitle(.aiConversations, "Opens to")
                 Text("What summoning AI Chat lands on.")
             }
             if settings.opensTo == .recent {
                 Picker(selection: $settings.newChatAfter) {
-                    ForEach(AINewChatAfter.allCases) { Text($0.title).tag($0) }
+                    ForEach(AINewChatAfter.allCases) {
+                        Text(SettingsLocalization.string($0.title)).tag($0)
+                    }
                 } label: {
                     SettingsRowTitle(.aiConversations, "Start a new conversation after")
                     Text("Idle this long and the next summon starts fresh instead.")
                 }
             }
             Picker(selection: $settings.retention) {
-                ForEach(AIRetention.allCases) { Text($0.title).tag($0) }
+                ForEach(AIRetention.allCases) {
+                    Text(SettingsLocalization.string($0.title)).tag($0)
+                }
             } label: {
                 SettingsRowTitle(.aiConversations, "Keep conversations")
                 Text("Older conversations are deleted permanently.")
@@ -423,7 +429,7 @@ struct AISettingsView: View {
         LabeledContent {
             providerActions { providerToggle(kind) }
         } label: {
-            Text(kind.title)
+            Text(SettingsLocalization.string(kind.title))
             Text("Disabled")
         }
     }

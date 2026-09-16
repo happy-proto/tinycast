@@ -20,12 +20,12 @@ struct SettingsRow<Icon: View, Trailing: View>: View {
                     if let anchor {
                         SettingsRowTitle(anchor, title)
                     } else {
-                        Text(title)
+                        Text(SettingsLocalization.string(title))
                     }
                 }
                 .lineLimit(1)
                 if let subtitle {
-                    Text(subtitle)
+                    Text(SettingsLocalization.string(subtitle))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                         .lineLimit(subtitleLineLimit)
@@ -73,11 +73,11 @@ struct FeatureSwitchSection: View {
         Section {
             Toggle(isOn: $isEnabled) {
                 SettingsRowTitle(anchor, enableTitle)
-                Text(enableSubtitle)
+                Text(SettingsLocalization.string(enableSubtitle))
             }
             Toggle(isOn: $showsInLauncher) {
                 Text("Show in launcher")
-                Text(launcherSubtitle)
+                Text(SettingsLocalization.string(launcherSubtitle))
             }
             // The switch above stays live so the feature can always be turned back on.
             .settingsEnabled(isEnabled)
@@ -99,7 +99,7 @@ struct SettingsFilterField: View {
             Image(systemName: "magnifyingglass")
                 .foregroundStyle(.secondary)
             // `prompt:` + `labelsHidden`, or the form makes the placeholder a left-column heading.
-            TextField("", text: $query, prompt: Text(prompt))
+            TextField("", text: $query, prompt: Text(SettingsLocalization.string(prompt)))
                 .textFieldStyle(.plain)
                 .labelsHidden()
                 .focused($focused)

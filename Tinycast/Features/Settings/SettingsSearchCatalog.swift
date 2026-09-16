@@ -19,12 +19,13 @@ struct SettingsSearchEntry: Identifiable, Hashable, Sendable {
 
     /// One setting, which its pane marks with a matching `SettingsRowTitle`.
     init(_ anchor: SettingsAnchor, _ title: String, keywords: [String] = []) {
-        self.init(.row(anchor, title), title, keywords)
+        let localizedTitle = SettingsLocalization.string(title)
+        self.init(.row(anchor, localizedTitle), localizedTitle, keywords)
     }
 
     /// A whole group, for a result no single row answers — a list, or a section's master switch.
     init(group anchor: SettingsAnchor, _ title: String, keywords: [String] = []) {
-        self.init(.section(anchor), title, keywords)
+        self.init(.section(anchor), SettingsLocalization.string(title), keywords)
     }
 
     init(pane: SettingsTab, keywords: [String] = []) {
