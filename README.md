@@ -25,6 +25,26 @@ RAM.**
 SwiftUI and AppKit, **zero third-party dependencies**, no Electron and no telemetry. It also **runs
 real Raycast extensions**, rendered as native SwiftUI. Free, open source, and staying that way.
 
+## About this fork
+
+This is a personal-use fork of [Tinycast](https://github.com/abue-ammar/tinycast). It mainly carries
+changes for problems I encounter in my own daily use, rather than trying to serve as a general-purpose
+alternative distribution.
+
+I have no macOS development experience. All fork-specific code changes are written with AI assistance,
+and I do not perform detailed code reviews of the generated implementation. Use this fork at your own
+risk. If you have similar but different requirements, consider creating your own fork so its behavior
+and tradeoffs can match your setup.
+
+This repository will make a best effort to keep up with upstream. Fork-specific features are maintained
+as a stack of pull requests so each one can be updated, tested, or dropped independently:
+
+- `main` follows the upstream default branch and does not carry fork-specific changes.
+- Each customization lives on its own branch with a pull request targeting `main`.
+- `integration/current` merges the customizations currently used by this fork.
+- [PR #1](https://github.com/happy-proto/tinycast/pull/1) is the long-lived overview of that integration
+  stack, and `integration/current` is the repository's default displayed branch.
+
 For anything private, email [iabueammar@gmail.com](mailto:iabueammar@gmail.com).
 
 <p align="center">
