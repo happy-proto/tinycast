@@ -146,7 +146,8 @@ struct RootPaletteView: View {
         PopoverMenuContent(
             items: ClipboardFilter.allCases.enumerated().map { index, filter in
                 PopoverMenuItem(
-                    title: filter.title, systemImage: filter.systemImage,
+                    title: SettingsLocalization.string(filter.title),
+                    systemImage: filter.systemImage,
                     startsSection: index == 1
                 ) {
                     vm.clipboardFilter = filter
