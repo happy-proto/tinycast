@@ -36,12 +36,14 @@ and I do not perform detailed code reviews of the generated implementation. Use 
 risk. If you have similar but different requirements, consider creating your own fork so its behavior
 and tradeoffs can match your setup.
 
-This repository will make a best effort to keep up with upstream. Fork-specific features are maintained
-as a stack of pull requests so each one can be updated, tested, or dropped independently:
+This repository will make a best effort to keep up with upstream. Fork-specific changes are maintained
+as a stack of focused pull requests. The split records which feature motivated each code change, making
+future maintenance and upstream rebases easier; it does not mean every pull request can merge on its own:
 
 - `main` follows the upstream default branch and does not carry fork-specific changes.
-- Each customization lives on its own branch with a pull request targeting `main`.
-- `integration/current` merges the customizations currently used by this fork.
+- Each customization lives on its own branch and pull request. Dependencies between pull requests are
+  expected, and dependent changes build on their parent branches as a stack.
+- `integration/current` combines the customizations currently used by this fork.
 - [PR #1](https://github.com/happy-proto/tinycast/pull/1) is the long-lived overview of that integration
   stack, and `integration/current` is the repository's default displayed branch.
 
