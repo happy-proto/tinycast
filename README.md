@@ -37,13 +37,16 @@ risk. If you have similar but different requirements, consider creating your own
 and tradeoffs can match your setup.
 
 This repository will make a best effort to keep up with upstream. Fork-specific changes are maintained
-as a stack of focused pull requests. The split records which feature motivated each code change, making
-future maintenance and upstream rebases easier; it does not mean every pull request can merge on its own:
+as a linear stack of focused pull requests. Each pull request is one segment of the fork's Git history,
+recording which feature motivated its code changes and making future maintenance and upstream rebases
+easier:
 
 - `main` follows the upstream default branch and does not carry fork-specific changes.
-- Each customization lives on its own branch and pull request. Dependencies between pull requests are
-  expected, and dependent changes build on their parent branches as a stack.
-- `integration/current` combines the customizations currently used by this fork.
+- Each customization lives on its own branch and pull request, based on the preceding branch in the
+  stack. A pull request therefore shows only the history segment introduced for that feature.
+- New feature layers can be inserted or reordered within the stack; branches above them are then
+  restacked so the history continues to describe which feature introduced each change.
+- `integration/current` points to the top of the complete stack used by this fork.
 - [PR #1](https://github.com/happy-proto/tinycast/pull/1) is the long-lived overview of that integration
   stack, and `integration/current` is the repository's default displayed branch.
 
