@@ -38,9 +38,9 @@ struct BackupCategorySelection: View {
                             Image(systemName: category.descriptor.symbol)
                                 .foregroundStyle(.secondary)
                                 .frame(width: 16)
-                            Text(category.descriptor.label).lineLimit(1)
+                            Text(SettingsLocalization.string(category.descriptor.label)).lineLimit(1)
                             if let subtitle = subtitle(category) {
-                                Text(subtitle)
+                                Text(SettingsLocalization.string(subtitle))
                                     .foregroundStyle(.secondary)
                                     .lineLimit(1)
                             }

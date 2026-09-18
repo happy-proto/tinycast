@@ -46,7 +46,7 @@ struct RaycastImportSelection: View {
                             )
                             .foregroundStyle(.secondary)
                             .frame(width: 16)
-                            Text(category.label).lineLimit(1)
+                            Text(SettingsLocalization.string(category.label)).lineLimit(1)
                         }
                     }
                     .toggleStyle(.checkbox)

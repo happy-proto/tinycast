@@ -137,7 +137,7 @@ private struct QuicklinkSettingsRow: View {
     let onDelete: () -> Void
 
     var body: some View {
-        SettingsRow(title: quicklink.name, subtitle: quicklink.link) {
+        SettingsRow(title: quicklink.name, subtitle: quicklink.link, localizesText: false) {
             SymbolImage(
                 name: quicklink.symbol,
                 size: Theme.Size.settingsRowIcon - Theme.Spacing.xs

@@ -71,7 +71,7 @@ struct ExtensionAppearancePicker: View {
                     .pointerStyle(.horizontalText)
                 Picker("", selection: $category) {
                     ForEach(catalog.categories) { item in
-                        Text(item.title).tag(item)
+                        Text(ExtensionLocalization.string(item.title)).tag(item)
                     }
                 }
                 .labelsHidden()

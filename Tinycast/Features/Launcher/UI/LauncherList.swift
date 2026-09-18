@@ -112,7 +112,7 @@ struct LauncherList: View {
         var grouped: [AppEntry.Kind: [AppEntry]] = [:]
         for app in rest { grouped[app.kind, default: []].append(app) }
         if !favorites.isEmpty {
-            rows.append(.header("Favorites"))
+            rows.append(.header(SettingsLocalization.string("Favorites")))
             rows.append(
                 contentsOf: favorites.enumerated().map {
                     .app($1, slot: FavoriteSlots.digit(at: $0))
@@ -138,7 +138,7 @@ struct LauncherList: View {
         ]
         for kind in kinds {
             guard let group = grouped[kind], !group.isEmpty else { continue }
-            rows.append(.header(kind.descriptor.sectionTitle))
+            rows.append(.header(SettingsLocalization.string(kind.descriptor.sectionTitle)))
             rows.append(contentsOf: group.map { .app($0, slot: nil) })
         }
         // A missing kind would make every later row activate its neighbour: assert instead.
@@ -153,7 +153,7 @@ struct LauncherList: View {
         let rows = rows
         return Group {
             if results.isEmpty && card == nil && files == nil && fallbacks == nil {
-                EmptyResults(text: "No apps found")
+                EmptyResults(text: SettingsLocalization.string("No apps found"))
             } else {
                 ScrollViewReader { proxy in
                     ScrollView {
@@ -335,7 +335,7 @@ private struct AppRow: View {
             } else if app.kind == .meeting {
                 MeetingEntryContent(entryID: app.id) { MeetingTiming(meeting: $0, now: $1) }
             } else {
-                Text(app.kindLabel)
+                Text(app.ownerName ?? SettingsLocalization.string(app.kind.descriptor.label))
                     .font(metrics.typography.rowTrailing)
                     .foregroundStyle(.secondary)
             }

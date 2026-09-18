@@ -6,6 +6,7 @@ struct GeneralSettingsView: View {
     private var launcherRanking: LauncherRankingStore { core.launcherRanking }
     @State private var confirmingRankingReset = false
     @State private var inputSources: [InputSourceSwitcher.Option] = []
+    @State private var appLanguage = AppLanguage.current()
 
     var body: some View {
         @Bindable var settings = settings
@@ -32,7 +33,7 @@ struct GeneralSettingsView: View {
                 }
                 Picker(selection: $settings.popToRootTimeout) {
                     ForEach(PopToRootTimeout.allCases) { timeout in
-                        Text(timeout.title).tag(timeout)
+                        Text(SettingsLocalization.string(timeout.title)).tag(timeout)
                     }
                 } label: {
                     SettingsRowTitle(.generalGeneral, "Pop to Root Search")
@@ -40,7 +41,7 @@ struct GeneralSettingsView: View {
                 }
                 Picker(selection: $settings.escapeKeyBehavior) {
                     ForEach(EscapeKeyBehavior.allCases) { behavior in
-                        Text(behavior.title).tag(behavior)
+                        Text(SettingsLocalization.string(behavior.title)).tag(behavior)
                     }
                 } label: {
                     SettingsRowTitle(.generalGeneral, "Escape Key Behavior")
@@ -63,9 +64,22 @@ struct GeneralSettingsView: View {
             }
 
             Section {
+                Picker(selection: $appLanguage) {
+                    ForEach(AppLanguage.allCases) { language in
+                        Text(SettingsLocalization.string(language.title)).tag(language)
+                    }
+                } label: {
+                    SettingsRowTitle(.generalAppearance, "Application language")
+                    Text("Relaunches Tinycast to apply the selected language everywhere.")
+                }
+                .onChange(of: appLanguage) { _, language in
+                    language.apply()
+                    RelaunchRunner.relaunchAfterExit(Bundle.main.bundleURL)
+                    NSApp.terminate(nil)
+                }
                 Picker(selection: $settings.appearance) {
                     ForEach(AppAppearance.allCases) { appearance in
-                        Text(appearance.title).tag(appearance)
+                        Text(SettingsLocalization.string(appearance.title)).tag(appearance)
                     }
                 } label: {
                     SettingsRowTitle(.generalAppearance, "Theme")
@@ -260,8 +274,8 @@ private struct InterfaceSizeRow: View {
                 .settingsOptionSegment(isSelected: selected)
         }
         .buttonStyle(.plain)
-        .accessibilityLabel(size.title)
+        .accessibilityLabel(SettingsLocalization.string(size.title))
         .accessibilityAddTraits(selected ? [.isSelected] : [])
-        .help(size.title)
+        .help(SettingsLocalization.string(size.title))
     }
 }
