@@ -58,8 +58,9 @@ struct QuicklinksSettingsView: View {
     private var storageNotice: some View {
         Section {
             Label(
-                "Quicklinks can't be saved: the database couldn't be opened, so nothing you change"
-                    + " here will stick. The existing file was left untouched.",
+                SettingsLocalization.string(
+                    "Quicklinks can't be saved: the database couldn't be opened, so nothing you change"
+                        + " here will stick. The existing file was left untouched."),
                 systemImage: "exclamationmark.triangle.fill"
             )
             .foregroundStyle(.orange)
@@ -110,12 +111,13 @@ struct QuicklinksSettingsView: View {
             Toggle(isOn: $settings.quicklinkOpensNewWindow) {
                 SettingsRowTitle(.quicklinksBehaviour, "Open in a new window")
                 Text(
-                    "Ask the handler for a new window instead of reusing its frontmost tab. "
-                        + "Only apps that accept a new-window argument can honour this.")
+                    SettingsLocalization.string(
+                        "Ask the handler for a new window instead of reusing its frontmost tab. "
+                            + "Only apps that accept a new-window argument can honour this."))
             }
             Picker(selection: $settings.quicklinkSelectionFallback) {
                 ForEach(QuicklinkSelectionFallback.allCases) { option in
-                    Text(option.title).tag(option)
+                    Text(SettingsLocalization.string(option.title)).tag(option)
                 }
             } label: {
                 SettingsRowTitle(.quicklinksBehaviour, "When there's no selected text")
@@ -168,7 +170,7 @@ private struct QuicklinkSettingsRow: View {
     let onDelete: () -> Void
 
     var body: some View {
-        SettingsRow(title: quicklink.name, subtitle: quicklink.link) {
+        SettingsRow(verbatimTitle: quicklink.name, subtitle: quicklink.link) {
             SymbolImage(name: quicklink.symbol, size: 13)
         } trailing: {
             if quicklink.isPinned {

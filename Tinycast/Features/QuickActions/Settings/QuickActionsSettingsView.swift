@@ -22,8 +22,9 @@ struct QuickActionsSettingsView: View {
                 Toggle(isOn: enabledBinding) {
                     SettingsRowTitle(.quickActionsQuickActions, "Enable Quick Actions")
                     Text(
-                        "Act on the text you have selected in any app. Nothing is read until you "
-                            + "press a shortcut.")
+                        SettingsLocalization.string(
+                            "Act on the text you have selected in any app. Nothing is read until you "
+                                + "press a shortcut."))
                 }
                 if appSettings.quickActionsEnabled, !isTrusted {
                     // Every shortcut fails without it; better said here than found one press later.
@@ -89,7 +90,9 @@ struct QuickActionsSettingsView: View {
         Section {
             ForEach(BuiltInQuickAction.allCases, content: builtInRow)
             ForEach(customActions.actions) { action in
-                SettingsRow(title: action.name, subtitle: subtitle(for: .custom(action))) {
+                SettingsRow(
+                    verbatimTitle: action.name, subtitle: subtitle(for: .custom(action))
+                ) {
                     SymbolImage(name: action.symbol, size: Theme.Size.quickActionHeaderIcon)
                         .frame(width: Theme.Size.settingsRowIcon)
                 } trailing: {
@@ -111,9 +114,11 @@ struct QuickActionsSettingsView: View {
             SettingsSectionHeader(.quickActionsActions)
         } footer: {
             Text(
-                "Replace puts the result straight into your document — undo in the app you were in "
-                    + "brings it back. Preview shows it in a panel first. The checkbox lists the "
-                    + "action in the launcher; its shortcut works either way."
+                SettingsLocalization.string(
+                    "Replace puts the result straight into your document — undo in the app you were in "
+                        + "brings it back. Preview shows it in a panel first. The checkbox lists the "
+                        + "action in the launcher; its shortcut works either way."
+                )
             )
             .font(.caption)
             .foregroundStyle(.secondary)
@@ -182,8 +187,10 @@ struct QuickActionsSettingsView: View {
             SettingsSectionHeader(.quickActionsModel)
         } footer: {
             Text(
-                "Separate from chat's model on purpose: a shortcut you press all day should not "
-                    + "bill an API every time. Apple Intelligence runs on this Mac for nothing."
+                SettingsLocalization.string(
+                    "Separate from chat's model on purpose: a shortcut you press all day should not "
+                        + "bill an API every time. Apple Intelligence runs on this Mac for nothing."
+                )
             )
             .font(.caption)
             .foregroundStyle(.secondary)
@@ -205,8 +212,10 @@ struct QuickActionsSettingsView: View {
             SettingsSectionHeader(.quickActionsTranslate)
         } footer: {
             Text(
-                "Translation uses Apple's own translator on this Mac, so it costs nothing and "
-                    + "reaches no provider. A language downloads the first time you use it."
+                SettingsLocalization.string(
+                    "Translation uses Apple's own translator on this Mac, so it costs nothing and "
+                        + "reaches no provider. A language downloads the first time you use it."
+                )
             )
             .font(.caption)
             .foregroundStyle(.secondary)
@@ -317,8 +326,9 @@ struct QuickActionsSettingsView: View {
         var body: some View {
             VStack(alignment: .leading, spacing: Theme.Spacing.xl) {
                 SettingsEditorHeader(
-                    title: "Customize \(action.title)",
-                    subtitle: "Tell Tinycast how you want \(action.title) to handle your selected text."
+                    title: SettingsLocalization.format("Customize %@", action.title),
+                    subtitle: SettingsLocalization.format(
+                        "Tell Tinycast how you want %@ to handle your selected text.", action.title)
                 )
 
                 TextEditor(text: $instructions)

@@ -150,7 +150,8 @@ struct RootPaletteView: View {
         PopoverMenuContent(
             items: ClipboardFilter.allCases.enumerated().map { index, filter in
                 PopoverMenuItem(
-                    title: filter.title, systemImage: filter.systemImage,
+                    title: SettingsLocalization.string(filter.title),
+                    systemImage: filter.systemImage,
                     startsSection: index == 1
                 ) {
                     vm.clipboardFilter = filter
@@ -189,24 +190,32 @@ struct RootPaletteView: View {
             header: title,
             items: [
                 PopoverMenuItem(
-                    title: "Changelog",
+                    title: SettingsLocalization.string("Changelog"),
                     systemImage: "clock.arrow.trianglehead.2.counterclockwise.rotate.90"
                 ) {
                     if let url = URL(string: "https://github.com/abue-ammar/tinycast/releases") {
                         openURL(url)
                     }
                 },
-                PopoverMenuItem(title: "About Tinycast", systemImage: "info.circle") {
+                PopoverMenuItem(
+                    title: SettingsLocalization.string("About Tinycast"), systemImage: "info.circle"
+                ) {
                     core.settingsCoordinator.showAbout()
                 },
-                PopoverMenuItem(title: "Support Tinycast", systemImage: "heart") {
+                PopoverMenuItem(
+                    title: SettingsLocalization.string("Support Tinycast"), systemImage: "heart"
+                ) {
                     core.supportCoordinator.showSupport()
                 },
-                PopoverMenuItem(title: "Settings", systemImage: "gearshape", shortcut: "⌘,") {
+                PopoverMenuItem(
+                    title: SettingsLocalization.string("Settings"), systemImage: "gearshape",
+                    shortcut: "⌘,"
+                ) {
                     core.settingsCoordinator.showSettings()
                 },
                 PopoverMenuItem(
-                    title: "Quit \(appName)", systemImage: "rectangle.portrait.and.arrow.right",
+                    title: String(format: SettingsLocalization.string("Quit %@"), appName),
+                    systemImage: "rectangle.portrait.and.arrow.right",
                     startsSection: true, isDestructive: true
                 ) {
                     NSApp.terminate(nil)
@@ -228,7 +237,8 @@ struct RootPaletteView: View {
             return PaletteMenuContent(
                 popover: filtered.content, selection: $menuSelection,
                 search: PopoverMenu.Search(
-                    placeholder: "Search for actions…", placement: .bottom),
+                    placeholder: SettingsLocalization.string("Search for actions…"),
+                    placement: .bottom),
                 onActivate: activateMenuItem, preferredSelection: filtered.bestMatch)
         case .clipboardFilter:
             return headerMenu(
@@ -283,7 +293,8 @@ struct RootPaletteView: View {
                 .safeAreaInset(edge: .bottom, spacing: 0) {
                     if !isCollapsed {
                         bottomBar(
-                            pillLabel: screen.primaryActionTitle, showActionGroup: showActionGroup,
+                            pillLabel: SettingsLocalization.string(screen.primaryActionTitle),
+                            showActionGroup: showActionGroup,
                             formPrimaryShortcut: isExtensionForm,
                             showActions: screen.hasActions(at: sel))
                     }
@@ -801,13 +812,14 @@ struct RootPaletteView: View {
         // Squeezed to the caret, the field has no room for a prompt; beside one it keeps it.
         if headerAccessory?.placement == .afterQuery, vm.mode != .ai { return "" }
         if vm.mode == .customCommandArguments {
-            return customCommandArguments.prompt ?? vm.mode.placeholder
+            return customCommandArguments.prompt
+                ?? SettingsLocalization.string(vm.mode.placeholder)
         }
         // Inside a running command the search bar belongs to the extension.
         if vm.mode == .extensionCommand, let placeholder = extensionScreen.searchPlaceholder {
             return placeholder
         }
-        return vm.mode.placeholder
+        return SettingsLocalization.string(vm.mode.placeholder)
     }
 
     /// The one search field — empty it's a drag handle, and any text hands every press to editing.

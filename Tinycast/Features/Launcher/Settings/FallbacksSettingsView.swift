@@ -12,8 +12,10 @@ struct FallbacksSettingsView: View {
         Form {
             Section {
                 Text(
-                    "Every search offers these below its results, under “Use … with”. "
-                        + "Each one takes what you typed as its input."
+                    SettingsLocalization.string(
+                        "Every search offers these below its results, under “Use … with”. "
+                            + "Each one takes what you typed as its input."
+                    )
                 )
                 .foregroundStyle(.secondary)
             } header: {
@@ -39,8 +41,10 @@ struct FallbacksSettingsView: View {
                 }
             } footer: {
                 Text(
-                    "A quicklink appears here once its link contains an {argument}, "
-                        + "which the query fills in."
+                    SettingsLocalization.string(
+                        "A quicklink appears here once its link contains an {argument}, "
+                            + "which the query fills in."
+                    )
                 )
                 .font(.caption)
                 .foregroundStyle(.secondary)
@@ -66,7 +70,10 @@ private struct FallbackRow: View {
 
     var body: some View {
         if let entry = core.fallbackCoordinator.entry(for: fallback) {
-            SettingsRow(title: entry.name, subtitle: entry.kindLabel) {
+            SettingsRow(
+                verbatimTitle: entry.name,
+                subtitle: SettingsLocalization.string(entry.kindLabel)
+            ) {
                 AppIconView(app: entry)
                     .frame(width: Theme.Size.settingsRowIcon, height: Theme.Size.settingsRowIcon)
             } trailing: {

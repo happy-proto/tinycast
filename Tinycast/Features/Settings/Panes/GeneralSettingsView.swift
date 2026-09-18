@@ -9,6 +9,7 @@ struct GeneralSettingsView: View {
     @AppStorage(SettingsKey.showInMenuBar) private var showInMenuBar = true
     @State private var confirmingRankingReset = false
     @State private var inputSources: [InputSourceSwitcher.Option] = []
+    @State private var appLanguage = AppLanguage.current()
 
     /// The Hyper modifier chord as prose glyphs, tracking the Include Shift toggle.
     private var hyperGlyphs: String { settings.hyperKeyIncludesShift ? "⌃⌥⇧⌘" : "⌃⌥⌘" }
@@ -16,12 +17,19 @@ struct GeneralSettingsView: View {
     /// The missing-permission half is its own row, so it can carry the button that fixes it.
     private var hyperSubtitle: String {
         guard settings.hyperKey != .none else {
-            return
-                "Select a physical key to remap to the \(hyperGlyphs) modifier keys simultaneously."
+            return String(
+                localized:
+                    "Select a physical key to remap to the \(hyperGlyphs) modifier keys simultaneously."
+            )
         }
-        return
-            "Pressing \(settings.hyperKey.title) will trigger the left \(hyperGlyphs) modifier keys."
-            + " Hyper Key shortcuts are shown in Tinycast with ✦."
+        return String(
+            format: SettingsLocalization.string(
+                "Pressing %@ will trigger the left %@ modifier keys. "
+                    + "Hyper Key shortcuts are shown in Tinycast with ✦."
+            ),
+            settings.hyperKey.title,
+            hyperGlyphs
+        )
     }
 
     var body: some View {
@@ -51,9 +59,10 @@ struct GeneralSettingsView: View {
             } header: {
                 SettingsSectionHeader(.generalSearch)
             } footer: {
-                Text(
-                    "Tinycast privately learns which results you choose for each query. Reset all learned choices to restore the default order."
-                )
+                Text(SettingsLocalization.string(
+                    "Tinycast privately learns which results you choose for each query. "
+                        + "Reset all learned choices to restore the default order."
+                ))
                 .font(.caption)
                 .foregroundStyle(.secondary)
             }
@@ -61,11 +70,11 @@ struct GeneralSettingsView: View {
             Section {
                 Picker(selection: $settings.hyperKey) {
                     ForEach(HyperKeyPhysicalKey.allCases) { key in
-                        Text(key.title).tag(key)
+                        Text(SettingsLocalization.string(key.title)).tag(key)
                     }
                 } label: {
                     SettingsRowTitle(.generalHyperKey, "Hyper Key")
-                    Text(hyperSubtitle)
+                    Text(SettingsLocalization.string(hyperSubtitle))
                 }
                 .onChange(of: settings.hyperKey) { _, newKey in
                     // A Quick Press choice is meaningless for a different key.
@@ -111,9 +120,22 @@ struct GeneralSettingsView: View {
             }
 
             Section {
+                Picker(selection: $appLanguage) {
+                    ForEach(AppLanguage.allCases) { language in
+                        Text(SettingsLocalization.string(language.title)).tag(language)
+                    }
+                } label: {
+                    SettingsRowTitle(.generalAppearance, "Application language")
+                    Text("Relaunches Tinycast to apply the selected language everywhere.")
+                }
+                .onChange(of: appLanguage) { _, language in
+                    language.apply()
+                    RelaunchRunner.relaunchAfterExit(Bundle.main.bundleURL)
+                    NSApp.terminate(nil)
+                }
                 Picker(selection: $settings.appearance) {
                     ForEach(AppAppearance.allCases) { appearance in
-                        Text(appearance.title).tag(appearance)
+                        Text(SettingsLocalization.string(appearance.title)).tag(appearance)
                     }
                 } label: {
                     SettingsRowTitle(.generalAppearance, "Theme")
@@ -159,7 +181,7 @@ struct GeneralSettingsView: View {
                 }
                 Picker(selection: $settings.popToRootTimeout) {
                     ForEach(PopToRootTimeout.allCases) { timeout in
-                        Text(timeout.title).tag(timeout)
+                        Text(SettingsLocalization.string(timeout.title)).tag(timeout)
                     }
                 } label: {
                     SettingsRowTitle(.generalGeneral, "Pop to Root Search")
@@ -167,7 +189,7 @@ struct GeneralSettingsView: View {
                 }
                 Picker(selection: $settings.escapeKeyBehavior) {
                     ForEach(EscapeKeyBehavior.allCases) { behavior in
-                        Text(behavior.title).tag(behavior)
+                        Text(SettingsLocalization.string(behavior.title)).tag(behavior)
                     }
                 } label: {
                     SettingsRowTitle(.generalGeneral, "Escape Key Behavior")
@@ -255,9 +277,9 @@ private struct InterfaceSizeRow: View {
                 .background(shape.fill(selected ? Theme.Colors.controlSurface : Color.clear))
         }
         .buttonStyle(.plain)
-        .accessibilityLabel(size.title)
+        .accessibilityLabel(SettingsLocalization.string(size.title))
         .accessibilityAddTraits(selected ? [.isSelected] : [])
-        .help(size.title)
+        .help(SettingsLocalization.string(size.title))
     }
 }
 

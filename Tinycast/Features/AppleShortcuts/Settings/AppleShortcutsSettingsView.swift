@@ -47,8 +47,10 @@ struct AppleShortcutsSettingsView: View {
             SettingsSectionHeader(.appleShortcutsShortcuts)
         } footer: {
             Text(
-                "Create and edit shortcuts in the Shortcuts app. A shortcut works even when it is "
-                    + "hidden from the launcher."
+                SettingsLocalization.string(
+                    "Create and edit shortcuts in the Shortcuts app. A shortcut works even when it is "
+                        + "hidden from the launcher."
+                )
             )
             .font(.caption)
             .foregroundStyle(.secondary)

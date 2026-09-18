@@ -88,17 +88,19 @@ struct ExtensionsSettingsView: View {
             } label: {
                 Label("What works", systemImage: "checkmark.circle")
                 Text(
-                    "List, detail, form and grid commands, and ones that just run. Preferences, "
-                        + "arguments, storage, the clipboard, toasts, HUDs and OAuth sign-in. "
-                        + "No-view commands refresh their subtitle on their manifest interval.")
+                    ExtensionLocalization.string(
+                        "List, detail, form and grid commands, and ones that just run. Preferences, "
+                            + "arguments, storage, the clipboard, toasts, HUDs and OAuth sign-in. "
+                            + "No-view commands refresh their subtitle on their manifest interval."))
             }
             LabeledContent {
                 EmptyView()
             } label: {
                 Label("What doesn't, yet", systemImage: "xmark.circle")
                 Text(
-                    "Menu-bar commands, sign-ins routed through Raycast's own OAuth proxy, and "
-                        + "Raycast's AI, browser and window-management services.")
+                    ExtensionLocalization.string(
+                        "Menu-bar commands, sign-ins routed through Raycast's own OAuth proxy, and "
+                            + "Raycast's AI, browser and window-management services."))
             }
         } header: {
             SettingsSectionHeader(.extensionsCompatibility)
@@ -370,7 +372,7 @@ private struct ExtensionDisclosure: View {
     }
 
     private var summary: some View {
-        SettingsRow(title: installed.title, subtitle: subtitle) {
+        SettingsRow(verbatimTitle: installed.title, subtitle: subtitle) {
             ExtensionIconView(
                 resolved: installed.iconPath.map { ExtensionImage.Resolved(source: .file($0)) },
                 size: Theme.Size.rowIcon)
@@ -799,7 +801,8 @@ private struct ExtensionImportPanel: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.xl) {
-            ExtensionSettingsEditorHeader(title: "Import from Raycast", subtitle: subtitle)
+            ExtensionSettingsEditorHeader(
+                title: ExtensionLocalization.string("Import from Raycast"), subtitle: subtitle)
 
             if candidates.count > 6 {
                 SettingsFilterField(prompt: "Filter…", query: $filter)
