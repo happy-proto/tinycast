@@ -11,12 +11,24 @@
 1. 确认工作树没有会被切分支或 rebase 干扰的用户改动。
 2. Fetch `origin` 和 `fork`，记录 `origin/main`、`fork/main`、各层 head 和 PR base/head。
 3. 验证 `fork/main` 没有 fork 专属提交，并判断它相对 `origin/main` 是相同、可快进还是已经分叉。
-   `main` 只能快进到上游；若已分叉则停止，不用 rebase 或 force-push 掩盖异常。
+   `main` 通常只能快进到上游；若已分叉，先判断是 fork 异常还是上游公开历史被改写，不用 rebase 或
+   force-push 掩盖来源不明的分叉。
 4. 以旧 `fork/main..origin/main` 为上游增量，阅读提交主题、变更路径和高影响 diff。不要只看提交数
    或依赖 `gh stack view` 的 `needsRebase`：在 `fork/main` 尚未更新时，它可能仍把旧 trunk 视为正常。
 
 先区分上游增量中的功能、重构、删除、生成文件、构建测试、文档和仓库治理变化。重点找出与 fork
 各功能层相同的文件、符号、界面和对外契约，以及上游是否已经部分或完整吸收某层目的。
+
+### 上游改写了公开历史
+
+如果 `origin/main` 发生 forced update，先在旧 `fork/main` 的历史中找到新上游里语义等价的检查点，
+比较两棵树和提交正文，确认差异来自上游改写而非 fork 专属提交。记录旧 trunk 和每层旧 head，再用
+带明确期望旧 SHA 的 `--force-with-lease` 更新 `fork/main`。
+
+不要随后直接让 `gh stack rebase` 猜旧 trunk：它可能把两套上游历史间的数百个提交当成 fork 提交
+重放。先按旧边界逐层执行等价于 `rebase --onto <新直接 base> <旧直接 base> <层 head>` 的移植，
+每层只重放自己的提交；全部线性后重新建立本地 stack tracking，再让 `gh stack view` 和净 diff 复核。
+一旦普通级联 rebase 在 fork 层之外的旧路径产生大量冲突，应立即 abort，并按此流程重做。
 
 ## 规划每个功能层
 
@@ -53,7 +65,7 @@
 
 ## 执行与复核
 
-在用户授权范围内，先快进本地 `main` 并更新 `fork/main`，使 fork trunk 与 `origin/main` 相同；随后
+在用户授权范围内，先更新本地 `main` 和 `fork/main`，使 fork trunk 与 `origin/main` 相同；随后
 从 stack 底部到 `integration/current` 级联 rebase。通常使用 `gh stack rebase --remote fork`；需要
 预判冲突或尚未获准改写正式分支时，在临时 clone 或临时分支中按相同 base 顺序演练。
 
