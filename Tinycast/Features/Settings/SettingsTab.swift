@@ -7,30 +7,31 @@ enum SettingsTab: CaseIterable, Identifiable {
     var id: Self { self }
 
     var title: String {
-        switch self {
-        case .general: return "General"
-        case .applications: return "Applications"
-        case .systemSettings: return "System Settings"
-        case .systemActions: return "System Actions"
-        case .commands: return "Commands"
-        case .quicklinks: return "Quicklinks"
-        case .appleShortcuts: return "Apple Shortcuts"
-        case .fallbacks: return "Fallbacks"
-        case .ai: return "AI"
-        case .quickActions: return "Quick Actions"
-        case .fileSearch: return "File Search"
-        case .notes: return "Notes"
-        case .snippets: return "Snippets"
-        case .navigation: return "Navigation"
-        case .windowManagement: return "Window Management"
-        case .clipboard: return "Clipboard"
-        case .emoji: return "Emoji & Symbols"
-        case .calendar: return "Calendar"
-        case .extensions: return "Extensions"
-        case .permissions: return "Permissions"
-        case .backup: return "Backup"
-        case .about: return "About"
+        let key = switch self {
+        case .general: "General"
+        case .applications: "Applications"
+        case .systemSettings: "System Settings"
+        case .systemActions: "System Actions"
+        case .commands: "Commands"
+        case .quicklinks: "Quicklinks"
+        case .appleShortcuts: "Apple Shortcuts"
+        case .fallbacks: "Fallbacks"
+        case .ai: "AI"
+        case .quickActions: "Quick Actions"
+        case .fileSearch: "File Search"
+        case .notes: "Notes"
+        case .snippets: "Snippets"
+        case .navigation: "Navigation"
+        case .windowManagement: "Window Management"
+        case .clipboard: "Clipboard"
+        case .emoji: "Emoji & Symbols"
+        case .calendar: "Calendar"
+        case .extensions: "Extensions"
+        case .permissions: "Permissions"
+        case .backup: "Backup"
+        case .about: "About"
         }
+        return SettingsLocalization.string(key)
     }
 
     var systemImage: String {
@@ -68,12 +69,13 @@ enum SettingsSection: CaseIterable, Identifiable {
     var id: Self { self }
 
     var title: String {
-        switch self {
-        case .general: return "General"
-        case .launcher: return "Launcher"
-        case .features: return "Features"
-        case .advanced: return "Advanced"
+        let key = switch self {
+        case .general: "General"
+        case .launcher: "Launcher"
+        case .features: "Features"
+        case .advanced: "Advanced"
         }
+        return SettingsLocalization.string(key)
     }
 
     var tabs: [SettingsTab] {

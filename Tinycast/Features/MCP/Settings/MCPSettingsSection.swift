@@ -41,9 +41,11 @@ struct MCPSettingsSection: View {
             SettingsSectionHeader(.aiMCPServers)
         } footer: {
             Text(
-                "Tools from every enabled server are offered to the model; type @slug to address "
-                    + "one directly. The first call of a chat asks before it runs. Credentials "
-                    + "stay in your login Keychain."
+                SettingsLocalization.string(
+                    "Tools from every enabled server are offered to the model; type @slug to address "
+                        + "one directly. The first call of a chat asks before it runs. Credentials "
+                        + "stay in your login Keychain."
+                )
             )
             .font(.caption)
             .foregroundStyle(.secondary)
@@ -93,7 +95,7 @@ private struct MCPServerRow: View {
     let onRemove: () -> Void
 
     var body: some View {
-        SettingsRow(title: server.title, subtitle: subtitle) {
+        SettingsRow(verbatimTitle: server.title, subtitle: subtitle) {
             Image(systemName: "wrench.and.screwdriver")
                 .foregroundStyle(server.isEnabled ? AnyShapeStyle(.tint) : AnyShapeStyle(.secondary))
         } trailing: {

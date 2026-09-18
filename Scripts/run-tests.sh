@@ -431,7 +431,8 @@ run slow ext-test          -parse-as-library \
                            $E/UI/ExtensionScreen.swift \
                            $L/SearchRelevance.swift \
                            Tinycast/Platform/Compression/Zlib.swift
-run settings-history-test  Tinycast/Features/Settings/SettingsTab.swift \
+run settings-history-test  Tinycast/Features/Settings/SettingsLocalization.swift \
+                           Tinycast/Features/Settings/SettingsTab.swift \
                            Tinycast/Features/Settings/SettingsHistory.swift \
                            Tinycast/Features/Settings/SettingsAnchor.swift \
                            Tinycast/Features/Settings/SettingsNavigationState.swift \
