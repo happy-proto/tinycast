@@ -1,0 +1,4 @@
+interface:
+  display_name: "Tinycast Fork Maintenance"
+  short_description: "维护 Tinycast fork 的功能、Stack 与 Dev App"
+  default_prompt: "Use $tinycast-fork-maintenance to maintain this Tinycast fork through the appropriate PR layer and integrated Dev App."
