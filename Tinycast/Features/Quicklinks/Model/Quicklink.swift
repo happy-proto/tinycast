@@ -46,6 +46,11 @@ struct Quicklink: Codable, Hashable, Identifiable, Sendable {
 
     var entryID: String { Self.entryIDPrefix + id.uuidString.lowercased() }
 
+    static func singleLineName(_ value: String) -> String {
+        guard value.contains(where: \.isNewline) else { return value }
+        return value.split(whereSeparator: \.isNewline).joined(separator: " ")
+    }
+
     static func id(fromEntryID entryID: String) -> UUID? {
         guard entryID.hasPrefix(entryIDPrefix) else { return nil }
         return UUID(uuidString: String(entryID.dropFirst(entryIDPrefix.count)))

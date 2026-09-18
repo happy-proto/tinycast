@@ -209,6 +209,15 @@ struct QuicklinkTests {
                 (try? store.update(renamed)) != nil,
                 "a quicklink does not collide with its own name when edited")
             expect(store.quicklinks[0].name == "Search", "names are trimmed on save")
+
+            var multiline = store.quicklinks[0]
+            multiline.name = "\nSearch\r\nGitHub\u{2028}Issues\n"
+            expect(
+                (try? store.update(multiline)) != nil,
+                "a pasted multi-line quicklink name can be saved")
+            expect(
+                store.quicklinks[0].name == "Search GitHub Issues",
+                "line breaks in a quicklink name collapse to spaces")
         }
     }
 

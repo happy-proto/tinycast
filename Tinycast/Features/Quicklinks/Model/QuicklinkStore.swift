@@ -192,7 +192,8 @@ final class QuicklinkStore {
     private func validated(_ draft: Quicklink) throws(QuicklinkError) -> Quicklink {
         guard isAvailable else { throw .storageUnavailable }
         var value = draft
-        value.name = draft.name.trimmingCharacters(in: .whitespacesAndNewlines)
+        value.name = Quicklink.singleLineName(draft.name)
+            .trimmingCharacters(in: .whitespacesAndNewlines)
         value.link = draft.link.trimmingCharacters(in: .whitespacesAndNewlines)
         value.iconSymbol =
             draft.iconSymbol?.trimmingCharacters(in: .whitespacesAndNewlines)

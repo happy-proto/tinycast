@@ -22,6 +22,8 @@ every shortcut without re-registering.
   selection never touches the clipboard or the frontmost app's selection. Only opening does.
 - **`Quicklink.precedes` is the one display order**, sorted through by both the store and the `AppIndex`
   slice.
+- **A quicklink name is one line.** The editor collapses pasted line breaks as they arrive, and the
+  store applies the same rule so imports and other callers cannot persist a multi-line name.
 - **A disabled quicklink is inert, not gone.** `isEnabled == false` takes it out of root search and out
   of Search Quicklinks, and `openQuicklink` refuses it, so no surface can offer or open it. Everything
   attached — name, link, alias, shortcut, favorite slot, ranking — stays exactly as it was. The

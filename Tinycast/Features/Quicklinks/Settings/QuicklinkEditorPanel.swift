@@ -45,6 +45,9 @@ struct QuicklinkEditorPanel: View {
                     .font(.callout.weight(.medium))
                 TextField("Search GitHub", text: $name)
                     .settingsEditorTextField()
+                    .onChange(of: name) { _, value in
+                        name = Quicklink.singleLineName(value)
+                    }
             }
 
             VStack(alignment: .leading, spacing: Theme.Spacing.sm) {
