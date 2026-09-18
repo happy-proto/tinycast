@@ -90,7 +90,7 @@ struct LauncherItemRow: View {
     @Environment(VisibilityStore.self) private var visibility
 
     var body: some View {
-        SettingsRow(title: entry.name) {
+        SettingsRow(verbatimTitle: entry.name) {
             // Keyed so a reused cell seeds the new entry's icon on its first frame.
             AppIconView(app: entry).frame(width: 18, height: 18).id(entry.iconKey)
         } trailing: {

@@ -36,7 +36,9 @@ struct QuicklinkEditorPanel: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.xl) {
-            SettingsEditorHeader(title: quicklink == nil ? "Add Quicklink" : "Edit Quicklink")
+            SettingsEditorHeader(
+                title: SettingsLocalization.string(
+                    quicklink == nil ? "Add Quicklink" : "Edit Quicklink"))
 
             VStack(alignment: .leading, spacing: Theme.Spacing.sm) {
                 Text("Name")
@@ -155,7 +157,7 @@ struct QuicklinkEditorPanel: View {
             } label: {
                 HStack(spacing: Theme.Spacing.sm) {
                     SymbolImage(name: resolvedSymbol, size: 14)
-                    Text(iconSymbol == nil ? "Automatic" : "Custom")
+                    Text(SettingsLocalization.string(iconSymbol == nil ? "Automatic" : "Custom"))
                         .lineLimit(1)
                     Spacer(minLength: 0)
                 }

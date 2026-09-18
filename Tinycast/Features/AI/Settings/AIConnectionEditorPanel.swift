@@ -35,7 +35,8 @@ struct AIConnectionEditorPanel: View {
     var body: some View {
         VStack(spacing: 0) {
             SettingsEditorHeader(
-                title: target.isNew ? "Add API Connection" : "Edit API Connection"
+                title: SettingsLocalization.string(
+                    target.isNew ? "Add API Connection" : "Edit API Connection")
             )
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.horizontal, Theme.Spacing.dialogInset)
@@ -77,8 +78,9 @@ struct AIConnectionEditorPanel: View {
                             .foregroundStyle(.secondary)
                     } else if target.hasStoredKey {
                         Label(
-                            "The saved key stays with the endpoint it was saved for. "
-                                + "Enter a key for this one.",
+                            SettingsLocalization.string(
+                                "The saved key stays with the endpoint it was saved for. "
+                                    + "Enter a key for this one."),
                             systemImage: "exclamationmark.triangle"
                         )
                         .font(.caption)
@@ -104,8 +106,10 @@ struct AIConnectionEditorPanel: View {
                     }
                 } footer: {
                     Text(
-                        "Search the models available to this key and add one or more. Exact model "
-                            + "IDs remain available when discovery is unsupported."
+                        SettingsLocalization.string(
+                            "Search the models available to this key and add one or more. Exact model "
+                                + "IDs remain available when discovery is unsupported."
+                        )
                     )
                     .font(.caption)
                     .foregroundStyle(.secondary)

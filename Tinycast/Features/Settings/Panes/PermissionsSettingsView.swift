@@ -12,7 +12,7 @@ struct PermissionsSettingsView: View {
             Section {
                 LabeledContent {
                     HStack(spacing: Theme.Spacing.lg) {
-                        Label(accessibilityStatus.title, systemImage: accessibilityStatus.symbol)
+                        Label(SettingsLocalization.string(accessibilityStatus.title), systemImage: accessibilityStatus.symbol)
                             .foregroundStyle(accessibilityStatus.tint)
                         Button(accessibilityTrusted ? "Open…" : "Grant Access…") {
                             Permissions.openAccessibilitySettings()
@@ -30,7 +30,7 @@ struct PermissionsSettingsView: View {
             Section {
                 LabeledContent {
                     HStack(spacing: Theme.Spacing.lg) {
-                        Label(calendarStatus.title, systemImage: calendarStatus.symbol)
+                        Label(SettingsLocalization.string(calendarStatus.title), systemImage: calendarStatus.symbol)
                             .foregroundStyle(calendarStatus.tint)
                         Button(calendarNeedsPrompt ? "Grant Access…" : "Open…") {
                             // Settings lists no app TCC was never asked about, so asking is the way in.
