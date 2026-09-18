@@ -92,25 +92,6 @@ struct AppNameTest {
             "two blank keys still fall back to the filename",
             blankBoth?.installedAppName == "Ghost")
 
-        func codes(_ preferred: [String]) -> [String] {
-            BundleLocalization.indexedLanguages(preferred)
-        }
-        check(
-            "a Simplified Chinese Mac looks up the zh_CN Apple actually keys by",
-            codes(["zh-Hans-CN"]).contains("zh_CN"))
-        check(
-            "a script-only tag maximizes to reach the same key",
-            codes(["zh-Hans"]).contains("zh_CN"))
-        check(
-            "Traditional Chinese resolves to its own region, not the mainland's",
-            codes(["zh-Hant-TW"]).contains("zh_TW") && !codes(["zh-Hant-TW"]).contains("zh_CN"))
-        check(
-            "English stays last so a Chinese reader still types \"Calendar\"",
-            codes(["zh-Hans-CN"]).last == "en")
-        check(
-            "a tag carrying no script is left exactly as it was",
-            codes(["pt-BR"]) == ["pt-BR", "pt_BR", "pt", "en"])
-
         /// The whole path: a bundle translated only in its loctable, read as the scan reads it.
         func makeLocalizedApp(_ fileName: String, table: [String: Any]) -> URL {
             let url = root.appendingPathComponent(fileName)
@@ -126,7 +107,8 @@ struct AppNameTest {
         func names(_ url: URL, _ preferred: [String], region: String? = "en") -> [String] {
             BundleLocalization.names(
                 for: url, base: url.deletingPathExtension().lastPathComponent,
-                developmentRegion: region, languages: codes(preferred))
+                developmentRegion: region,
+                languages: BundleLocalization.indexedLanguages(preferred))
         }
 
         let monitor = makeLocalizedApp(
@@ -142,6 +124,59 @@ struct AppNameTest {
         check(
             "an English Mac indexes only the English name",
             names(monitor, ["en-US"]) == ["Activity Monitor"])
+        check(
+            "Traditional Chinese selects its own system localization",
+            names(monitor, ["zh-Hant-TW"]) == ["活動監視器", "Activity Monitor"])
+
+        let netease = root.appendingPathComponent("NeteaseMusic.app")
+        let neteaseResources = netease.appendingPathComponent("Contents/Resources")
+        for (code, name) in [("zh-Hans", "网易云音乐"), ("en", "NetEaseMusic")] {
+            let directory = neteaseResources.appendingPathComponent("\(code).lproj")
+            try? fm.createDirectory(at: directory, withIntermediateDirectories: true)
+            let data = try? PropertyListSerialization.data(
+                fromPropertyList: ["CFBundleDisplayName": name], format: .xml, options: 0)
+            try? data?.write(to: directory.appendingPathComponent("InfoPlist.strings"))
+        }
+        check(
+            "a Chinese Mac labels a third-party script-localized app in Chinese",
+            names(netease, ["zh-Hans-CN"]) == ["网易云音乐", "NetEaseMusic"])
+
+        let serbianNotes = root.appendingPathComponent("Notes.app")
+        let serbianResources = serbianNotes.appendingPathComponent("Contents/Resources")
+        for (code, name) in [("sr-Latn", "Beleške"), ("en", "Notes")] {
+            let directory = serbianResources.appendingPathComponent("\(code).lproj")
+            try? fm.createDirectory(at: directory, withIntermediateDirectories: true)
+            let data = try? PropertyListSerialization.data(
+                fromPropertyList: ["CFBundleDisplayName": name], format: .xml, options: 0)
+            try? data?.write(to: directory.appendingPathComponent("InfoPlist.strings"))
+        }
+        check(
+            "a regional preference selects a non-Chinese script-only localization",
+            names(serbianNotes, ["sr-Latn-RS"]) == ["Beleške", "Notes"])
+
+        let serbianDevelopment = makeLocalizedApp(
+            "Beleške.app", table: ["en": ["CFBundleName": "Notes"]])
+        check(
+            "a script-bearing development language ranks the base name with that script",
+            names(serbianDevelopment, ["sr-Latn-RS"], region: "sr-Latn")
+                == ["Beleške", "Notes"])
+
+        let bilingual = makeLocalizedApp(
+            "Name.app",
+            table: ["fr": ["CFBundleName": "Nom"], "en": ["CFBundleName": "Name"]])
+        check(
+            "an unsupported first preference does not outrank a supported second preference",
+            names(bilingual, ["ja-JP", "fr-FR"]) == ["Nom", "Name"])
+
+        let latinAmerican = makeLocalizedApp(
+            "Name.app",
+            table: [
+                "es_419": ["CFBundleName": "Nombre"],
+                "en": ["CFBundleName": "Name"],
+            ])
+        check(
+            "a regional Spanish preference reaches the Latin American fallback",
+            names(latinAmerican, ["es-MX"]) == ["Nombre", "Name"])
 
         // Tips.app ships every language but its own: `en` is the one key Apple's loctables omit.
         let tips = makeLocalizedApp(
