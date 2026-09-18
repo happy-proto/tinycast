@@ -77,7 +77,7 @@ private struct WindowLayoutSettingsRow: View {
     var body: some View {
         let entry = AppEntry(layout)
         let isVisible = visibility.isItemVisible(entry)
-        SettingsRow(title: layout.name, subtitle: layout.summary) {
+        SettingsRow(verbatimTitle: layout.name, subtitle: layout.summary) {
             SymbolImage(name: layout.symbol, size: 13)
         } trailing: {
             AliasField(entry: entry)

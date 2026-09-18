@@ -7,6 +7,7 @@ struct GeneralSettingsView: View {
     private var launcherRanking: LauncherRankingStore { core.launcherRanking }
     @State private var confirmingRankingReset = false
     @State private var inputSources: [InputSourceSwitcher.Option] = []
+    @State private var appLanguage = AppLanguage.current()
 
     /// The Hyper modifier chord as prose glyphs, tracking the Include Shift toggle.
     private var hyperGlyphs: String { settings.hyperKeyIncludesShift ? "⌃⌥⇧⌘" : "⌃⌥⌘" }
@@ -26,8 +27,11 @@ struct GeneralSettingsView: View {
 
     /// The missing-permission half is its own row, so it can carry the button that fixes it.
     private var hyperSubtitle: String {
-        guard settings.hyperKey != .none else { return "Remap one key to \(hyperGlyphs) held together." }
-        return "\(settings.hyperKey.title) sends \(hyperGlyphs), shown as ✦ in shortcuts."
+        guard settings.hyperKey != .none else {
+            return SettingsLocalization.format("Remap one key to %@ held together.", hyperGlyphs)
+        }
+        return SettingsLocalization.format(
+            "%@ sends %@, shown as ✦ in shortcuts.", settings.hyperKey.title, hyperGlyphs)
     }
 
     var body: some View {
@@ -55,7 +59,7 @@ struct GeneralSettingsView: View {
                 }
                 Picker(selection: $settings.popToRootTimeout) {
                     ForEach(PopToRootTimeout.allCases) { timeout in
-                        Text(timeout.title).tag(timeout)
+                        Text(SettingsLocalization.string(timeout.title)).tag(timeout)
                     }
                 } label: {
                     SettingsRowTitle(.generalGeneral, "Pop to Root Search")
@@ -63,7 +67,7 @@ struct GeneralSettingsView: View {
                 }
                 Picker(selection: $settings.escapeKeyBehavior) {
                     ForEach(EscapeKeyBehavior.allCases) { behavior in
-                        Text(behavior.title).tag(behavior)
+                        Text(SettingsLocalization.string(behavior.title)).tag(behavior)
                     }
                 } label: {
                     SettingsRowTitle(.generalGeneral, "Escape Key Behavior")
@@ -86,9 +90,22 @@ struct GeneralSettingsView: View {
             }
 
             Section {
+                Picker(selection: $appLanguage) {
+                    ForEach(AppLanguage.allCases) { language in
+                        Text(SettingsLocalization.string(language.title)).tag(language)
+                    }
+                } label: {
+                    SettingsRowTitle(.generalAppearance, "Application language")
+                    Text("Relaunches Tinycast to apply the selected language everywhere.")
+                }
+                .onChange(of: appLanguage) { _, language in
+                    language.apply()
+                    RelaunchRunner.relaunchAfterExit(Bundle.main.bundleURL)
+                    NSApp.terminate(nil)
+                }
                 Picker(selection: $settings.appearance) {
                     ForEach(AppAppearance.allCases) { appearance in
-                        Text(appearance.title).tag(appearance)
+                        Text(SettingsLocalization.string(appearance.title)).tag(appearance)
                     }
                 } label: {
                     SettingsRowTitle(.generalAppearance, "Theme")
@@ -114,7 +131,7 @@ struct GeneralSettingsView: View {
             Section {
                 Picker(selection: hyperKeySelection) {
                     ForEach(HyperKeyPhysicalKey.allCases) { key in
-                        Text(key.title).tag(key)
+                        Text(SettingsLocalization.string(key.title)).tag(key)
                     }
                 } label: {
                     SettingsRowTitle(.generalHyperKey, "Hyper Key")
@@ -325,8 +342,8 @@ private struct InterfaceSizeRow: View {
                 .settingsOptionSegment(isSelected: selected)
         }
         .buttonStyle(.plain)
-        .accessibilityLabel(size.title)
+        .accessibilityLabel(SettingsLocalization.string(size.title))
         .accessibilityAddTraits(selected ? [.isSelected] : [])
-        .help(size.title)
+        .help(SettingsLocalization.string(size.title))
     }
 }

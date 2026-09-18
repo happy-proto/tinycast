@@ -87,7 +87,8 @@ struct MCPServerEditor: View {
     var body: some View {
         VStack(spacing: 0) {
             SettingsEditorHeader(
-                title: target.isNew ? "Add MCP Server" : "Edit MCP Server"
+                title: SettingsLocalization.string(
+                    target.isNew ? "Add MCP Server" : "Edit MCP Server")
             )
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.horizontal, Theme.Spacing.dialogInset)
@@ -107,7 +108,9 @@ struct MCPServerEditor: View {
                     field("Connection") {
                         SteadySegmentedPicker(
                             title: "Connection",
-                            options: Kind.allCases.map { .init(value: $0, title: $0.title) },
+                            options: Kind.allCases.map {
+                                .init(value: $0, title: SettingsLocalization.string($0.title))
+                            },
                             selection: $kind)
                     }
                     if kind == .http {
@@ -174,7 +177,9 @@ struct MCPServerEditor: View {
                     Toggle("Offer this server's tools", isOn: $isEnabled)
                     field("Trust") {
                         Picker("Trust", selection: $trust) {
-                            ForEach(MCPTrust.allCases) { Text($0.title).tag($0) }
+                            ForEach(MCPTrust.allCases) {
+                                Text(SettingsLocalization.string($0.title)).tag($0)
+                            }
                         }
                         .labelsHidden()
                     }
@@ -188,8 +193,10 @@ struct MCPServerEditor: View {
                     }
                 } footer: {
                     Text(
-                        "Ask Each Chat puts the first tool call of every conversation through a "
-                            + "confirmation. Never Allow withholds the server without removing it."
+                        SettingsLocalization.string(
+                            "Ask Each Chat puts the first tool call of every conversation through a "
+                                + "confirmation. Never Allow withholds the server without removing it."
+                        )
                     )
                     .font(.caption)
                     .foregroundStyle(.secondary)
