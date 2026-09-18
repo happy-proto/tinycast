@@ -92,7 +92,9 @@ struct QuickActionsSettingsView: View {
         Section {
             ForEach(BuiltInQuickAction.allCases, content: builtInRow)
             ForEach(customActions.actions) { action in
-                SettingsRow(title: action.name, subtitle: subtitle(for: .custom(action))) {
+                SettingsRow(
+                    verbatimTitle: action.name, subtitle: subtitle(for: .custom(action))
+                ) {
                     SymbolImage(name: action.symbol, size: Theme.Size.quickActionHeaderIcon)
                         .frame(width: Theme.Size.settingsRowIcon)
                 } trailing: {
@@ -309,8 +311,9 @@ struct QuickActionsSettingsView: View {
         var body: some View {
             VStack(alignment: .leading, spacing: Theme.Spacing.xl) {
                 SettingsEditorHeader(
-                    title: "Customize \(action.title)",
-                    subtitle: "Tell Tinycast how you want \(action.title) to handle your selected text."
+                    title: SettingsLocalization.format("Customize %@", action.title),
+                    subtitle: SettingsLocalization.format(
+                        "Tell Tinycast how you want %@ to handle your selected text.", action.title)
                 )
 
                 TextEditor(text: $instructions)

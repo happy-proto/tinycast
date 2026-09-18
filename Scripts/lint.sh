@@ -21,5 +21,8 @@ fi
 if ! node Scripts/check-settings-search.js; then
     exit 1
 fi
+if ! node Scripts/check-localized-text.js; then
+    exit 1
+fi
 
 echo "✓ lint-clean"
