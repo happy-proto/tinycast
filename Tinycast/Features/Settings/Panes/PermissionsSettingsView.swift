@@ -12,7 +12,9 @@ struct PermissionsSettingsView: View {
             Section {
                 LabeledContent {
                     Label(
-                        accessibilityTrusted ? "Granted" : "Not granted",
+                        SettingsLocalization.string(
+                            accessibilityTrusted ? "Granted" : "Not granted"
+                        ),
                         systemImage: accessibilityTrusted
                             ? "checkmark.circle.fill" : "exclamationmark.triangle.fill"
                     )
@@ -23,11 +25,13 @@ struct PermissionsSettingsView: View {
                 }
 
                 LabeledContent {
-                    Button(accessibilityTrusted ? "Open…" : "Grant Access…") {
+                    Button(SettingsLocalization.string(accessibilityTrusted ? "Open…" : "Grant Access…")) {
                         Permissions.openAccessibilitySettings()
                     }
                 } label: {
-                    Text(accessibilityTrusted ? "Manage in System Settings" : "Grant access")
+                    Text(SettingsLocalization.string(
+                        accessibilityTrusted ? "Manage in System Settings" : "Grant access"
+                    ))
                     Text("Opens Privacy & Security › Accessibility.")
                 }
             } header: {
@@ -40,7 +44,10 @@ struct PermissionsSettingsView: View {
 
             Section {
                 LabeledContent {
-                    Label(calendarStatus.title, systemImage: calendarStatus.symbol)
+                    Label(
+                        SettingsLocalization.string(calendarStatus.title),
+                        systemImage: calendarStatus.symbol
+                    )
                         .foregroundStyle(calendarStatus.tint)
                 } label: {
                     SettingsRowTitle(.permissionsCalendars, "Calendars")
@@ -48,7 +55,7 @@ struct PermissionsSettingsView: View {
                 }
 
                 LabeledContent {
-                    Button(calendarNeedsPrompt ? "Grant Access…" : "Open…") {
+                    Button(SettingsLocalization.string(calendarNeedsPrompt ? "Grant Access…" : "Open…")) {
                         // Settings lists no app TCC was never asked about, so asking is the way in.
                         if calendarNeedsPrompt {
                             core.calendarCoordinator.setCalendarEnabled(true)
@@ -57,11 +64,14 @@ struct PermissionsSettingsView: View {
                         }
                     }
                 } label: {
-                    Text(calendarNeedsPrompt ? "Grant access" : "Manage in System Settings")
-                    Text(
+                    Text(SettingsLocalization.string(
+                        calendarNeedsPrompt ? "Grant access" : "Manage in System Settings"
+                    ))
+                    Text(SettingsLocalization.string(
                         calendarNeedsPrompt
                             ? "Turns the calendar on, then asks macOS for access."
-                            : "Opens Privacy & Security › Calendars.")
+                            : "Opens Privacy & Security › Calendars."
+                    ))
                 }
             } header: {
                 SettingsSectionHeader(.permissionsCalendars)

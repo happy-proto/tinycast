@@ -161,7 +161,7 @@ extension PaletteScreen {
         return PaletteMenuContent(
             popover: filtered.content, selection: menuSelection,
             search: PopoverMenu.Search(
-                placeholder: "Search for actions…", placement: .bottom),
+                placeholder: SettingsLocalization.string("Search for actions…"), placement: .bottom),
             onActivate: onActivate, preferredSelection: filtered.bestMatch)
     }
     func pasteKeepingWindowOpen(at selection: Int) -> Bool { false }

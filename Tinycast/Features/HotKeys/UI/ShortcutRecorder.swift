@@ -54,7 +54,7 @@ struct ShortcutRecorder: View {
         if let binding = hotKeys.binding(for: action) {
             boundLabel(binding)
         } else {
-            Text(isRecording ? "Listening…" : "Record")
+            Text(SettingsLocalization.string(isRecording ? "Listening…" : "Record"))
                 .font(Theme.Typography.keyCap)
                 .foregroundStyle(unsetInk)
         }

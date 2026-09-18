@@ -56,8 +56,10 @@ struct CommandsSettingsView: View {
                 }
             } footer: {
                 Text(
-                    "Name it, then add an alias or a shortcut if you want one. Importing reads a folder of "
-                        + "Raycast script commands, one command per script."
+                    SettingsLocalization.string(
+                        "Name it, then add an alias or a shortcut if you want one. Importing reads a folder of "
+                            + "Raycast script commands, one command per script."
+                    )
                 )
                 .font(.caption)
                 .foregroundStyle(.secondary)
@@ -101,7 +103,7 @@ private struct CustomCommandSettingsRow: View {
     let onDelete: () -> Void
 
     var body: some View {
-        SettingsRow(title: command.name, subtitle: command.command) {
+        SettingsRow(verbatimTitle: command.name, subtitle: command.command) {
             Image(systemName: command.symbol)
         } trailing: {
             // An alias only reaches the ranker through the launcher slice, so it dims with it.
