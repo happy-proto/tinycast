@@ -64,11 +64,11 @@ struct WindowManagementSettingsView: View {
         return Section {
             Picker(selection: $settings.windowCycle) {
                 ForEach(WindowCycle.allCases) { cycle in
-                    Text(cycle.title).tag(cycle)
+                    Text(SettingsLocalization.string(cycle.title)).tag(cycle)
                 }
             } label: {
                 SettingsRowTitle(.windowManagementOptions, "Cycling")
-                Text(settings.windowCycle.detail)
+                Text(SettingsLocalization.string(settings.windowCycle.detail))
             }
 
             LabeledContent {
@@ -123,7 +123,7 @@ struct WindowManagementSettingsView: View {
                     WindowCommandSettingsRow(command: command)
                 }
             } header: {
-                Text(section.group.title)
+                Text(SettingsLocalization.string(section.group.title))
             }
         }
     }

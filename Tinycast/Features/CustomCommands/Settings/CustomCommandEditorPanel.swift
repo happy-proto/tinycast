@@ -45,7 +45,8 @@ struct CustomCommandEditorPanel: View {
     var body: some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.xl) {
             SettingsEditorHeader(
-                title: command == nil ? "Add Custom Command" : "Edit Custom Command")
+                title: SettingsLocalization.string(
+                    command == nil ? "Add Custom Command" : "Edit Custom Command"))
 
             HStack(alignment: .bottom, spacing: Theme.Spacing.lg) {
                 VStack(alignment: .leading, spacing: Theme.Spacing.sm) {

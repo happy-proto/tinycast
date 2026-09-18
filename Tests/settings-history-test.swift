@@ -30,6 +30,8 @@ struct SettingsHistoryTests {
         catalogFindsKnownRows()
         catalogRanksTitlesFirst()
         catalogAnchorsMatchTheirPane()
+        localizationDoesNotChangeTargetIdentity()
+        appLanguageReadsOnlyTheApplicationDomain()
         revealingRecordsANewRequestEachTime()
         flashOutlivesThePaneThatLitIt()
 
@@ -178,6 +180,44 @@ struct SettingsHistoryTests {
         expect(
             SettingsSearchCatalog.results(for: "nothing here matches at all").isEmpty,
             "and an unmatched query returns nothing")
+    }
+
+    static func localizationDoesNotChangeTargetIdentity() {
+        expect(
+            SettingsAnchor.calendarCalendar.key == "Calendar",
+            "an anchor keeps its untranslated identity key")
+        expect(
+            SettingsAnchor.calendarCalendar != .calendarCalendars,
+            "sections remain distinct when their translations are equal")
+
+        let entry = SettingsSearchEntry(.generalHyperKey, "Hyper Key")
+        expect(
+            entry.target == .row(.generalHyperKey, "Hyper Key"),
+            "a search result targets the untranslated row identity")
+    }
+
+    static func appLanguageReadsOnlyTheApplicationDomain() {
+        let suiteName = "AppLanguageTests-\(UUID().uuidString)"
+        let defaults = UserDefaults(suiteName: suiteName)!
+        let domain = "com.tinycast.tests.\(UUID().uuidString)"
+        defer {
+            defaults.removePersistentDomain(forName: suiteName)
+            defaults.removePersistentDomain(forName: domain)
+        }
+
+        expect(
+            AppLanguage.current(defaults: defaults, bundleIdentifier: domain) == .system,
+            "a missing app override follows the system language")
+
+        defaults.setPersistentDomain(["AppleLanguages": ["en"]], forName: domain)
+        expect(
+            AppLanguage.current(defaults: defaults, bundleIdentifier: domain) == .english,
+            "an English app override is reported explicitly")
+
+        AppLanguage.system.apply(defaults: defaults, bundleIdentifier: domain)
+        expect(
+            AppLanguage.current(defaults: defaults, bundleIdentifier: domain) == .system,
+            "removing an app override returns to following the system")
     }
 
     // MARK: - Revealing a section
