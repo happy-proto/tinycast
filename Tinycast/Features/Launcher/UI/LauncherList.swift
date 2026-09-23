@@ -109,7 +109,7 @@ struct LauncherList: View {
                 })
         }
         if !suggestions.isEmpty {
-            rows.append(.header("Suggestions"))
+            rows.append(.header(SettingsLocalization.string("Suggestions")))
             rows.append(contentsOf: suggestions.map { .app($0, slot: nil) })
         }
         // Publication order, so rows match the flat index.
