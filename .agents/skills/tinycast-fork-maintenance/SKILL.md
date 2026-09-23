@@ -9,7 +9,7 @@ description: 维护 happy-proto/tinycast 个人 fork；在判断需求所属 PR�
 
 ## 固定约定
 
-- `origin` 指向上游 `abue-ammar/tinycast`，`fork` 指向 `happy-proto/tinycast`。
+- `origin` 指向个人 fork `happy-proto/tinycast`，`upstream` 指向上游 `abue-ammar/tinycast`。
 - `main` 只跟随上游 `main`，不承载 fork 专属修改。
 - 功能 PR 可以完全依赖前一层；分层记录修改为什么存在，不要求功能彼此独立。
 - `integration/current` 始终是完整 stack 顶部和 fork 默认分支。
