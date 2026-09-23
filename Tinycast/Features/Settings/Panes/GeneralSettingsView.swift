@@ -186,7 +186,7 @@ struct GeneralSettingsView: View {
                 }
                 Picker(selection: $settings.rootSearchSensitivity) {
                     ForEach(SearchSensitivity.allCases) { sensitivity in
-                        Text(sensitivity.title).tag(sensitivity)
+                        Text(SettingsLocalization.string(sensitivity.title)).tag(sensitivity)
                     }
                 } label: {
                     SettingsRowTitle(.generalSearch, "Search sensitivity")
