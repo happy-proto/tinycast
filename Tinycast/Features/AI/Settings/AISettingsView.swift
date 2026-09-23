@@ -135,19 +135,25 @@ struct AISettingsView: View {
         @Bindable var settings = settings
         return Section {
             Picker(selection: $settings.opensTo) {
-                ForEach(AIOpensTo.allCases) { Text($0.title).tag($0) }
+                ForEach(AIOpensTo.allCases) {
+                    Text(SettingsLocalization.string($0.title)).tag($0)
+                }
             } label: {
                 SettingsRowTitle(.aiConversations, "Opens to")
             }
             if settings.opensTo == .recent {
                 Picker(selection: $settings.newChatAfter) {
-                    ForEach(AINewChatAfter.allCases) { Text($0.title).tag($0) }
+                    ForEach(AINewChatAfter.allCases) {
+                        Text(SettingsLocalization.string($0.title)).tag($0)
+                    }
                 } label: {
                     SettingsRowTitle(.aiConversations, "Start a new conversation after")
                 }
             }
             Picker(selection: $settings.retention) {
-                ForEach(AIRetention.allCases) { Text($0.title).tag($0) }
+                ForEach(AIRetention.allCases) {
+                    Text(SettingsLocalization.string($0.title)).tag($0)
+                }
             } label: {
                 SettingsRowTitle(.aiConversations, "Keep conversations")
                 Text("Older ones are deleted.")
@@ -184,8 +190,9 @@ struct AISettingsView: View {
         @Bindable var settings = settings
         return VStack(alignment: .leading, spacing: 0) {
             SettingsEditorHeader(
-                title: "AI Providers",
-                subtitle: "Use an installed account or connect an API endpoint."
+                title: SettingsLocalization.string("AI Providers"),
+                subtitle: SettingsLocalization.string(
+                    "Use an installed account or connect an API endpoint.")
             )
             .padding(.horizontal, Theme.Spacing.dialogInset)
             .padding(.top, Theme.Spacing.dialogInset)
@@ -405,7 +412,7 @@ struct AISettingsView: View {
         LabeledContent {
             providerActions { providerToggle(kind) }
         } label: {
-            Text(kind.title)
+            Text(SettingsLocalization.string(kind.title))
             Text("Disabled")
         }
     }
@@ -564,14 +571,20 @@ struct AISettingsView: View {
 
     private func readyDetail(_ kind: InstalledAIKind, _ status: InstalledAIStatus) -> String {
         var parts: [String] = []
-        if let version = status.version { parts.append("Version " + version) }
+        if let version = status.version {
+            parts.append(SettingsLocalization.format("Version %@", version))
+        }
         parts.append(modelCount(status.models))
-        if let caveat = kind.isolationCaveat { parts.append(caveat) }
+        if let caveat = kind.isolationCaveat {
+            parts.append(SettingsLocalization.string(caveat))
+        }
         return parts.joined(separator: " · ")
     }
 
     private func modelCount(_ models: [InstalledAIModel]) -> String {
-        models.count == 1 ? "1 model" : "\(models.count) models"
+        models.count == 1
+            ? SettingsLocalization.string("1 model")
+            : SettingsLocalization.format("%lld models", models.count)
     }
 
     private func loadKeyStatuses() {
@@ -597,7 +610,7 @@ private struct AIConnectionRow: View {
 
     var body: some View {
         SettingsRow(
-            title: connection.title,
+            verbatimTitle: connection.title,
             subtitle: "\(connection.provider.title) · \(keyStatus) · \(modelCount)"
         ) {
             Image(systemName: "sparkles")

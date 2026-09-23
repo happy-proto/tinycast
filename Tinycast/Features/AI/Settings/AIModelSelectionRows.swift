@@ -19,13 +19,14 @@ struct AIModelSelectionRows<ModelLabel: View, EffortLabel: View>: View {
         } else {
             Picker(selection: modelBinding) {
                 if let inheritedTitle {
-                    Text(inheritedTitle).tag(AIModelSelection?.none)
+                    Text(SettingsLocalization.string(inheritedTitle)).tag(AIModelSelection?.none)
                     Divider()
                 }
                 ForEach(modelGroups) { group in
                     Section(group.title) {
                         ForEach(group.options) { option in
-                            Text(option.title).tag(Optional(option.selection))
+                            Text(SettingsLocalization.string(option.title))
+                                .tag(Optional(option.selection))
                         }
                     }
                 }
@@ -35,7 +36,7 @@ struct AIModelSelectionRows<ModelLabel: View, EffortLabel: View>: View {
             if !efforts.isEmpty {
                 Picker(selection: effortBinding) {
                     ForEach(efforts) { effort in
-                        Text(effort.title).tag(effort.id)
+                        Text(SettingsLocalization.string(effort.title)).tag(effort.id)
                     }
                 } label: {
                     effortLabel()

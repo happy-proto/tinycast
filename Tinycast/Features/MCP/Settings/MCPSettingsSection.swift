@@ -89,7 +89,7 @@ private struct MCPServerRow: View {
     let onRemove: () -> Void
 
     var body: some View {
-        SettingsRow(title: server.title, subtitle: subtitle) {
+        SettingsRow(verbatimTitle: server.title, subtitle: subtitle) {
             Image(systemName: "wrench.and.screwdriver")
                 .foregroundStyle(server.isEnabled ? AnyShapeStyle(.tint) : AnyShapeStyle(.secondary))
         } trailing: {

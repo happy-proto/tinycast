@@ -354,7 +354,7 @@ private struct ExtensionDisclosure: View {
     }
 
     private var summary: some View {
-        SettingsRow(title: installed.title, subtitle: subtitle) {
+        SettingsRow(verbatimTitle: installed.title, subtitle: subtitle) {
             ExtensionIconView(
                 resolved: installed.iconPath.map { ExtensionImage.Resolved(source: .file($0)) },
                 size: Theme.Size.rowIcon)
@@ -796,7 +796,8 @@ private struct ExtensionImportPanel: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.xl) {
-            ExtensionSettingsEditorHeader(title: "Import from Raycast", subtitle: subtitle)
+            ExtensionSettingsEditorHeader(
+                title: ExtensionLocalization.string("Import from Raycast"), subtitle: subtitle)
 
             if candidates.count > 6 {
                 SettingsFilterField(prompt: "Filter…", query: $filter)

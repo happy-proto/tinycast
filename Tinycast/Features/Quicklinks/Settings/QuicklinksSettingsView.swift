@@ -105,7 +105,7 @@ struct QuicklinksSettingsView: View {
             }
             Picker(selection: $settings.quicklinkSelectionFallback) {
                 ForEach(QuicklinkSelectionFallback.allCases) { option in
-                    Text(option.title).tag(option)
+                    Text(SettingsLocalization.string(option.title)).tag(option)
                 }
             } label: {
                 SettingsRowTitle(.quicklinksBehaviour, "When there's no selected text")
@@ -158,7 +158,7 @@ private struct QuicklinkSettingsRow: View {
     let onDelete: () -> Void
 
     var body: some View {
-        SettingsRow(title: quicklink.name, subtitle: quicklink.link) {
+        SettingsRow(verbatimTitle: quicklink.name, subtitle: quicklink.link) {
             SymbolImage(name: quicklink.symbol, size: 13)
         } trailing: {
             if quicklink.isPinned {

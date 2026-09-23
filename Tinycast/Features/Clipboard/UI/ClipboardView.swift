@@ -58,7 +58,9 @@ struct ClipboardList: View {
                     ForEach(rows) { row in
                         switch row {
                         case .header(let title):
-                            SectionHeader(title: title, isFirst: row.id == rows.first?.id)
+                            SectionHeader(
+                                title: SettingsLocalization.string(title),
+                                isFirst: row.id == rows.first?.id)
                         case .item(let item, let slot):
                             ClipboardRow(
                                 item: item, selected: item.id == selectedID,
@@ -172,11 +174,11 @@ private struct ClipboardRow: View {
         case .text:
             return String((item.text ?? "").prefix(200)).trimmingCharacters(
                 in: .whitespacesAndNewlines)
-        case .image: return "Image"
+        case .image: return SettingsLocalization.string("Image")
         case .file:
             return item.filePath.map {
                 URL(filePath: $0, directoryHint: .inferFromPath).lastPathComponent
-            } ?? "File"
+            } ?? SettingsLocalization.string("File")
         }
     }
 
@@ -390,7 +392,7 @@ private struct ClipboardInfoSection: View {
                 ForEach(rows) { row in
                     if row.id != rows.first?.id { Divider() }
                     HStack(spacing: metrics.spacing.sm) {
-                        Text(row.label).foregroundStyle(.secondary)
+                        Text(SettingsLocalization.string(row.label)).foregroundStyle(.secondary)
                         Spacer(minLength: metrics.spacing.lg)
                         if let icon = row.icon {
                             Image(nsImage: icon)
@@ -417,7 +419,10 @@ private struct ClipboardInfoSection: View {
         case .text:
             // What the entry *is*, which is what the type filter files it under.
             let isColor = item.colorValue != nil
-            rows.append(InfoRow(label: "Type", value: isColor ? "Color" : "Text"))
+            rows.append(
+                InfoRow(
+                    label: "Type",
+                    value: SettingsLocalization.string(isColor ? "Color" : "Text")))
             // A colour's own notations are the pane above; its length is not what you came for.
             if !isColor {
                 if let characters = details.characters {
@@ -428,7 +433,8 @@ private struct ClipboardInfoSection: View {
                 }
             }
         case .image:
-            rows.append(InfoRow(label: "Type", value: "Image"))
+            rows.append(
+                InfoRow(label: "Type", value: SettingsLocalization.string("Image")))
             if let size = details.pixelSize {
                 rows.append(
                     InfoRow(label: "Dimensions", value: "\(Int(size.width))×\(Int(size.height))"))
@@ -443,7 +449,8 @@ private struct ClipboardInfoSection: View {
             rows.append(
                 InfoRow(
                     label: "Type",
-                    value: details.typeName ?? ClipboardFileKind.of(path: path).title))
+                    value: details.typeName
+                        ?? SettingsLocalization.string(ClipboardFileKind.of(path: path).title)))
             rows.append(InfoRow(label: "Path", value: (path as NSString).abbreviatingWithTildeInPath))
             if let bytes = details.fileBytes {
                 rows.append(

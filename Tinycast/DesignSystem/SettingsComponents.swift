@@ -9,6 +9,7 @@ struct SettingsRow<Icon: View, Trailing: View>: View {
     var subtitle: String?
     var subtitleLineLimit = 1
     var alignment: VerticalAlignment = .center
+    var localizesText = true
     /// Set when a search result points at this row, so its title can carry the pulse.
     var anchor: SettingsAnchor?
     @ViewBuilder var icon: Icon
@@ -21,13 +22,15 @@ struct SettingsRow<Icon: View, Trailing: View>: View {
                 Group {
                     if let anchor {
                         SettingsRowTitle(anchor, title)
+                    } else if localizesText {
+                        Text(SettingsLocalization.string(title))
                     } else {
-                        Text(title)
+                        Text(verbatim: title)
                     }
                 }
                 .lineLimit(1)
                 if let subtitle {
-                    Text(subtitle)
+                    Text(localizesText ? SettingsLocalization.string(subtitle) : subtitle)
                         .font(.caption)
                         .foregroundStyle(.secondary)
                         .lineLimit(subtitleLineLimit)
@@ -42,6 +45,18 @@ struct SettingsRow<Icon: View, Trailing: View>: View {
     }
 }
 
+extension SettingsRow {
+    init(
+        verbatimTitle title: String, subtitle: String? = nil, subtitleLineLimit: Int = 1,
+        @ViewBuilder icon: () -> Icon,
+        @ViewBuilder trailing: () -> Trailing
+    ) {
+        self.init(
+            title: title, subtitle: subtitle, subtitleLineLimit: subtitleLineLimit,
+            localizesText: false, anchor: nil, icon: icon, trailing: trailing)
+    }
+}
+
 extension SettingsRow where Icon == EmptyView {
     init(
         title: String, subtitle: String? = nil, subtitleLineLimit: Int = 1,
@@ -53,6 +68,15 @@ extension SettingsRow where Icon == EmptyView {
             alignment: alignment,
             anchor: anchor, icon: { EmptyView() },
             trailing: trailing)
+    }
+
+    init(
+        verbatimTitle title: String, subtitle: String? = nil, subtitleLineLimit: Int = 1,
+        @ViewBuilder trailing: () -> Trailing
+    ) {
+        self.init(
+            title: title, subtitle: subtitle, subtitleLineLimit: subtitleLineLimit,
+            localizesText: false, anchor: nil, icon: { EmptyView() }, trailing: trailing)
     }
 }
 
@@ -171,7 +195,7 @@ struct FeatureSwitchSection: View {
         Section {
             Toggle(isOn: $isEnabled) {
                 SettingsRowTitle(anchor, enableTitle)
-                if let enableSubtitle { Text(enableSubtitle) }
+                if let enableSubtitle { Text(SettingsLocalization.string(enableSubtitle)) }
             }
             Toggle("Show in launcher", isOn: $showsInLauncher)
                 // The switch above stays live so the feature can always be turned back on.
@@ -194,7 +218,7 @@ struct SettingsFilterField: View {
             Image(systemName: "magnifyingglass")
                 .foregroundStyle(.secondary)
             // `prompt:` + `labelsHidden`, or the form makes the placeholder a left-column heading.
-            TextField("", text: $query, prompt: Text(prompt))
+            TextField("", text: $query, prompt: Text(SettingsLocalization.string(prompt)))
                 .textFieldStyle(.plain)
                 .labelsHidden()
                 .focused($focused)
