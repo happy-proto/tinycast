@@ -20,7 +20,7 @@ struct PermissionsSettingsView: View {
                             Text(SettingsLocalization.string(accessibilityStatus.title))
                         }
                         .foregroundStyle(accessibilityStatus.tint)
-                        Button(accessibilityTrusted ? "Open…" : "Grant Access…") {
+                        Button(SettingsLocalization.string(accessibilityTrusted ? "Open…" : "Grant Access…")) {
                             Permissions.openAccessibilitySettings()
                         }
                         .help("Opens Privacy & Security › Accessibility.")
@@ -51,7 +51,7 @@ struct PermissionsSettingsView: View {
                             Text(SettingsLocalization.string(calendarStatus.title))
                         }
                         .foregroundStyle(calendarStatus.tint)
-                        Button(calendarNeedsPrompt ? "Grant Access…" : "Open…") {
+                        Button(SettingsLocalization.string(calendarNeedsPrompt ? "Grant Access…" : "Open…")) {
                             // Settings lists no app TCC was never asked about, so asking is the way in.
                             if calendarNeedsPrompt {
                                 core.calendarCoordinator.setCalendarEnabled(true)
@@ -59,10 +59,10 @@ struct PermissionsSettingsView: View {
                                 Permissions.openCalendarSettings()
                             }
                         }
-                        .help(
+                        .help(SettingsLocalization.string(
                             calendarNeedsPrompt
                                 ? "Turns the calendar on, then asks macOS for access."
-                                : "Opens Privacy & Security › Calendars.")
+                                : "Opens Privacy & Security › Calendars."))
                     }
                 } label: {
                     HStack(spacing: Theme.Spacing.lg) {
