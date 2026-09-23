@@ -63,7 +63,7 @@ struct GeneralSettingsView: View {
                     Picker(selection: $settings.autoSwitchInputSourceID) {
                         Text("None").tag(nil as String?)
                         ForEach(inputSources) { source in
-                            Text(source.title).tag(Optional(source.id))
+                            Text(verbatim: source.title).tag(Optional(source.id))
                         }
                     } label: {
                         SettingsRowTitle(.generalGeneral, "Auto-switch input source")
@@ -144,12 +144,14 @@ struct GeneralSettingsView: View {
                     Picker(selection: $settings.hyperKeyQuickPress) {
                         Text("Does Nothing").tag(HyperKeyQuickPress.none)
                         if let original = settings.hyperKey.quickPressOriginalTitle {
-                            Text(original).tag(HyperKeyQuickPress.originalKey)
+                            Text(SettingsLocalization.string(original)).tag(HyperKeyQuickPress.originalKey)
                         }
                         Text("Trigger Escape").tag(HyperKeyQuickPress.escape)
                     } label: {
                         SettingsRowTitle(.generalHyperKey, "Quick Press")
-                        Text("When \(settings.hyperKey.title) is pressed alone.")
+                        Text(SettingsLocalization.format(
+                            "When %@ is pressed alone.",
+                            SettingsLocalization.string(settings.hyperKey.title)))
                     }
                 }
 
@@ -166,7 +168,8 @@ struct GeneralSettingsView: View {
                 Picker(selection: $settings.calcNumberStyle) {
                     ForEach(CalcNumberStyle.allCases) { style in
                         let sample = core.regionNumberFormat.format(for: style).localized("1,234,567.89")
-                        Text("\(style.title) (\(sample))").tag(style)
+                        let title = SettingsLocalization.string(style.title)
+                        Text(verbatim: "\(title) (\(sample))").tag(style)
                     }
                 } label: {
                     SettingsRowTitle(.generalCalculator, "Number format")
@@ -261,7 +264,7 @@ private struct WindowModeRow: View {
                         RoundedRectangle(cornerRadius: Theme.Radius.barControl, style: .continuous)
                     )
                     .saturation(selected ? 1 : 0)
-                Text(title)
+                Text(SettingsLocalization.string(title))
                     .font(.caption)
                     .fontWeight(selected ? .semibold : .regular)
                     .foregroundStyle(selected ? Color.primary : Color.secondary)
@@ -269,7 +272,7 @@ private struct WindowModeRow: View {
             .contentShape(Rectangle())
         }
         .buttonStyle(WindowModeButtonStyle())
-        .accessibilityLabel(title)
+        .accessibilityLabel(SettingsLocalization.string(title))
         .accessibilityAddTraits(selected ? [.isSelected] : [])
     }
 }

@@ -174,11 +174,11 @@ private struct ClipboardRow: View {
         case .text:
             return String((item.text ?? "").prefix(200)).trimmingCharacters(
                 in: .whitespacesAndNewlines)
-        case .image: return "Image"
+        case .image: return SettingsLocalization.string("Image")
         case .file:
             return item.filePath.map {
                 URL(filePath: $0, directoryHint: .inferFromPath).lastPathComponent
-            } ?? "File"
+            } ?? SettingsLocalization.string("File")
         }
     }
 

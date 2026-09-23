@@ -14,7 +14,7 @@ struct PermissionsSettingsView: View {
                     HStack(spacing: Theme.Spacing.lg) {
                         Label(SettingsLocalization.string(accessibilityStatus.title), systemImage: accessibilityStatus.symbol)
                             .foregroundStyle(accessibilityStatus.tint)
-                        Button(accessibilityTrusted ? "Open…" : "Grant Access…") {
+                        Button(SettingsLocalization.string(accessibilityTrusted ? "Open…" : "Grant Access…")) {
                             Permissions.openAccessibilitySettings()
                         }
                         .help("Opens Privacy & Security › Accessibility.")
@@ -32,7 +32,7 @@ struct PermissionsSettingsView: View {
                     HStack(spacing: Theme.Spacing.lg) {
                         Label(SettingsLocalization.string(calendarStatus.title), systemImage: calendarStatus.symbol)
                             .foregroundStyle(calendarStatus.tint)
-                        Button(calendarNeedsPrompt ? "Grant Access…" : "Open…") {
+                        Button(SettingsLocalization.string(calendarNeedsPrompt ? "Grant Access…" : "Open…")) {
                             // Settings lists no app TCC was never asked about, so asking is the way in.
                             if calendarNeedsPrompt {
                                 core.calendarCoordinator.setCalendarEnabled(true)
@@ -40,10 +40,10 @@ struct PermissionsSettingsView: View {
                                 Permissions.openCalendarSettings()
                             }
                         }
-                        .help(
+                        .help(SettingsLocalization.string(
                             calendarNeedsPrompt
                                 ? "Turns the calendar on, then asks macOS for access."
-                                : "Opens Privacy & Security › Calendars.")
+                                : "Opens Privacy & Security › Calendars."))
                     }
                 } label: {
                     SettingsRowTitle(.permissionsCalendars, "Calendars")
