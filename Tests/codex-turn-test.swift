@@ -106,6 +106,8 @@ final class StubServer {
         // The locator walks PATH, so the stub only sits in front of any real `codex`.
         let inherited = ProcessInfo.processInfo.environment["PATH"] ?? ""
         setenv("PATH", "\(executable.deletingLastPathComponent().path):\(inherited)", 1)
+        // Keep login-shell lookup on the fixture's PATH rather than the developer's shell profile.
+        setenv("ZDOTDIR", root.path, 1)
         setenv("TC_STUB_ROOT", root.path, 1)
         setenv("TC_STUB_MODE", mode, 1)
 
