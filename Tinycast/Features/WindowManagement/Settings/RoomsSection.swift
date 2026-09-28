@@ -42,13 +42,17 @@ private struct RoomSettingsRow: View {
     @Environment(VisibilityStore.self) private var visibility
 
     private var subtitle: String {
-        "\(room.summary) · \(coordinator.layout(of: room).title)"
+        let count = room.windows.count
+        let windows = count == 1
+            ? SettingsLocalization.string("1 window")
+            : SettingsLocalization.format("%lld windows", count)
+        return "\(windows) · \(SettingsLocalization.string(coordinator.layout(of: room).title))"
     }
 
     var body: some View {
         let entry = AppEntry(room)
         let isVisible = visibility.isItemVisible(entry)
-        SettingsRow(title: room.name, subtitle: subtitle) {
+        SettingsRow(verbatimTitle: room.name, subtitle: subtitle) {
             SymbolImage(name: Room.sfSymbol, size: 13)
         } trailing: {
             AliasField(entry: entry)
