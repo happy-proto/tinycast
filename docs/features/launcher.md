@@ -176,10 +176,9 @@ all 65 of them read English on every Mac, whatever language it is set to. Founda
 localization selection ranks the codes that actually exist: `zh-Hans-CN` reaches both Apple's
 `zh_CN` tables and the `zh-Hans.lproj` folders common in third-party bundles.
 
-A tag carrying a script is read under two more codes, because no one folder name covers it: a
-`zh-Hans-CN` Mac also reads `zh-Hans`, the folder most third-party apps ship, then `zh_CN`, the key
-Apple's own loctables use. A script-only `zh-Hans` maximizes to reach the same region. A tag without a
-script, every English one included, produces exactly the codes it always did.
+The scanner reads the localization codes each app actually ships, then uses Foundation to rank
+matching language and script candidates for each preferred language. It does not synthesize folder
+names from language tags. A preference the app does not support leaves the next preference in place.
 
 The user's own language wins the **display name**, so a row reads the way Finder reads it. The rest,
 English included, ride along as alternate titles, matched as typed and never transliterated.
