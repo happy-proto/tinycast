@@ -17,7 +17,7 @@ struct AIEmptyState: View {
             Text("Ask anything")
                 .foregroundStyle(.secondary)
             if let message {
-                Text(message)
+                Text(SettingsLocalization.string(message))
                     .font(metrics.typography.rowTrailing)
                     .foregroundStyle(Theme.Colors.textTertiary)
                     .multilineTextAlignment(.center)

@@ -64,11 +64,15 @@ private struct RoomPickerRowView: View {
     private var trailing: String {
         switch row {
         case .window(let window):
-            if window.isAppHidden { return "\(window.appName) · Hidden" }
-            if window.isMinimized { return "\(window.appName) · Minimized" }
+            if window.isAppHidden {
+                return SettingsLocalization.format("%@ · Hidden", window.appName)
+            }
+            if window.isMinimized {
+                return SettingsLocalization.format("%@ · Minimized", window.appName)
+            }
             return window.appName
         case .app:
-            return "App · Opens with the room"
+            return SettingsLocalization.string("App · Opens with the room")
         }
     }
 
@@ -108,7 +112,9 @@ private struct RoomPickerRowView: View {
         .armedHover($hovered)
         .accessibilityElement(children: .combine)
         .accessibilityLabel(title)
-        .accessibilityValue(place.map { "\(trailing), number \($0) in the room" } ?? trailing)
+        .accessibilityValue(place.map {
+            SettingsLocalization.format("%@, number %lld in the room", trailing, $0)
+        } ?? trailing)
         .accessibilityAddTraits(selected ? .isSelected : [])
     }
 

@@ -32,8 +32,12 @@ struct RoomPickerScreen: PaletteScreen {
     var primaryActionTitle: String {
         let rows = rows
         let name = "“\(session.roomName)”"
-        guard rows.indices.contains(vm.selection) else { return "Add to \(name)" }
-        return session.picked.contains(rows[vm.selection].pick) ? "Remove from \(name)" : "Add to \(name)"
+        guard rows.indices.contains(vm.selection) else {
+            return SettingsLocalization.format("Add to %@", name)
+        }
+        return session.picked.contains(rows[vm.selection].pick)
+            ? SettingsLocalization.format("Remove from %@", name)
+            : SettingsLocalization.format("Add to %@", name)
     }
 
     func activate(at selection: Int) {
@@ -59,7 +63,9 @@ struct RoomPickerScreen: PaletteScreen {
                 ) {
                     activate(at: selection)
                 },
-                PopoverMenuItem(title: "Save Room", systemImage: Room.sfSymbol, shortcut: "⌘↵") {
+                PopoverMenuItem(
+                    title: SettingsLocalization.string("Save Room"),
+                    systemImage: Room.sfSymbol, shortcut: "⌘↵") {
                     coordinator.savePicked()
                 }
             ])
@@ -82,8 +88,9 @@ struct RoomPickerScreen: PaletteScreen {
     }
 
     private var emptyText: String {
-        guard session.isLoaded else { return "Reading windows…" }
+        guard session.isLoaded else { return SettingsLocalization.string("Reading windows…") }
         return vm.query.isEmpty
-            ? "No open windows — type an app's name to add it" : "No windows or apps found"
+            ? SettingsLocalization.string("No open windows — type an app's name to add it")
+            : SettingsLocalization.string("No windows or apps found")
     }
 }
