@@ -742,6 +742,14 @@ final class StubServer {
             to: root.appending(path: ".zshenv"), atomically: true, encoding: .utf8)
         try? #"[ -n "$TINYCAST_SAVED_PATH" ] && export PATH="$TINYCAST_SAVED_PATH""#.write(
             to: root.appending(path: ".zprofile"), atomically: true, encoding: .utf8)
+        // Fish loads its own startup files and can put the user's Codex ahead of the stub.
+        let fishConfig = root.appending(path: "fish/config.fish")
+        try? FileManager.default.createDirectory(
+            at: fishConfig.deletingLastPathComponent(), withIntermediateDirectories: true)
+        try? "set -gx PATH $TC_STUB_BIN $PATH\n".write(
+            to: fishConfig, atomically: true, encoding: .utf8)
+        setenv("TC_STUB_BIN", executable.deletingLastPathComponent().path, 1)
+        setenv("XDG_CONFIG_HOME", root.path, 1)
         setenv("TC_STUB_ROOT", root.path, 1)
         setenv("TC_STUB_MODE", mode, 1)
 
