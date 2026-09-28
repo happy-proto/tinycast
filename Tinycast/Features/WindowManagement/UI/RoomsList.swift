@@ -56,8 +56,8 @@ private struct RoomRowView: View {
     private var title: String {
         switch row {
         case .room(let room): room.name
-        case .edit(let room): "Choose Windows for “\(room.name)”"
-        case .create(let name): "Create Room “\(name)”"
+        case .edit(let room): SettingsLocalization.format("Choose Windows for “%@”", room.name)
+        case .create(let name): SettingsLocalization.format("Create Room “%@”", name)
         }
     }
 
@@ -67,10 +67,15 @@ private struct RoomRowView: View {
             let apps = room.windows.map(\.appName).reduce(into: [String]()) { names, name in
                 if !names.contains(name) { names.append(name) }
             }
-            return ([isCurrent ? "Current" : nil, room.summary] + [apps.joined(separator: ", ")])
+            let count = room.windows.count
+            let windows = count == 1
+                ? SettingsLocalization.string("1 window")
+                : SettingsLocalization.format("%lld windows", count)
+            return ([isCurrent ? SettingsLocalization.string("Current") : nil, windows]
+                + [apps.joined(separator: ", ")])
                 .compactMap { $0 }.filter { !$0.isEmpty }.joined(separator: " · ")
         case .edit, .create:
-            return "Pick the open windows that belong in it"
+            return SettingsLocalization.string("Pick the open windows that belong in it")
         }
     }
 
@@ -98,7 +103,7 @@ private struct RoomRowView: View {
             Spacer(minLength: metrics.spacing.md)
             if let layout {
                 HStack(spacing: metrics.spacing.sm) {
-                    Text(layout.title)
+                    Text(SettingsLocalization.string(layout.title))
                         .font(metrics.typography.rowTrailing)
                         .foregroundStyle(.secondary)
                     // Tab changes the selected room's layout, so only that row advertises it.
@@ -114,7 +119,10 @@ private struct RoomRowView: View {
         .armedHover($hovered)
         .accessibilityElement(children: .combine)
         .accessibilityLabel(title)
-        .accessibilityValue(layout.map { "\(subtitle), \($0.title) layout" } ?? subtitle)
+        .accessibilityValue(layout.map {
+            SettingsLocalization.format(
+                "%@, %@ layout", subtitle, SettingsLocalization.string($0.title))
+        } ?? subtitle)
         .accessibilityAddTraits(selected ? .isSelected : [])
     }
 }
