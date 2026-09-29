@@ -41,7 +41,8 @@ struct AIProviderAdvancedSection: View {
                 }
             } label: {
                 Text("Command path")
-                Text("Empty finds \(kind.command) the way Terminal does.")
+                Text(SettingsLocalization.format(
+                    "Empty finds %@ the way Terminal does.", kind.command))
             }
             .task(id: kind) { load() }
             .onChange(of: focus) { old, new in
@@ -57,7 +58,8 @@ struct AIProviderAdvancedSection: View {
                     .disabled(readFailed)
             } label: {
                 Text("Variables")
-                Text("Set for \(kind.title) only, each time it starts.")
+                Text(SettingsLocalization.format(
+                    "Set for %@ only, each time it starts.", kind.title))
             }
             ForEach($variables) { $variable in
                 variableRow($variable)
@@ -85,7 +87,8 @@ struct AIProviderAdvancedSection: View {
                     .focused($focus, equals: .name(draft.id))
                     .onSubmit(save)
                 RevealableSecureField(
-                    title: "Value of \(draft.name)", text: variable.value, prompt: Text("Value")
+                    title: SettingsLocalization.format("Value of %@", draft.name),
+                    text: variable.value, prompt: Text("Value")
                 )
                 .labelsHidden()
                 .font(.callout.monospaced())
@@ -99,7 +102,7 @@ struct AIProviderAdvancedSection: View {
                 }
                 .buttonStyle(.plain)
                 .help("Remove")
-                .accessibilityLabel("Remove \(draft.name)")
+                .accessibilityLabel(SettingsLocalization.format("Remove %@", draft.name))
             }
             if let note = note(for: draft.name) {
                 Text(note)
@@ -110,19 +113,27 @@ struct AIProviderAdvancedSection: View {
     }
 
     private var footer: String {
-        if readFailed { return "The variables could not be read from your login Keychain." }
+        if readFailed {
+            return SettingsLocalization.string(
+                "The variables could not be read from your login Keychain.")
+        }
         return saveFailed
-            ? "The variables could not be saved to your login Keychain."
-            : "Values stay in your login Keychain. A change applies the next time \(kind.title) starts."
+            ? SettingsLocalization.string(
+                "The variables could not be saved to your login Keychain.")
+            : SettingsLocalization.format(
+                "Values stay in your login Keychain. A change applies the next time %@ starts.",
+                kind.title)
     }
 
     private func note(for name: String) -> String? {
         guard !name.isEmpty else { return nil }
         if !InstalledAILaunch.isVariableName(name) {
-            return "A name is letters, digits and underscores, and does not start with a digit."
+            return SettingsLocalization.string(
+                "A name is letters, digits and underscores, and does not start with a digit.")
         }
         if kind.isManagedVariable(name) {
-            return "Tinycast sets \(name) itself, so this value is not used."
+            return SettingsLocalization.format(
+                "Tinycast sets %@ itself, so this value is not used.", name)
         }
         return nil
     }
@@ -174,7 +185,8 @@ struct AIProviderAdvancedSection: View {
             ?? FileManager.default.homeDirectoryForCurrentUser
         guard
             let url = ExecutablePicker.choose(
-                message: "Choose the \(kind.command) command Tinycast should run.",
+                message: SettingsLocalization.format(
+                    "Choose the %@ command Tinycast should run.", kind.command),
                 startingAt: start)
         else { return }
         path = (url.path as NSString).abbreviatingWithTildeInPath

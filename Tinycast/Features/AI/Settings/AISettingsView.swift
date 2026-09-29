@@ -87,11 +87,12 @@ struct AISettingsView: View {
 
     private var defaultModelFooter: String {
         if settings.defaultModel?.isOnDevice == true {
-            return "Apple Intelligence runs on this Mac. Nothing leaves it."
+            return SettingsLocalization.string(
+                "Apple Intelligence runs on this Mac. Nothing leaves it.")
         }
         return settings.defaultModel == nil
-            ? "Turn on Apple Intelligence, or add a provider above."
-            : "Only the selected provider is contacted."
+            ? SettingsLocalization.string("Turn on Apple Intelligence, or add a provider above.")
+            : SettingsLocalization.string("Only the selected provider is contacted.")
     }
 
     /// Why the on-device route is missing from the picker, or `nil` when it is there.
@@ -108,9 +109,13 @@ struct AISettingsView: View {
         }
         if !settings.connections.isEmpty {
             let count = settings.connections.count
-            providers.append(count == 1 ? "1 API connection" : "\(count) API connections")
+            providers.append(count == 1
+                ? SettingsLocalization.string("1 API connection")
+                : SettingsLocalization.format("%lld API connections", count))
         }
-        return providers.isEmpty ? "No external providers ready" : providers.joined(separator: ", ")
+        return providers.isEmpty
+            ? SettingsLocalization.string("No external providers ready")
+            : providers.joined(separator: ", ")
     }
 
     private func syncSelection() {
