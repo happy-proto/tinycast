@@ -59,8 +59,8 @@ struct WindowLayoutsSection: View {
 
     private var emptyMessage: String {
         store.layouts.isEmpty
-            ? "Save an arrangement, then restore it with one shortcut."
-            : "No layout matches “\(query)”."
+            ? SettingsLocalization.string("Save an arrangement, then restore it with one shortcut.")
+            : SettingsLocalization.format("No layout matches “%@”.", query)
     }
 }
 
