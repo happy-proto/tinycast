@@ -167,6 +167,11 @@ Xcode's re-indent (⌃I), as it always has been. Two consequences worth knowing:
 Errors block, warnings do not. No CI runs this script; CodeRabbit runs SwiftLint on each PR but not
 the settings-search check, so run it locally before you open one.
 
+The localization check also requires translated Simplified Chinese catalog entries for fixed
+Settings view labels, section and row titles, feature descriptions, built-in command names and
+window-cycling descriptions. Technical examples and brand names remain verbatim. This is a textual
+check of those source shapes; runtime-composed text still needs manual review.
+
 ## Generated data
 
 Three Swift files are emitted by scripts and must never be hand-edited. Each downloads its source, so

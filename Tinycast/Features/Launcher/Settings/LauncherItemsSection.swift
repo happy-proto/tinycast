@@ -103,7 +103,8 @@ struct LauncherItemRow: View {
     var body: some View {
         SettingsRow(
             title: entry.name,
-            labelOpacity: visibility.isItemVisible(entry) ? 1 : 0.45
+            labelOpacity: visibility.isItemVisible(entry) ? 1 : 0.45,
+            localizesText: CommandCatalog.command(for: entry) != nil
         ) {
             // Keyed so a reused cell seeds the new entry's icon on its first frame.
             AppIconView(app: entry)

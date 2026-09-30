@@ -28,7 +28,7 @@ struct DisabledApplicationsList: View {
 struct DisabledApplicationsSection: View {
     @Binding var bundleIDs: [String]
     let anchor: SettingsAnchor
-    let footer: String
+    let footer: LocalizedStringKey
 
     var body: some View {
         Section {

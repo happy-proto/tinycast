@@ -1,5 +1,11 @@
 import SwiftUI
 
+enum ExtensionLocalization {
+    static func string(_ key: String) -> String {
+        String(localized: String.LocalizationValue(key))
+    }
+}
+
 /// A registry decides what search can find, so it belongs where searching is asked.
 struct ExtensionRegistriesPanel: View {
     let onClose: () -> Void
@@ -14,8 +20,9 @@ struct ExtensionRegistriesPanel: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             ExtensionSettingsEditorHeader(
-                title: "Registries",
-                subtitle: "Where Tinycast looks when you search for an extension to install."
+                title: ExtensionLocalization.string("Registries"),
+                subtitle: ExtensionLocalization.string(
+                    "Where Tinycast looks when you search for an extension to install.")
             )
             .padding(.horizontal, Theme.Spacing.dialogInset)
             .padding(.top, Theme.Spacing.dialogInset)
@@ -30,8 +37,10 @@ struct ExtensionRegistriesPanel: View {
                     Text("Raycast Store")
                 } footer: {
                     Text(
-                        "Prebuilt extensions, through the endpoint the store's own site searches. "
-                            + "Not an official API, so a GitHub registry is the fallback if it changes."
+                        ExtensionLocalization.string(
+                            "Prebuilt extensions, through the endpoint the store's own site searches. "
+                                + "Not an official API, so a GitHub registry is the fallback if it changes."
+                        )
                     )
                     .font(.caption)
                     .foregroundStyle(.secondary)
@@ -56,10 +65,12 @@ struct ExtensionRegistriesPanel: View {
                     Text("GitHub Registries")
                 } footer: {
                     Text(
-                        "A repository with one folder per extension, laid out like "
-                            + "raycast/extensions. These serve source, so installing one builds it "
-                            + "here — dependencies first, with the package manager above. Add a "
-                            + "registry only if you trust who publishes it."
+                        ExtensionLocalization.string(
+                            "A repository with one folder per extension, laid out like "
+                                + "raycast/extensions. These serve source, so installing one builds it "
+                                + "here — dependencies first, with the package manager above. Add a "
+                                + "registry only if you trust who publishes it."
+                        )
                     )
                     .font(.caption)
                     .foregroundStyle(.secondary)
@@ -99,7 +110,7 @@ struct ExtensionRegistriesPanel: View {
     }
 
     private func registryRow(_ registry: ExtensionRegistry) -> some View {
-        SettingsRow(title: registry.name, subtitle: registry.subtitle) {
+        SettingsRow(verbatimTitle: registry.name, subtitle: registry.subtitle) {
             registryIcon(registry)
         } trailing: {
             Toggle("", isOn: binding(for: registry))
@@ -168,9 +179,11 @@ struct ExtensionRegistriesPanel: View {
                 }
             }
             Text(
-                "Colon-separated, like PATH — checked before Homebrew and the rest. For mise: "
-                    + "~/.local/share/mise/shims. For Nix (Home Manager): "
-                    + "/etc/profiles/per-user/<you>/home-path/bin."
+                ExtensionLocalization.string(
+                    "Colon-separated, like PATH — checked before Homebrew and the rest. For mise: "
+                        + "~/.local/share/mise/shims. For Nix (Home Manager): "
+                        + "/etc/profiles/per-user/<you>/home-path/bin."
+                )
             )
             .font(.caption)
             .foregroundStyle(.secondary)
@@ -232,8 +245,10 @@ struct RegistryEditorPanel: View {
             VStack(alignment: .leading, spacing: Theme.Spacing.sm) {
                 Text("Add Registry").font(Theme.Typography.panelTitle)
                 Text(
-                    "A GitHub repository holding one folder per extension, laid out like "
-                        + "raycast/extensions."
+                    ExtensionLocalization.string(
+                        "A GitHub repository holding one folder per extension, laid out like "
+                            + "raycast/extensions."
+                    )
                 )
                 .font(Theme.Typography.rowTitle)
                 .foregroundStyle(Theme.Colors.textSecondary)
@@ -266,8 +281,10 @@ struct RegistryEditorPanel: View {
             }
 
             Text(
-                "Extensions from a repository are source: installing one runs your package manager "
-                    + "and the extension's own build script on this Mac."
+                ExtensionLocalization.string(
+                    "Extensions from a repository are source: installing one runs your package manager "
+                        + "and the extension's own build script on this Mac."
+                )
             )
             .font(.caption)
             .foregroundStyle(.secondary)
