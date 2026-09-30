@@ -10,6 +10,11 @@ const CATALOG = "Tinycast/Localizable.xcstrings";
 const LOCALIZABLE_VIEWS = "Text|Label|Button|Toggle|Picker|Menu|NavigationLink|TextField|SecureField";
 const SWIFT_LITERAL = String.raw`"(?:[^"\\]|\\.)*"`;
 const CONCATENATED_LITERALS = String.raw`(?:${SWIFT_LITERAL}\s*\+\s*)+${SWIFT_LITERAL}`;
+const VERBATIM_TEXT = new Set([
+  "AI", "Aa", "GitHub", "Bearer …", "npx", "GITHUB_TOKEN=…",
+  "https://example.com/mcp", "~/.local/share/mise/shims",
+  "-y @modelcontextprotocol/server-filesystem ~/Desktop",
+]);
 
 function swiftSources(directory, found = []) {
   for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
@@ -40,10 +45,38 @@ const explicitPattern = new RegExp(
   String.raw`SettingsLocalization\.string\(\s*(${CONCATENATED_LITERALS})\s*\)`,
   "gs"
 );
+const settingsPattern = new RegExp(
+  String.raw`\b(?:Text|Label|Button|Toggle|Picker|Menu|NavigationLink|SettingsLocalization\.(?:string|format))\s*\(\s*("[^"\\\n]+")|\b(?:title|subtitle|enableTitle|enableSubtitle|footer):\s*("[^"\\\n]+")|SettingsRowTitle\([^,]+,\s*("[^"\\\n]+")`,
+  "g"
+);
+
+function checkTranslation(key, relativePath, source, offset) {
+  if (!/[A-Za-z]{2}/.test(key)) return;
+  if (VERBATIM_TEXT.has(key)) return;
+  const unit = catalog[key]?.localizations?.["zh-Hans"]?.stringUnit;
+  if (unit?.state !== "translated" || !unit.value) {
+    problems.push(
+      `${relativePath}:${lineNumber(source, offset)} — missing zh-Hans catalog entry for “${key}”`
+    );
+  }
+}
 
 for (const file of swiftSources(path.join(ROOT, "Tinycast"))) {
   const source = fs.readFileSync(file, "utf8");
   const relativePath = path.relative(ROOT, file);
+  if (relativePath.includes("/Settings/") || relativePath.endsWith("/SettingsComponents.swift")) {
+    for (const match of source.matchAll(settingsPattern)) {
+      const literal = match[1] ?? match[2] ?? match[3];
+      if (/^\s*\+/.test(source.slice(match.index + match[0].length))) continue;
+      checkTranslation(JSON.parse(literal), relativePath, source, match.index);
+    }
+  }
+  if (/\/(?:CommandID|Fallback|WindowCycle)\.swift$/.test(relativePath)) {
+    const names = source.split(/\n    (?:var sfSymbol|static func ordered)/)[0];
+    for (const match of names.matchAll(/case [^\n]+:\s*(?:return\s+)?"([^"\\]+)"/g)) {
+      checkTranslation(match[1], relativePath, source, match.index);
+    }
+  }
   for (const match of source.matchAll(implicitPattern)) {
     problems.push(
       `${relativePath}:${lineNumber(source, match.index)} — concatenated UI text is not localized`
