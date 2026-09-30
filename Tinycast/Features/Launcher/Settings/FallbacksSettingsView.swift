@@ -47,7 +47,8 @@ private struct FallbackRow: View {
     var body: some View {
         if let entry = core.fallbackCoordinator.entry(for: fallback) {
             SettingsRow(
-                verbatimTitle: entry.name,
+                verbatimTitle: CommandCatalog.command(for: entry) == nil
+                    ? entry.name : SettingsLocalization.string(entry.name),
                 subtitle: SettingsLocalization.string(entry.kindLabel)
             ) {
                 AppIconView(app: entry)
