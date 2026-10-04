@@ -174,8 +174,10 @@ the settings-search check, so run it locally before you open one.
 
 The localization check also requires translated Simplified Chinese catalog entries for fixed
 Settings view labels, section and row titles, feature descriptions, built-in command names and
-window-cycling descriptions. Technical examples and brand names remain verbatim. This is a textual
-check of those source shapes; runtime-composed text still needs manual review.
+window-cycling descriptions, selection labels and backup category count nouns. Backup selection
+buttons must use localized keys for both branches of their select/deselect title. Technical examples
+and brand names remain verbatim. This is a textual check of those source shapes; runtime-composed text
+still needs manual review.
 
 ## Generated data
 

@@ -12,7 +12,7 @@ struct RaycastImportSelection: View {
     }
 
     private static let categories: [Category] = [
-        .init(option: .shortcuts, symbol: "command", label: "Shortcuts"),
+        .init(option: .shortcuts, symbol: "command", label: "Keyboard Shortcuts"),
         .init(option: .favorites, symbol: "star", label: "Favorites"),
         .init(option: .aliases, symbol: "character.cursor.ibeam", label: "Aliases"),
         .init(option: .emojiSkinTone, symbol: "face.smiling", label: "Emoji skin tone"),
@@ -49,7 +49,7 @@ struct RaycastImportSelection: View {
                     .toggleStyle(.checkbox)
                 }
             }
-            Button(selection == .all ? "Deselect All" : "Select All") {
+            Button(selection == .all ? LocalizedStringKey("Deselect All") : LocalizedStringKey("Select All")) {
                 selection = selection == .all ? [] : .all
             }
             .buttonStyle(.link)

@@ -38,9 +38,12 @@ struct BackupSettingsView: View {
 
     private var raycastFileSubtitle: String {
         guard let name = raycastFile?.lastPathComponent else {
-            return "A .rayconfig file from Raycast 2.0 or later."
+            return SettingsLocalization.string("A .rayconfig file from Raycast 2.0 or later.")
         }
-        return "\(name) — \(isRaycastExport ? "Raycast export" : "not a Raycast export")"
+        if isRaycastExport {
+            return SettingsLocalization.format("%@ — Raycast export", name)
+        }
+        return SettingsLocalization.format("%@ — not a Raycast export", name)
     }
 
     var body: some View {
@@ -181,9 +184,10 @@ struct BackupSettingsView: View {
 
     private var backupFileSubtitle: String {
         guard let name = backupFile?.lastPathComponent else {
-            return "A .tinycast file exported from Tinycast."
+            return SettingsLocalization.string("A .tinycast file exported from Tinycast.")
         }
-        return openedManifest == nil ? "\(name) — couldn't be read" : name
+        return openedManifest == nil
+            ? SettingsLocalization.format("%@ — couldn't be read", name) : name
     }
 
     private func available(in manifest: BackupManifest) -> [BackupCategory: Int] {
