@@ -45,12 +45,16 @@ const explicitPattern = new RegExp(
   String.raw`(?:SettingsLocalization|ExtensionLocalization)\.string\(\s*(${CONCATENATED_LITERALS})\s*\)`,
   "gs"
 );
+const conditionalPattern = new RegExp(
+  String.raw`\b(?:${LOCALIZABLE_VIEWS})\s*\(\s*[^()?\n]+\?\s*(${SWIFT_LITERAL})\s*:\s*(${SWIFT_LITERAL})`,
+  "g"
+);
 const runtimePattern = new RegExp(
   String.raw`(?:SettingsLocalization|ExtensionLocalization)\.(?:string|format)\s*\(\s*("[^"\\\n]+")`,
   "g"
 );
 const settingsPattern = new RegExp(
-  String.raw`\b(?:Text|Label|Button|Toggle|Picker|Menu|NavigationLink|(?:SettingsLocalization|ExtensionLocalization)\.(?:string|format))\s*\(\s*("[^"\\\n]+")|\b(?:title|subtitle|enableTitle|enableSubtitle|footer):\s*("[^"\\\n]+")|SettingsRowTitle\([^,]+,\s*("[^"\\\n]+")`,
+  String.raw`\b(?:Text|Label|Button|Toggle|Picker|Menu|NavigationLink|LocalizedStringKey|(?:SettingsLocalization|ExtensionLocalization)\.(?:string|format))\s*\(\s*("[^"\\\n]+")|\b(?:title|subtitle|label|enableTitle|enableSubtitle|footer):\s*("[^"\\\n]+")|SettingsRowTitle\([^,]+,\s*("[^"\\\n]+")`,
   "g"
 );
 
@@ -81,6 +85,11 @@ for (const file of swiftSources(path.join(ROOT, "Tinycast"))) {
       checkTranslation(match[1], relativePath, source, match.index);
     }
   }
+  if (relativePath.endsWith("/BackupCategory.swift")) {
+    for (const match of source.matchAll(/\b(?:label|countNoun):\s*("[^"\\\n]+")/g)) {
+      checkTranslation(JSON.parse(match[1]), relativePath, source, match.index);
+    }
+  }
   if (/\/Dictation(?:Mode|Destination|Language|Model)\.swift$/.test(relativePath)) {
     const labels = relativePath.endsWith("/DictationLanguage.swift")
       ? source
@@ -98,6 +107,13 @@ for (const file of swiftSources(path.join(ROOT, "Tinycast"))) {
     problems.push(
       `${relativePath}:${lineNumber(source, match.index)} — concatenated UI text is not localized`
     );
+  }
+  if (relativePath.includes("/Backup/Settings/")) {
+    for (const match of source.matchAll(conditionalPattern)) {
+      problems.push(
+        `${relativePath}:${lineNumber(source, match.index)} — conditional UI text needs localized keys`
+      );
+    }
   }
   for (const match of source.matchAll(explicitPattern)) {
     const key = joinedString(match[1]);

@@ -26,7 +26,7 @@ struct BackupCategorySelection: View {
         guard let noun = category.descriptor.countNoun, let count = available?[category] else {
             return nil
         }
-        return "\(count) \(noun)"
+        return SettingsLocalization.format("%lld %@", count, SettingsLocalization.string(noun))
     }
 
     var body: some View {
@@ -40,7 +40,7 @@ struct BackupCategorySelection: View {
                                 .frame(width: 16)
                             Text(SettingsLocalization.string(category.descriptor.label)).lineLimit(1)
                             if let subtitle = subtitle(category) {
-                                Text(SettingsLocalization.string(subtitle))
+                                Text(subtitle)
                                     .foregroundStyle(.secondary)
                                     .lineLimit(1)
                             }
@@ -49,7 +49,7 @@ struct BackupCategorySelection: View {
                     .toggleStyle(.checkbox)
                 }
             }
-            Button(selection.isEmpty ? "Select All" : "Deselect All") {
+            Button(selection.isEmpty ? LocalizedStringKey("Select All") : LocalizedStringKey("Deselect All")) {
                 selection = selection.isEmpty ? Set(offered) : []
             }
             .buttonStyle(.link)
