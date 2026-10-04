@@ -57,3 +57,14 @@ struct MeetingEntryContent<Content: View>: View {
         }
     }
 }
+
+extension MeetingDay {
+    func localizedTitle(calendar: Calendar) -> String {
+        let date = start.formatted(calendar.formatStyle.month(.abbreviated).day())
+        switch offset {
+        case 0: return SettingsLocalization.format("Today, %@", date)
+        case 1: return SettingsLocalization.format("Tomorrow, %@", date)
+        default: return title(calendar: calendar)
+        }
+    }
+}

@@ -11,7 +11,7 @@ const LOCALIZABLE_VIEWS = "Text|Label|Button|Toggle|Picker|Menu|NavigationLink|T
 const SWIFT_LITERAL = String.raw`"(?:[^"\\]|\\.)*"`;
 const CONCATENATED_LITERALS = String.raw`(?:${SWIFT_LITERAL}\s*\+\s*)+${SWIFT_LITERAL}`;
 const VERBATIM_TEXT = new Set([
-  "AI", "Aa", "GitHub", "Bearer …", "npx", "GITHUB_TOKEN=…",
+  "AI", "Aa", "GitHub", "Ultra", "Redux", "Bearer …", "npx", "GITHUB_TOKEN=…",
   "https://example.com/mcp", "~/.local/share/mise/shims",
   "-y @modelcontextprotocol/server-filesystem ~/Desktop",
 ]);
@@ -42,11 +42,15 @@ const implicitPattern = new RegExp(
   "gs"
 );
 const explicitPattern = new RegExp(
-  String.raw`SettingsLocalization\.string\(\s*(${CONCATENATED_LITERALS})\s*\)`,
+  String.raw`(?:SettingsLocalization|ExtensionLocalization)\.string\(\s*(${CONCATENATED_LITERALS})\s*\)`,
   "gs"
 );
+const runtimePattern = new RegExp(
+  String.raw`(?:SettingsLocalization|ExtensionLocalization)\.(?:string|format)\s*\(\s*("[^"\\\n]+")`,
+  "g"
+);
 const settingsPattern = new RegExp(
-  String.raw`\b(?:Text|Label|Button|Toggle|Picker|Menu|NavigationLink|SettingsLocalization\.(?:string|format))\s*\(\s*("[^"\\\n]+")|\b(?:title|subtitle|enableTitle|enableSubtitle|footer):\s*("[^"\\\n]+")|SettingsRowTitle\([^,]+,\s*("[^"\\\n]+")`,
+  String.raw`\b(?:Text|Label|Button|Toggle|Picker|Menu|NavigationLink|(?:SettingsLocalization|ExtensionLocalization)\.(?:string|format))\s*\(\s*("[^"\\\n]+")|\b(?:title|subtitle|enableTitle|enableSubtitle|footer):\s*("[^"\\\n]+")|SettingsRowTitle\([^,]+,\s*("[^"\\\n]+")`,
   "g"
 );
 
@@ -76,6 +80,19 @@ for (const file of swiftSources(path.join(ROOT, "Tinycast"))) {
     for (const match of names.matchAll(/case [^\n]+:\s*(?:return\s+)?"([^"\\]+)"/g)) {
       checkTranslation(match[1], relativePath, source, match.index);
     }
+  }
+  if (/\/Dictation(?:Mode|Destination|Language|Model)\.swift$/.test(relativePath)) {
+    const labels = relativePath.endsWith("/DictationLanguage.swift")
+      ? source
+      : [...source.matchAll(/var (?:title|summary|coverage): String \{([^\n]*\}|[\s\S]*?\n    \})/g)]
+        .map((match) => match[1]).join("\n");
+    for (const match of labels.matchAll(/"[^"\\\n]+"/g)) {
+      checkTranslation(JSON.parse(match[0]), relativePath, source, source.indexOf(match[0]));
+    }
+  }
+  for (const match of source.matchAll(runtimePattern)) {
+    if (/^\s*\+/.test(source.slice(match.index + match[0].length))) continue;
+    checkTranslation(JSON.parse(match[1]), relativePath, source, match.index);
   }
   for (const match of source.matchAll(implicitPattern)) {
     problems.push(

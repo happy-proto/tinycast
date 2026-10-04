@@ -288,7 +288,8 @@ final class CalendarCoordinator {
 
     func openNextMeetingInCalendar() {
         guard let meeting = window.joinable(from: store.events, now: Date()) ?? agenda.first else {
-            report("Nothing scheduled \(settings.calendarSpan.orPhrase)")
+            report(SettingsLocalization.format(
+                "Nothing scheduled %@", SettingsLocalization.string(settings.calendarSpan.orPhrase)))
             return
         }
         openInCalendar(meeting)
