@@ -31,9 +31,9 @@ struct ExtensionSettingsEditorHeader: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.sm) {
-            Text(title).font(Theme.Typography.panelTitle)
+            Text(LocalizedStringKey(title)).font(Theme.Typography.panelTitle)
             if let subtitle {
-                Text(subtitle)
+                Text(LocalizedStringKey(subtitle))
                     .font(Theme.Typography.rowTitle)
                     .foregroundStyle(Theme.Colors.textSecondary)
                     .fixedSize(horizontal: false, vertical: true)

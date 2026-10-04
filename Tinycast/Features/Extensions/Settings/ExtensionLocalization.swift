@@ -1,0 +1,11 @@
+import Foundation
+
+enum ExtensionLocalization {
+    static func string(_ key: String) -> String {
+        String(localized: String.LocalizationValue(key))
+    }
+
+    static func format(_ key: String, _ arguments: CVarArg...) -> String {
+        String(format: string(key), locale: .current, arguments: arguments)
+    }
+}

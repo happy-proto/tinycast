@@ -32,7 +32,8 @@ struct DictationSettingsView: View {
                         Spacer(minLength: Theme.Spacing.lg)
                         Button(
                             microphoneAccess == .notDetermined
-                                ? "Grant Access…" : "Open System Settings"
+                                ? SettingsLocalization.string("Grant Access…")
+                                : SettingsLocalization.string("Open System Settings")
                         ) {
                             if microphoneAccess == .notDetermined {
                                 Task {
@@ -52,7 +53,7 @@ struct DictationSettingsView: View {
                 Section {
                     Picker(selection: $settings.dictationMode) {
                         ForEach(DictationMode.allCases) { mode in
-                            Text(mode.title).tag(mode)
+                            Text(SettingsLocalization.string(mode.title)).tag(mode)
                         }
                     } label: {
                         SettingsRowTitle(.dictationCommands, "Shortcut behavior")
@@ -65,8 +66,9 @@ struct DictationSettingsView: View {
                     if settings.dictationMode == .pushToTalk {
                         let issue = coordinator.holdShortcutIssue
                         Text(
-                            issue ?? "Hold a key combination or a single modifier; release it to transcribe. "
-                                + "Double taps work in toggle mode."
+                            issue ?? SettingsLocalization.string(
+                                "Hold a key combination or a single modifier; release it to transcribe. "
+                                    + "Double taps work in toggle mode.")
                         )
                         .font(.caption)
                         .foregroundStyle(issue == nil ? Color.secondary : Color.orange)
@@ -83,7 +85,8 @@ struct DictationSettingsView: View {
                     } label: {
                         SettingsRowTitle(.dictationModel, "Engine")
                         Text(
-                            settings.dictationModel.family.summary + " · " + settings.dictationModel.coverage)
+                            SettingsLocalization.string(settings.dictationModel.family.summary)
+                                + " · " + SettingsLocalization.string(settings.dictationModel.coverage))
                     }
                     Picker(selection: $settings.dictationModel) {
                         ForEach(
@@ -93,7 +96,7 @@ struct DictationSettingsView: View {
                         }
                     } label: {
                         SettingsRowTitle(.dictationModel, "Model")
-                        Text(settings.dictationModel.summary)
+                        Text(SettingsLocalization.string(settings.dictationModel.summary))
                     }
 
                     let installed = coordinator.models.isInstalled(settings.dictationModel)
@@ -122,7 +125,7 @@ struct DictationSettingsView: View {
                             Text("Auto").tag("")
                             Divider()
                             ForEach(DictationLanguage.allCases) { language in
-                                Text(language.rawValue).tag(language.rawValue)
+                                Text(SettingsLocalization.string(language.rawValue)).tag(language.rawValue)
                             }
                         } label: {
                             SettingsRowTitle(.dictationModel, "Language")
@@ -135,7 +138,7 @@ struct DictationSettingsView: View {
                 Section {
                     Picker(selection: $settings.dictationIdleRelease) {
                         ForEach(DictationIdleRelease.allCases) { option in
-                            Text(option.title).tag(option)
+                            Text(idleReleaseTitle(option)).tag(option)
                         }
                     } label: {
                         SettingsRowTitle(.dictationMemory, "Release model from memory")
@@ -148,7 +151,7 @@ struct DictationSettingsView: View {
 
                 Section {
                     Picker(selection: microphoneBinding) {
-                        Text(microphones.isEmpty ? "No microphone available" : "System default")
+                        Text(SettingsLocalization.string(microphones.isEmpty ? "No microphone available" : "System default"))
                             .tag("")
                         if !microphones.isEmpty { Divider() }
                         ForEach(microphones, id: \.uniqueID) { microphone in
@@ -159,7 +162,7 @@ struct DictationSettingsView: View {
                     }
                     Picker(selection: $settings.dictationDestination) {
                         ForEach(DictationDestination.allCases) { destination in
-                            Text(destination.title).tag(destination)
+                            Text(SettingsLocalization.string(destination.title)).tag(destination)
                         }
                     } label: {
                         SettingsRowTitle(.dictationOutput, "When finished")
@@ -233,6 +236,15 @@ struct DictationSettingsView: View {
             set: {
                 settings.dictationLanguage = $0.isEmpty ? nil : $0
             })
+    }
+
+    private func idleReleaseTitle(_ option: DictationIdleRelease) -> String {
+        switch option {
+        case .never: SettingsLocalization.string("Never")
+        case .oneMinute: SettingsLocalization.string("1 minute")
+        case .oneHour: SettingsLocalization.string("1 hour")
+        default: SettingsLocalization.format("%lld minutes", option.rawValue)
+        }
     }
 
     private var modelDescription: String {
