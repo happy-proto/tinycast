@@ -77,6 +77,6 @@ struct ScheduleScreen: PaletteScreen {
     private var emptyMessage: String {
         if store.access != .granted { return "Tinycast has no access to your calendar" }
         if !vm.query.trimmingCharacters(in: .whitespaces).isEmpty { return "No matching meetings" }
-        return "Nothing scheduled \(store.span.orPhrase)"
+        return SettingsLocalization.format("Nothing scheduled %@", SettingsLocalization.string(store.span.orPhrase))
     }
 }

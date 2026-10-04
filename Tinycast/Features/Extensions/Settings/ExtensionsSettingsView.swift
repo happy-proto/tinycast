@@ -184,7 +184,7 @@ struct ExtensionsSettingsView: View {
         updateError = nil
         Task {
             let failed = await core.extensions.update(names)
-            if !failed.isEmpty { updateError = "Couldn't update \(failed.joined(separator: ", "))." }
+            if !failed.isEmpty { updateError = ExtensionLocalization.format("Couldn't update %@.", failed.joined(separator: ", ")) }
         }
     }
 
@@ -858,7 +858,7 @@ private struct ExtensionImportPanel: View {
     var body: some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.xl) {
             ExtensionSettingsEditorHeader(
-                title: ExtensionLocalization.string("Import from Raycast"), subtitle: subtitle)
+                title: "Import from Raycast", subtitle: subtitle)
 
             if candidates.count > 6 {
                 SettingsFilterField(prompt: "Filter…", query: $filter)

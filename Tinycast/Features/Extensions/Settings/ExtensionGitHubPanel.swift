@@ -18,16 +18,18 @@ struct ExtensionGitHubPanel: View {
         VStack(alignment: .leading, spacing: Theme.Spacing.xl) {
             ExtensionSettingsEditorHeader(
                 title: "Install from GitHub",
-                subtitle: "Builds an extension from source on this Mac. Only the build is kept — "
-                    + "the source and its dependencies are deleted once it installs.")
+                subtitle: ExtensionLocalization.string(
+                    "Builds an extension from source on this Mac. Only the build is kept — "
+                        + "the source and its dependencies are deleted once it installs."))
 
             repositoryField
             ExtensionToolchainFields()
                 .disabled(isInstalling)
 
             Text(
-                "Installing runs your package manager and the extension's own build script. "
-                    + "Install only from someone you trust."
+                ExtensionLocalization.string(
+                    "Installing runs your package manager and the extension's own build script. "
+                        + "Install only from someone you trust.")
             )
             .font(.caption)
             .foregroundStyle(.secondary)
@@ -36,7 +38,7 @@ struct ExtensionGitHubPanel: View {
             status
 
             HStack(spacing: Theme.Spacing.md) {
-                Button(installedTitle == nil ? "Cancel" : "Done", action: onClose)
+                Button(ExtensionLocalization.string(installedTitle == nil ? "Cancel" : "Done"), action: onClose)
                     .buttonStyle(ExtensionSettingsEditorButtonStyle(role: .cancel))
                     .keyboardShortcut(.cancelAction)
                 Button("Install", action: install)
@@ -64,7 +66,7 @@ struct ExtensionGitHubPanel: View {
                 .pointerStyle(.horizontalText)
                 .disabled(isInstalling)
             if let source {
-                Text("Builds \(source.summary).")
+                Text(ExtensionLocalization.format("Builds %@.", source.summary))
                     .font(.caption)
                     .foregroundStyle(.secondary)
             } else if !repository.trimmingCharacters(in: .whitespaces).isEmpty {
@@ -80,7 +82,7 @@ struct ExtensionGitHubPanel: View {
         if let progress {
             HStack(spacing: Theme.Spacing.sm) {
                 ProgressView().controlSize(.small)
-                Text(progress.message).font(.caption).foregroundStyle(.secondary)
+                Text(progressMessage(progress)).font(.caption).foregroundStyle(.secondary)
             }
         } else if let failure {
             Label(failure, systemImage: "exclamationmark.triangle")
@@ -89,9 +91,19 @@ struct ExtensionGitHubPanel: View {
                 .textSelection(.enabled)
                 .fixedSize(horizontal: false, vertical: true)
         } else if let installedTitle {
-            Label("Installed \(installedTitle).", systemImage: "checkmark.circle.fill")
+            Label(ExtensionLocalization.format("Installed %@.", installedTitle), systemImage: "checkmark.circle.fill")
                 .font(.caption)
                 .foregroundStyle(.green)
+        }
+    }
+
+    private func progressMessage(_ progress: ExtensionInstaller.Progress) -> String {
+        switch progress {
+        case .downloading: ExtensionLocalization.string("Downloading…")
+        case .building: ExtensionLocalization.string("Building…")
+        case .installing: ExtensionLocalization.string("Installing…")
+        case .installingDependencies(let manager):
+            ExtensionLocalization.format("Installing dependencies with %@…", manager)
         }
     }
 
@@ -135,7 +147,7 @@ private struct ExtensionToolchainFields: View {
                     Spacer()
                     Picker("", selection: $settings.extensionPackageManager) {
                         ForEach(ExtensionPackageManager.allCases) { manager in
-                            Text(manager.title).tag(manager)
+                            Text(ExtensionLocalization.string(manager.title)).tag(manager)
                         }
                     }
                     .labelsHidden()
@@ -156,9 +168,10 @@ private struct ExtensionToolchainFields: View {
                         settings.extensionCustomSearchPaths = Self.parseSearchPaths(value)
                     }
                 Text(
-                    "Colon-separated, like PATH — checked before Homebrew and the rest. For mise: "
-                        + "~/.local/share/mise/shims. For Nix (Home Manager): "
-                        + "/etc/profiles/per-user/<you>/home-path/bin."
+                    ExtensionLocalization.string(
+                        "Colon-separated, like PATH — checked before Homebrew and the rest. For mise: "
+                            + "~/.local/share/mise/shims. For Nix (Home Manager): "
+                            + "/etc/profiles/per-user/<you>/home-path/bin.")
                 )
                 .font(.caption)
                 .foregroundStyle(.secondary)
@@ -175,12 +188,12 @@ private struct ExtensionToolchainFields: View {
         let additionalSearchPaths = core.settings.extensionCustomSearchPaths
         guard let resolved = chosen.resolve(additionalSearchPaths: additionalSearchPaths) else {
             return chosen == .automatic
-                ? "None found on this Mac. Install pnpm, npm, Yarn or Bun to build an extension."
-                : "\(chosen.title) isn't installed on this Mac."
+                ? ExtensionLocalization.string("None found on this Mac. Install pnpm, npm, Yarn or Bun to build an extension.")
+                : ExtensionLocalization.format("%@ isn't installed on this Mac.", chosen.title)
         }
         return chosen == .automatic
-            ? "Found \(resolved.manager.title) at \(resolved.url.path)."
-            : "Found at \(resolved.url.path)."
+            ? ExtensionLocalization.format("Found %@ at %@.", resolved.manager.title, resolved.url.path)
+            : ExtensionLocalization.format("Found at %@.", resolved.url.path)
     }
 
     /// Splits on `:`, the same separator PATH itself uses, dropping anything blank in between.

@@ -76,13 +76,13 @@ enum AppActionsMenu {
                 })
             items.append(
                 PopoverMenuItem(
-                    title: "Quit Application", systemImage: "power", shortcut: "⌃⇧Q"
+                    title: SettingsLocalization.string("Quit Application"), systemImage: "power", shortcut: "⌃⇧Q"
                 ) {
                     core.launcherCoordinator.quit(app)
                 })
             items.append(
                 PopoverMenuItem(
-                    title: "Force Quit Application", systemImage: "xmark.circle", shortcut: "⌃⌥⇧Q"
+                    title: SettingsLocalization.string("Force Quit Application"), systemImage: "xmark.circle", shortcut: "⌃⌥⇧Q"
                 ) {
                     core.launcherCoordinator.quit(app, force: true)
                 })
@@ -159,13 +159,13 @@ enum AppActionsMenu {
             }
         var items = [
             PopoverMenuItem(
-                title: app.kind.descriptor.openVerb, systemImage: primarySymbol,
+                title: SettingsLocalization.string(app.kind.descriptor.openVerb), systemImage: primarySymbol,
                 shortcut: "↵"
             ) { core.launcherCoordinator.launch(app, searchQuery: searchQuery) }
         ]
         if app.canRevealInFinder {
             items.append(
-                PopoverMenuItem(title: "Show in Finder", systemImage: "folder", shortcut: "⌘↵") {
+                PopoverMenuItem(title: SettingsLocalization.string("Show in Finder"), systemImage: "folder", shortcut: "⌘↵") {
                     core.launcherCoordinator.showInFinder(app)
                 })
         }
