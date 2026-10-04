@@ -41,6 +41,8 @@ jobs:
           git diff --exit-code -- Tinycast.xcodeproj
 
       - name: Run tests
+        env:
+          TINYCAST_TEST_JOBS: 1
         run: ./Scripts/run-tests.sh
 
       - name: Run lint
