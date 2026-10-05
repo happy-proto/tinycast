@@ -5,9 +5,9 @@
 
 ## 安装前提
 
-- 当前分支必须是 `integration/current`。
+- 当前分支必须是 `fork`。
 - 工作区必须干净，确保 App 对应一个可识别的完整 stack commit。
-- 本地 `integration/current` 必须已经包含本次目标层及所有上层修改。
+- 本地 `fork` 必须已经包含本次目标层及所有上层修改。
 - 本机存在 `Tinycast Self-Signed` 签名身份。
 
 ## 构建与安装

@@ -66,7 +66,7 @@
 ## 执行与复核
 
 在用户授权范围内，先更新本地 `main` 和 `origin/main`，使 fork trunk 与 `upstream/main` 相同；随后
-从 stack 底部到 `integration/current` 级联 rebase。通常使用 `gh stack rebase --remote origin`；需要
+从 stack 底部到 `fork` 级联 rebase。通常使用 `gh stack rebase --remote origin`；需要
 预判冲突或尚未获准改写正式分支时，在临时 clone 或临时分支中按相同 base 顺序演练。
 
 解决冲突时先确认上游改动意图，再把当前功能层的目的移植到新结构。不要机械选择 ours/theirs，也
@@ -79,7 +79,7 @@
 完成整个 stack 后运行项目验证。需要本地验收时，再读取 [dev-app.md](dev-app.md) 安装完整集成版本。
 验证通过且用户授权推送后，使用 `gh stack push --remote origin` 统一推送，避免先推底层造成上层 PR
 短暂错位；然后重新读取所有 PR 的 base/head、检查、mergeability 和 stack 线性关系，并确认
-`integration/current` 仍是顶部及 fork 默认分支。
+`fork` 仍是顶部及 fork 默认分支。
 
 ## 同步报告
 

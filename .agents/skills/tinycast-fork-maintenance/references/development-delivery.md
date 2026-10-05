@@ -9,13 +9,13 @@
 3. 完成项目 Definition of Done 和与风险匹配的专项验证。
 4. 用户授权提交后，在目标层创建范围明确的 commit。
 5. 读取 [stacked-pr.md](stacked-pr.md)，在本地级联 rebase 所有上层分支。
-6. 需要最终本地验收时，切换到 `integration/current`，读取 [dev-app.md](dev-app.md) 并安装
+6. 需要最终本地验收时，切换到 `fork`，读取 [dev-app.md](dev-app.md) 并安装
    完整集成版本。不要用目标功能层或 DerivedData 中的临时实例代替最终集成验收。
 7. 本地集成验证通过且用户已授权推送后，统一推送 stack。
-8. 回读 PR 和默认分支状态，最后保持 checkout 在干净的 `integration/current`。
+8. 回读 PR 和默认分支状态，最后保持 checkout 在干净的 `fork`。
 
 如果用户没有授权提交或历史改写，只在目标层完成工作区验证；不要声称未进入
-`integration/current` 的修改已经完成集成安装。
+`fork` 的修改已经完成集成安装。
 
 ## 验证边界
 

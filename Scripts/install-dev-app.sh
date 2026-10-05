@@ -4,8 +4,8 @@ set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
-if [ "$(git branch --show-current)" != "integration/current" ]; then
-    echo "✗ switch to integration/current before installing the Dev app" >&2
+if [ "$(git branch --show-current)" != "fork" ]; then
+    echo "✗ switch to fork before installing the Dev app" >&2
     exit 1
 fi
 
