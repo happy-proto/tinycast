@@ -1,6 +1,8 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "Automatically check for updates" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "自动检查更新" } } } },
+    "Check for Updates remains available when off." : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "关闭后仍可手动检查更新。" } } } },
     "Keyboard Shortcuts" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "快捷键" } } } },
     "records" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "条记录" } } } },
     "notes" : { "localizations" : { "zh-Hans" : { "stringUnit" : { "state" : "translated", "value" : "篇笔记" } } } },
