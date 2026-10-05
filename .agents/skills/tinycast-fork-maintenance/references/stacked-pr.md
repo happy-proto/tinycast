@@ -47,7 +47,7 @@ CI 或使 review 失效，但应保留 PR 编号和讨论。
 推送后回读每个 PR 的 base/head、状态、检查和 mergeability，并确认：
 
 - 历史仍然线性，没有层需要 rebase。
-- `integration/current` 是 stack 顶部和仓库默认分支。
+- `fork` 是 stack 顶部和仓库默认分支。
 - 本地目标分支与 fork 远端一致。
 
 CI 可以检查关系和运行测试，但不自动 rebase 或强推 stack。GitHub 自动调整剩余层后，先读取
