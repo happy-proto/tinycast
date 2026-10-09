@@ -25,7 +25,8 @@ struct ExtensionStorePanel: View {
     var body: some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.lg) {
             ExtensionSettingsEditorHeader(
-                title: storeInstall == nil ? "Search Extensions" : "Install Extension",
+                title: ExtensionLocalization.string(
+                    storeInstall == nil ? "Search Extensions" : "Install Extension"),
                 subtitle: "The Raycast Store's extensions arrive built, so they install as they are.")
             // The same borderless field the panes use, rather than a bordered capsule of its own.
             if storeInstall == nil {
@@ -53,7 +54,8 @@ struct ExtensionStorePanel: View {
         } else if searching && results.isEmpty {
             VStack(spacing: Theme.Spacing.md) {
                 ProgressView()
-                Text(storeInstall == nil ? "Searching…" : "Looking up extension…")
+                Text(ExtensionLocalization.string(
+                    storeInstall == nil ? "Searching…" : "Looking up extension…"))
                     .font(.callout).foregroundStyle(.secondary)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -61,8 +63,11 @@ struct ExtensionStorePanel: View {
             placeholder(searchFailure)
         } else if results.isEmpty && searched {
             placeholder(
-                storeInstall.map { "“\($0.handle)/\($0.name)” is unavailable in the Raycast Store." }
-                    ?? "Nothing matches “\(query)”.")
+                storeInstall.map {
+                    ExtensionLocalization.format(
+                        "“%@” is unavailable in the Raycast Store.", "\($0.handle)/\($0.name)")
+                }
+                    ?? ExtensionLocalization.format("Nothing matches “%@”.", query))
         } else {
             ScrollView {
                 LazyVStack(alignment: .leading, spacing: Theme.Spacing.xxs) {

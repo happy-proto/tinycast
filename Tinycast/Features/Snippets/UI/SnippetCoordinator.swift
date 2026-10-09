@@ -188,7 +188,7 @@ final class SnippetCoordinator {
         }
         // A window of ours that isn't an editor, such as Settings, has no caret to type at.
         guard let target = InjectionTarget.current() else {
-            showMessage("Click into a text field first", .neutral)
+            showMessage(SettingsLocalization.string("Click into a text field first"), .neutral)
             return
         }
         expandSnippet(id: id, target: target)

@@ -11,9 +11,9 @@ struct RoomsScreen: PaletteScreen {
 
     var primaryActionTitle: String {
         switch row(at: vm.selection) {
-        case .edit: "Choose Windows"
-        case .create: "Create Room"
-        case .room, nil: "Enter Room"
+        case .edit: SettingsLocalization.string("Choose Windows")
+        case .create: SettingsLocalization.string("Create Room")
+        case .room, nil: SettingsLocalization.string("Enter Room")
         }
     }
 
@@ -65,23 +65,31 @@ struct RoomsScreen: PaletteScreen {
         return PopoverMenuContent(
             header: room.name,
             items: [
-                PopoverMenuItem(title: "Enter Room", systemImage: Room.sfSymbol, shortcut: "↵") {
+                PopoverMenuItem(
+                    title: SettingsLocalization.string("Enter Room"),
+                    systemImage: Room.sfSymbol, shortcut: "↵") {
                     coordinator.enterRoom(id: room.id)
                 },
-                PopoverMenuItem(title: "Next Layout", systemImage: "rectangle.3.group", shortcut: "⇥") {
+                PopoverMenuItem(
+                    title: SettingsLocalization.string("Next Layout"),
+                    systemImage: "rectangle.3.group", shortcut: "⇥") {
                     coordinator.cycleLayout(of: room, backwards: false)
                 },
                 PopoverMenuItem(
-                    title: "Remember Arrangement", systemImage: "rectangle.dashed.badge.record",
+                    title: SettingsLocalization.string("Remember Arrangement"),
+                    systemImage: "rectangle.dashed.badge.record",
                     startsSection: true
                 ) {
                     coordinator.rememberArrangement(of: room)
                 },
-                PopoverMenuItem(title: "Choose Windows…", systemImage: "macwindow.badge.plus") {
+                PopoverMenuItem(
+                    title: SettingsLocalization.string("Choose Windows…"),
+                    systemImage: "macwindow.badge.plus") {
                     coordinator.editWindows(of: room)
                 },
                 PopoverMenuItem(
-                    title: "Delete Room", systemImage: "trash", startsSection: true, shortcut: "⌘⌫",
+                    title: SettingsLocalization.string("Delete Room"), systemImage: "trash",
+                    startsSection: true, shortcut: "⌘⌫",
                     isDestructive: true
                 ) {
                     coordinator.deleteRoom(room)

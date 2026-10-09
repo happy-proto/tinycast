@@ -115,21 +115,21 @@ private enum CalcSyntax {
 enum CalcActionsMenu {
     static func content(result: CalcResult, core: AppCore) -> PopoverMenuContent {
         var items = [
-            PopoverMenuItem(title: "Copy Answer", systemImage: "doc.on.doc", shortcut: "↵") {
+            PopoverMenuItem(title: SettingsLocalization.string("Copy Answer"), systemImage: "doc.on.doc", shortcut: "↵") {
                 core.calculatorCoordinator.copyCalculatorResult(result)
             }
         ]
         if result.canChain {
             items.append(
                 PopoverMenuItem(
-                    title: "Put Answer in Search Bar", systemImage: "text.cursor", shortcut: "⌘↵"
+                    title: SettingsLocalization.string("Put Answer in Search Bar"), systemImage: "text.cursor", shortcut: "⌘↵"
                 ) {
                     core.calculatorCoordinator.putAnswerInSearchBar(result)
                 })
         }
         items.append(
             PopoverMenuItem(
-                title: "Copy Calculation", systemImage: "doc.on.doc.fill", shortcut: "⇧⌘↵"
+                title: SettingsLocalization.string("Copy Calculation"), systemImage: "doc.on.doc.fill", shortcut: "⇧⌘↵"
             ) {
                 core.calculatorCoordinator.copyCalculationWithExpression(result)
             })

@@ -98,9 +98,10 @@ final class AppCore {
         audioDucker: dictationAudioDucker,
         confirmEnable: { [unowned self] in
             await self.confirm(
-                title: "Enable Dictation?",
-                message: "Tinycast needs microphone access for dictation and Accessibility to paste into "
-                    + "other apps. Audio is processed on this Mac.",
+                title: SettingsLocalization.string("Enable Dictation?"),
+                message: SettingsLocalization.string(
+                    "Tinycast needs microphone access for dictation and Accessibility to paste into "
+                        + "other apps. Audio is processed on this Mac."),
                 symbol: "waveform", confirmTitle: "Continue", tone: .neutral,
                 confirmRole: .standard)
         },

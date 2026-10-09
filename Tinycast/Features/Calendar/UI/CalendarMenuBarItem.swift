@@ -22,9 +22,9 @@ struct CalendarMenuBarLabel: View {
             }
         case (.meetingTitle, nil)
         where !AppCore.shared.calendarCoordinator.hasUpcomingMenuBarEvent:
-            title("No upcoming events")
+            title(SettingsLocalization.string("No upcoming events"))
         case (_, nil):
-            icon("calendar", describing: "no current meeting")
+            icon("calendar", describing: SettingsLocalization.string("no current meeting"))
         }
     }
 
@@ -52,7 +52,7 @@ struct CalendarMenuBarMenu: View {
             if let meeting = coordinator.menuBarEvent {
                 Section {
                     if let link = meeting.link {
-                        Button("Join \(meeting.title)", systemImage: link.provider.sfSymbol) {
+                        Button(SettingsLocalization.format("Join %@", meeting.title), systemImage: link.provider.sfSymbol) {
                             coordinator.join(meeting)
                         }
                     }
@@ -85,7 +85,7 @@ private struct MenuBarAgenda: View {
     var body: some View {
         let now = AppCore.shared.meetingClock.now
         ForEach(AppCore.shared.calendarCoordinator.menuBarAgenda) { group in
-            Section(group.day.title(calendar: .current)) {
+            Section(group.day.localizedTitle(calendar: .current)) {
                 ForEach(group.meetings) { meeting in
                     Button {
                         AppCore.shared.calendarCoordinator.join(meeting)

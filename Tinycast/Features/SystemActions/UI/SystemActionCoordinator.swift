@@ -57,7 +57,7 @@ final class SystemActionCoordinator {
                 let state = try SystemActionRunner.outputState()
                 volumeHUD.show(level: state.level, muted: state.muted)
             } else if let feedback {
-                core.showMessage(feedback.title, tone: feedback.isNoOp ? .neutral : .success)
+                core.showMessage(SettingsLocalization.string(feedback.title), tone: feedback.isNoOp ? .neutral : .success)
             }
         } catch let failure as SystemActionFailure {
             await presentFailure(action: action, failure: failure)
@@ -81,7 +81,7 @@ final class SystemActionCoordinator {
     private func presentFailure(action: SystemAction, failure: SystemActionFailure) async {
         guard
             await core.reportFailure(
-                title: "“\(action.name)” Failed", message: failure.message,
+                title: "“\(action.name)” Failed", message: SettingsLocalization.string(failure.message),
                 symbol: action.sfSymbol,
                 recovery: failure.settings == nil ? nil : "Open System Settings…"),
             let settings = failure.settings

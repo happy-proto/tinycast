@@ -32,7 +32,8 @@ struct DictationSettingsView: View {
                         Spacer(minLength: Theme.Spacing.lg)
                         Button(
                             microphoneAccess == .notDetermined
-                                ? "Grant Access…" : "Open System Settings"
+                                ? SettingsLocalization.string("Grant Access…")
+                                : SettingsLocalization.string("Open System Settings")
                         ) {
                             if microphoneAccess == .notDetermined {
                                 Task {
@@ -52,7 +53,7 @@ struct DictationSettingsView: View {
                 Section {
                     Picker(selection: $settings.dictationMode) {
                         ForEach(DictationMode.allCases) { mode in
-                            Text(mode.title).tag(mode)
+                            Text(SettingsLocalization.string(mode.title)).tag(mode)
                         }
                     } label: {
                         SettingsRowTitle(.dictationCommands, "Shortcut behavior")
@@ -65,8 +66,9 @@ struct DictationSettingsView: View {
                     if settings.dictationMode == .pushToTalk {
                         let issue = coordinator.holdShortcutIssue
                         Text(
-                            issue ?? "Hold a key combination or a single modifier; release it to transcribe. "
-                                + "Double taps work in toggle mode."
+                            issue ?? SettingsLocalization.string(
+                                "Hold a key combination or a single modifier; release it to transcribe. "
+                                    + "Double taps work in toggle mode.")
                         )
                         .font(.caption)
                         .foregroundStyle(issue == nil ? Color.secondary : Color.orange)
@@ -83,7 +85,8 @@ struct DictationSettingsView: View {
                     } label: {
                         SettingsRowTitle(.dictationModel, "Engine")
                         Text(
-                            settings.dictationModel.family.summary + " · " + settings.dictationModel.coverage)
+                            SettingsLocalization.string(settings.dictationModel.family.summary)
+                                + " · " + SettingsLocalization.string(settings.dictationModel.coverage))
                     }
                     Picker(selection: $settings.dictationModel) {
                         ForEach(
@@ -93,7 +96,7 @@ struct DictationSettingsView: View {
                         }
                     } label: {
                         SettingsRowTitle(.dictationModel, "Model")
-                        Text(settings.dictationModel.summary)
+                        Text(SettingsLocalization.string(settings.dictationModel.summary))
                     }
 
                     let installed = coordinator.models.isInstalled(settings.dictationModel)
@@ -114,8 +117,8 @@ struct DictationSettingsView: View {
                     } label: {
                         Text(
                             downloading
-                                ? "Downloading…"
-                                : installed ? "Installed" : "Not installed")
+                                ? SettingsLocalization.string("Downloading…")
+                                : SettingsLocalization.string(installed ? "Installed" : "Not installed"))
                         VStack(alignment: .leading, spacing: Theme.Spacing.xs) {
                             Text(modelDescription)
                             if downloading {
@@ -125,7 +128,8 @@ struct DictationSettingsView: View {
                                     )
                                     .accessibilityLabel("Download progress")
                                     Text(
-                                        "\(progress.received / 1_000_000) of \(progress.total / 1_000_000) MB"
+                                        SettingsLocalization.format(
+                                            "%lld of %lld MB", progress.received / 1_000_000, progress.total / 1_000_000)
                                     )
                                     .monospacedDigit()
                                 } else {
@@ -140,7 +144,7 @@ struct DictationSettingsView: View {
                             Text("Auto").tag("")
                             Divider()
                             ForEach(DictationLanguage.allCases) { language in
-                                Text(language.rawValue).tag(language.rawValue)
+                                Text(SettingsLocalization.string(language.rawValue)).tag(language.rawValue)
                             }
                         } label: {
                             SettingsRowTitle(.dictationModel, "Language")
@@ -153,7 +157,7 @@ struct DictationSettingsView: View {
                 Section {
                     Picker(selection: $settings.dictationIdleRelease) {
                         ForEach(DictationIdleRelease.allCases) { option in
-                            Text(option.title).tag(option)
+                            Text(idleReleaseTitle(option)).tag(option)
                         }
                     } label: {
                         SettingsRowTitle(.dictationMemory, "Release model from memory")
@@ -166,7 +170,7 @@ struct DictationSettingsView: View {
 
                 Section {
                     Picker(selection: microphoneBinding) {
-                        Text(microphones.isEmpty ? "No microphone available" : "System default")
+                        Text(SettingsLocalization.string(microphones.isEmpty ? "No microphone available" : "System default"))
                             .tag("")
                         if !microphones.isEmpty { Divider() }
                         ForEach(microphones, id: \.uniqueID) { microphone in
@@ -177,7 +181,7 @@ struct DictationSettingsView: View {
                     }
                     Picker(selection: $settings.dictationDestination) {
                         ForEach(DictationDestination.allCases) { destination in
-                            Text(destination.title).tag(destination)
+                            Text(SettingsLocalization.string(destination.title)).tag(destination)
                         }
                     } label: {
                         SettingsRowTitle(.dictationOutput, "When finished")
@@ -249,9 +253,20 @@ struct DictationSettingsView: View {
             })
     }
 
+    private func idleReleaseTitle(_ option: DictationIdleRelease) -> String {
+        switch option {
+        case .never: SettingsLocalization.string("Never")
+        case .oneMinute: SettingsLocalization.string("1 minute")
+        case .oneHour: SettingsLocalization.string("1 hour")
+        default: SettingsLocalization.format("%lld minutes", option.rawValue)
+        }
+    }
+
     private var modelDescription: String {
-        modelSize.map { "\(ByteCountFormatter.string(fromByteCount: $0, countStyle: .file)) on disk" }
-            ?? "about \(settings.dictationModel.approximateInstalledMegabytes) MB installed"
+        modelSize.map {
+            SettingsLocalization.format("%@ on disk", ByteCountFormatter.string(fromByteCount: $0, countStyle: .file))
+        } ?? SettingsLocalization.format(
+            "about %lld MB installed", settings.dictationModel.approximateInstalledMegabytes)
     }
 
     private func refreshModelSize(_ model: DictationModel) async {

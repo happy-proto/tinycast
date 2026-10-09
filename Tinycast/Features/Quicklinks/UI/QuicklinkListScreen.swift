@@ -136,13 +136,13 @@ enum QuicklinkActionsMenu {
         }
         items.append(
             PopoverMenuItem(
-                title: "Edit Quicklink", systemImage: "pencil", startsSection: true, shortcut: "⌘E"
+                title: SettingsLocalization.string("Edit Quicklink"), systemImage: "pencil", startsSection: true, shortcut: "⌘E"
             ) {
                 core.quicklinkCoordinator.editQuicklink(quicklink)
             })
         items.append(
             PopoverMenuItem(
-                title: "Duplicate Quicklink", systemImage: "plus.square.on.square", shortcut: "⌘D"
+                title: SettingsLocalization.string("Duplicate Quicklink"), systemImage: "plus.square.on.square", shortcut: "⌘D"
             ) {
                 core.quicklinkCoordinator.duplicateQuicklink(id: quicklink.id)
             })

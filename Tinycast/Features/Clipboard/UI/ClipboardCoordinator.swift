@@ -132,7 +132,7 @@ final class ClipboardCoordinator {
             pasteSequence = sequence
             return
         }
-        core.showMessage("Nothing left to paste", tone: .neutral)
+        core.showMessage(SettingsLocalization.string("Nothing left to paste"), tone: .neutral)
     }
 
     /// A copy since the last press, or a long pause, starts the walk over from the newest entry.

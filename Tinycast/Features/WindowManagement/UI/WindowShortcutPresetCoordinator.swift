@@ -21,7 +21,7 @@ final class WindowShortcutPresetCoordinator {
         var current = currentBindings()
         var plan = WindowShortcutPresetPlan(preset: preset, current: current)
         guard !plan.assignments.isEmpty else {
-            core.showMessage("\(preset.title) shortcuts already set")
+            core.showMessage(SettingsLocalization.format("%@ shortcuts already set", preset.title))
             return
         }
         if !plan.overwritten.isEmpty {
@@ -29,9 +29,10 @@ final class WindowShortcutPresetCoordinator {
             guard
                 await core.confirm(
                     title: plan.overwritten.count == 1
-                        ? "Replace 1 shortcut?" : "Replace \(plan.overwritten.count) shortcuts?",
+                        ? SettingsLocalization.string("Replace 1 shortcut?")
+                        : SettingsLocalization.format("Replace %lld shortcuts?", plan.overwritten.count),
                     message: replacementMessage(plan.overwritten, preset: preset),
-                    symbol: "keyboard", confirmTitle: "Replace")
+                    symbol: "keyboard", confirmTitle: SettingsLocalization.string("Replace"))
             else { return }
             // A settings.json reload can rebind while the dialog waits; never replace an unseen key.
             current = currentBindings()
@@ -62,10 +63,11 @@ final class WindowShortcutPresetCoordinator {
             }
         }
         if skipped.isEmpty {
-            core.showMessage("Applied \(preset.title) shortcuts")
+            core.showMessage(SettingsLocalization.format("Applied %@ shortcuts", preset.title))
         } else {
             core.showMessage(
-                "Applied \(preset.title) shortcuts — \(skipped.count) skipped, keys in use",
+                SettingsLocalization.format(
+                    "Applied %@ shortcuts — %lld skipped, keys in use", preset.title, skipped.count),
                 tone: .danger)
         }
     }
@@ -81,9 +83,10 @@ final class WindowShortcutPresetCoordinator {
     private func replacementMessage(
         _ ids: [WindowCommand.ID], preset: WindowShortcutPreset
     ) -> String {
-        let names = ids.compactMap { WindowCommandCatalog.command(id: $0)?.name }
+        let names = ids.compactMap { WindowCommandCatalog.command(id: $0).map { SettingsLocalization.string($0.name) } }
         let listed = names.prefix(3).joined(separator: ", ")
-        let rest = names.count > 3 ? " and \(names.count - 3) more" : ""
-        return "\(listed)\(rest) will use the \(preset.title) keys instead of the ones you set."
+        let rest = names.count > 3 ? SettingsLocalization.format(" and %lld more", names.count - 3) : ""
+        return SettingsLocalization.format(
+            "%@%@ will use the %@ keys instead of the ones you set.", listed, rest, preset.title)
     }
 }

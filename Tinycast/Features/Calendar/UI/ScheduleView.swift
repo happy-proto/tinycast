@@ -23,7 +23,7 @@ struct ScheduleList: View {
 
     private var rows: [Row] {
         MeetingDayGroup.grouping(results, now: now, calendar: .current).flatMap { group in
-            [.header(group.day.title(calendar: .current))] + group.meetings.map(Row.meeting)
+            [.header(group.day.localizedTitle(calendar: .current))] + group.meetings.map(Row.meeting)
         }
     }
 

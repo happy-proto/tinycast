@@ -265,7 +265,7 @@ struct AIModelButton: View {
             title: title,
             icon: icon,
             isOpen: isOpen,
-            help: "Switch AI model  ⌘P",
+            help: SettingsLocalization.string("Switch AI model  ⌘P"),
             action: action
         )
         .fixedSize(horizontal: true, vertical: false)

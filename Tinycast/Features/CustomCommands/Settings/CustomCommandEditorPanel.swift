@@ -47,7 +47,8 @@ struct CustomCommandEditorPanel: View {
     var body: some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.xl) {
             SettingsEditorHeader(
-                title: command == nil ? "Add Custom Command" : "Edit Custom Command")
+                title: SettingsLocalization.string(
+                    command == nil ? "Add Custom Command" : "Edit Custom Command"))
 
             HStack(alignment: .bottom, spacing: Theme.Spacing.lg) {
                 VStack(alignment: .leading, spacing: Theme.Spacing.sm) {
@@ -241,8 +242,8 @@ struct CustomCommandEditorPanel: View {
     ) -> some View {
         Toggle(isOn: isOn) {
             VStack(alignment: .leading, spacing: Theme.Spacing.xxs) {
-                Text(title)
-                Text(detail)
+                Text(SettingsLocalization.string(title))
+                Text(SettingsLocalization.string(detail))
                     .font(.caption)
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)

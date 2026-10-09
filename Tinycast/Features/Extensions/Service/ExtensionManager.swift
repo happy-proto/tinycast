@@ -574,7 +574,7 @@ final class ExtensionManager: ExtensionRuntimeDelegate, ExtensionHostContext {
             refreshingCommand: backgroundRef?.entryID,
             command: reference.entryID)
         {
-            coordinator?.showHUD(refusal)
+            coordinator?.showHUD(String(localized: String.LocalizationValue(refusal)))
             return
         }
         Task { [weak self] in

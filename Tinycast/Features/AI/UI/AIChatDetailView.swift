@@ -356,10 +356,10 @@ private struct AIAddMenu: View {
     private var attachHelp: String {
         let can = coordinator.capabilities(for: chat)
         switch (can.images, can.documents) {
-        case (true, true): return "Attach images, PDFs or text files"
-        case (true, false): return "Attach images or text files"
-        case (false, true): return "Attach PDFs or text files"
-        case (false, false): return "Attach text files"
+        case (true, true): return SettingsLocalization.string("Attach images, PDFs or text files")
+        case (true, false): return SettingsLocalization.string("Attach images or text files")
+        case (false, true): return SettingsLocalization.string("Attach PDFs or text files")
+        case (false, false): return SettingsLocalization.string("Attach text files")
         }
     }
 }
@@ -396,13 +396,14 @@ private struct DictationButton: View {
         .composerControl()
         .disabled(session?.isTranscribing == true)
         .help(help(session))
-        .accessibilityLabel(session == nil ? "Dictate" : "Stop Dictating")
+        .accessibilityLabel(SettingsLocalization.string(session == nil ? "Dictate" : "Stop Dictating"))
     }
 
     private func help(_ session: DictationField?) -> String {
-        guard dictation.hasModel else { return "Download a dictation model in Settings" }
-        guard let session else { return "Dictate" }
-        return session.isTranscribing ? "Transcribing…" : "Stop and insert the text  ↵"
+        guard dictation.hasModel else { return SettingsLocalization.string("Download a dictation model in Settings") }
+        guard let session else { return SettingsLocalization.string("Dictate") }
+        return SettingsLocalization.string(
+            session.isTranscribing ? "Transcribing…" : "Stop and insert the text  ↵")
     }
 }
 
@@ -542,9 +543,10 @@ private struct AIToolsMenu: View {
         } label: {
             Label(
                 !takesTools
-                    ? "Tools · Not with this model"
+                    ? SettingsLocalization.string("Tools · Not with this model")
                     : servers.isEmpty || !scope.isEnabled
-                        ? "Tools · Off" : "Tools · \(active) of \(servers.count)",
+                        ? SettingsLocalization.string("Tools · Off")
+                        : SettingsLocalization.format("Tools · %lld of %lld", active, servers.count),
                 systemImage: "wrench.and.screwdriver")
         }
         .disabled(!takesTools)

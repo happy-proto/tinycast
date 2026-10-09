@@ -105,9 +105,9 @@ final class CalendarCoordinator {
             guard
                 await core.confirm(
                     title: "Enable calendar?",
-                    message:
-                        "Tinycast reads \(settings.calendarSpan.possessivePhrase) events "
-                        + "to find join links. Nothing leaves this Mac.",
+                    message: SettingsLocalization.format(
+                        "Tinycast reads %@ events to find join links. Nothing leaves this Mac.",
+                        SettingsLocalization.string(settings.calendarSpan.possessivePhrase)),
                     symbol: "calendar", confirmTitle: "Continue", tone: .neutral,
                     confirmRole: .standard)
             else { return }
@@ -289,7 +289,8 @@ final class CalendarCoordinator {
 
     func openNextMeetingInCalendar() {
         guard let meeting = window.joinable(from: store.events, now: Date()) ?? agenda.first else {
-            report("Nothing scheduled \(settings.calendarSpan.orPhrase)")
+            report(SettingsLocalization.format(
+                "Nothing scheduled %@", SettingsLocalization.string(settings.calendarSpan.orPhrase)))
             return
         }
         openInCalendar(meeting)

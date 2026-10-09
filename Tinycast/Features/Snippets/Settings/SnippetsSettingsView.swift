@@ -75,7 +75,9 @@ struct SnippetsSettingsView: View {
     private var library: some View {
         Section {
             if sortedSnippets.isEmpty {
-                Text(snippetsStore.state == .loading ? "Loading snippets…" : "No snippets yet.")
+                Text(SettingsLocalization.string(
+                    snippetsStore.state == .loading ? "Loading snippets…" : "No snippets yet."
+                ))
                     .foregroundStyle(.secondary)
             } else {
                 ForEach(sortedSnippets) { record in
@@ -185,7 +187,7 @@ private struct SnippetSettingsRow: View {
     let onDelete: () -> Void
 
     var body: some View {
-        SettingsRow(title: record.snippet.name, subtitle: metadata) {
+        SettingsRow(verbatimTitle: record.snippet.name, subtitle: metadata) {
             Image(systemName: "doc.text")
                 .font(.system(size: Theme.Size.settingsRowIcon - Theme.Spacing.xs))
                 .frame(width: SettingsListMetrics.iconSize, height: SettingsListMetrics.iconSize)
@@ -248,7 +250,9 @@ private struct SnippetEditorPanel: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: Theme.Spacing.xl) {
-            SettingsEditorHeader(title: record == nil ? "Add Snippet" : "Edit Snippet")
+            SettingsEditorHeader(
+                title: SettingsLocalization.string(
+                    record == nil ? "Add Snippet" : "Edit Snippet"))
 
             field(
                 title: "Name", placeholder: "Email Sign-off", text: $name,

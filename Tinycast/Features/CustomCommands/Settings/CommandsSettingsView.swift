@@ -22,8 +22,8 @@ struct CommandsSettingsView: View {
                 anchor: .commandsCustomCommands,
                 enableTitle: "Enable custom commands",
                 enableSubtitle:
-                    "Run as you in /bin/zsh, or the interpreter a #! line names. "
-                    + "Use full executable paths.",
+                    SettingsLocalization.string(
+                        "Run as you in /bin/zsh, or the interpreter a #! line names. Use full executable paths."),
                 isEnabled: $settings.customCommandsEnabled,
                 showsInLauncher: $settings.customCommandsShowInLauncher)
 
@@ -100,7 +100,7 @@ private struct CustomCommandSettingsRow: View {
     let onDelete: () -> Void
 
     var body: some View {
-        SettingsRow(title: command.name, subtitle: command.command) {
+        SettingsRow(verbatimTitle: command.name, subtitle: command.command) {
             Image(systemName: command.symbol)
         } trailing: {
             if !command.showsInRootSearch {

@@ -142,6 +142,7 @@ run favorites-test         $L/FavoriteSlots.swift
 run launcher-file-test     $L/LauncherFileFormat.swift \
                            Tinycast/Features/Settings/Model/SettingsFileJSON.swift
 run launcher-settings-file-test \
+                           Tinycast/Features/Settings/SettingsLocalization.swift \
                            $L/LauncherFileFormat.swift $L/CommandID.swift $L/CommandCatalog.swift \
                            Tinycast/Features/Launcher/Service/LauncherSettingsFile.swift \
                            Tinycast/Features/Launcher/Service/AliasStore.swift \
@@ -301,7 +302,8 @@ run fallback-test          Tinycast/Features/Launcher/Model/Fallback.swift \
 run dictionary-test        Tinycast/Features/Dictionary/Model/DictionaryEntry.swift \
                            Tinycast/Features/Dictionary/Model/DictionaryMarkup.swift
 run dictation-test         Tinycast/Features/Dictation/Model/DictationModel.swift Tinycast/Features/Dictation/Model/DictationIdleRelease.swift Tinycast/Features/Dictation/Model/DictationTextFormatter.swift
-run dictation-field-test   Tinycast/Features/Dictation/Model/DictationModel.swift \
+run dictation-field-test   Tinycast/Features/Settings/SettingsLocalization.swift \
+                           Tinycast/Features/Dictation/Model/DictationModel.swift \
                            Tinycast/Features/Dictation/Model/DictationMode.swift \
                            Tinycast/Features/Dictation/Model/DictationDestination.swift \
                            Tinycast/Features/Dictation/Model/DictationTextFormatter.swift \
@@ -630,7 +632,8 @@ run slow ext-test          -parse-as-library \
                            Tinycast/Platform/Compression/Zlib.swift \
                            Tinycast/Features/Clipboard/Model/ColorValue.swift \
                            Tinycast/Features/Clipboard/Model/ColorSpaces.swift
-run settings-history-test  Tinycast/Features/Settings/SettingsTab.swift \
+run settings-history-test  Tinycast/Features/Settings/SettingsLocalization.swift \
+                           Tinycast/Features/Settings/SettingsTab.swift \
                            Tinycast/Features/Settings/SettingsHistory.swift \
                            Tinycast/Features/Settings/SettingsAnchor.swift \
                            Tinycast/Features/Settings/SettingsNavigationState.swift \

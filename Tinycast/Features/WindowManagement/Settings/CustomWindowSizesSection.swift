@@ -44,7 +44,7 @@ private struct CustomWindowSizeRow: View {
     var body: some View {
         let entry = AppEntry(size)
         let isVisible = visibility.isItemVisible(entry)
-        SettingsRow(title: size.name, subtitle: size.summary) {
+        SettingsRow(verbatimTitle: size.name, subtitle: size.summary) {
             Image(systemName: CustomWindowSize.sfSymbol)
         } trailing: {
             AliasField(entry: entry)
@@ -73,7 +73,7 @@ private struct CustomWindowSizeRow: View {
             .labelsHidden()
             .toggleStyle(.checkbox)
             .launcherVisibilityHelp()
-            .accessibilityLabel("Show \(size.name) in launcher")
+            .accessibilityLabel(SettingsLocalization.format("Show %@ in launcher", size.name))
         }
     }
 }
