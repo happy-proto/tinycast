@@ -4,38 +4,7 @@ import Foundation
 enum BundleLocalization {
     /// Preferred languages first, English last: a user who reads Thai still types "Calendar".
     nonisolated static func indexedLanguages(_ preferred: [String]) -> [String] {
-        var codes: [String] = []
-        var seen = Set<String>()
-        for tag in preferred + ["en"] {
-            let bare = tag.split(separator: "-").first.map(String.init) ?? tag
-            let aliases = resourceAlias(for: bare).map { [$0] } ?? []
-            for form in [tag] + scriptForms(tag) + [bare] + aliases {
-                // loctable keys and .lproj folders use underscores where a language tag uses "-".
-                let underscored = form.replacingOccurrences(of: "-", with: "_")
-                for code in [form, underscored]
-                where !code.isEmpty && seen.insert(code).inserted {
-                    codes.append(code)
-                }
-            }
-        }
-        return codes
-    }
-
-    private static func resourceAlias(for language: String) -> String? {
-        language == "nb" ? "no" : nil
-    }
-
-    /// Most apps ship a script-bearing tag as `zh-Hans`; Apple keys it by region alone, as `zh_CN`.
-    private static func scriptForms(_ tag: String) -> [String] {
-        let subtags = tag.split(separator: "-")
-        guard subtags.contains(where: { $0.count == 4 && $0.allSatisfy(\.isLetter) })
-        else { return [] }
-        let language = Locale.Language(identifier: tag)
-        guard let code = language.languageCode?.identifier else { return [] }
-        let region =
-            language.region ?? Locale.Language(identifier: language.maximalIdentifier).region
-        return [language.script?.identifier, region?.identifier].compactMap { $0 }
-            .map { "\(code)-\($0)" }
+        preferred + ["en"]
     }
 
     /// Every name the bundle carries, most preferred language first. `base` — an app's file name, a
@@ -45,13 +14,7 @@ enum BundleLocalization {
     ) -> [String] {
         let resources = bundleURL.appendingPathComponent("Contents/Resources", isDirectory: true)
         let table = plist(at: resources.appendingPathComponent("InfoPlist.loctable"))
-        let development = developmentRegion.flatMap { languageCode(of: $0) }
-        let developmentAlias = development.flatMap { resourceAlias(for: $0) }
-        let developmentFallback = languages.last { code in
-            guard let development else { return false }
-            return code.caseInsensitiveCompare(development) == .orderedSame
-                || code == developmentAlias
-        }
+        let development = developmentRegion.flatMap { localizationIdentifier(of: $0) }
         var result: [String] = []
         var seen = Set<String>()
         var isBaseRenamed = false
@@ -61,17 +24,30 @@ enum BundleLocalization {
             result.append(name)
         }
 
-        for code in languages {
+        let folders =
+            (try? FileManager.default.contentsOfDirectory(
+                at: resources, includingPropertiesForKeys: nil, options: [.skipsHiddenFiles]))?
+            .filter { $0.pathExtension == "lproj" }
+            .map { $0.deletingPathExtension().lastPathComponent } ?? []
+        let tableCodes = table.map { Array($0.keys) } ?? []
+        var available = Set(tableCodes + folders)
+        if let development { available.insert(development) }
+        let codes = localizedCodes(available: available.sorted(), preferences: languages)
+
+        let developmentCodes = codes.filter { code in
+            guard let development else { return false }
+            return localizationIdentifier(of: code) == development
+        }
+
+        for code in codes {
             let strings = plist(
                 at: resources.appendingPathComponent("\(code).lproj/InfoPlist.strings"))
             let translated = [table?[code] as? [String: Any], strings]
                 .compactMap { $0.flatMap(AppDisplayName.inInfo) }
             translated.forEach(append)
-            if let development,
-                code.caseInsensitiveCompare(development) == .orderedSame || code == developmentAlias
-            {
+            if developmentCodes.contains(code) {
                 if !translated.isEmpty { isBaseRenamed = true }
-                if code == developmentFallback && !isBaseRenamed { append(base) }
+                if code == developmentCodes.last && !isBaseRenamed { append(base) }
             }
         }
         // A development region this Mac doesn't read still leaves the name searchable.
@@ -79,10 +55,37 @@ enum BundleLocalization {
         return result
     }
 
+    /// An unsupported preference must not trigger Foundation's English backstop.
+    private static func localizedCodes(available: [String], preferences: [String]) -> [String] {
+        var result: [String] = []
+        var seen = Set<String>()
+        let preferences = preferences.flatMap { preference -> [String] in
+            let language = Locale.Language(identifier: preference).languageCode?.identifier
+            return language == "nb" ? [preference, "no"] : [preference]
+        }
+        for preference in preferences {
+            let language = Locale.Language(identifier: preference)
+            let candidates = available.filter {
+                let candidate = Locale.Language(identifier: $0)
+                return localizationIdentifier(of: $0).map { Locale.Language(identifier: $0).languageCode }
+                    == localizationIdentifier(of: preference).map { Locale.Language(identifier: $0).languageCode }
+                    && candidate.script == language.script
+            }
+            guard !candidates.isEmpty else { continue }
+            for code in Bundle.preferredLocalizations(
+                from: candidates, forPreferences: [preference])
+            where seen.insert(code).inserted {
+                result.append(code)
+            }
+        }
+        return result
+    }
+
     /// `CFBundleDevelopmentRegion` still ships its pre-BCP-47 spelling: Safari's reads "English".
-    private static func languageCode(of region: String) -> String? {
-        Locale.Language(identifier: Locale.canonicalLanguageIdentifier(from: region))
-            .languageCode?.identifier
+    private static func localizationIdentifier(of region: String) -> String? {
+        let identifier = Locale.canonicalLanguageIdentifier(from: region)
+        guard Locale.Language(identifier: identifier).languageCode != nil else { return nil }
+        return identifier == "no" ? "nb" : identifier
     }
 
     private static func plist(at url: URL) -> [String: Any]? {
