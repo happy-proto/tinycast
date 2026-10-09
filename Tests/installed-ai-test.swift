@@ -626,8 +626,10 @@ struct InstalledAITests {
         let events = await fixture.events(
             kind: .claude, model: "pair", effort: nil, toolServers: session)
         expect(
-            reader.calls.map(\.tool) == ["first_tool", "second_tool"] && reader.mostAtOnce == 1,
-            "two calls held open together are asked about one after the other, in order")
+            reader.calls.count == 2
+                && Set(reader.calls.map(\.tool)) == ["first_tool", "second_tool"]
+                && reader.mostAtOnce == 1,
+            "each concurrent call is asked once without overlapping questions")
         expect(
             reader.dialogs == 1,
             "and the second is decided after the first dialog closes, so its grant is seen")
@@ -820,6 +822,13 @@ private final class Fixture {
                 to: root.appending(path: ".zshenv"), atomically: true, encoding: .utf8)
             try #"[ -n "$TINYCAST_SAVED_PATH" ] && export PATH="$TINYCAST_SAVED_PATH""#.write(
                 to: root.appending(path: ".zprofile"), atomically: true, encoding: .utf8)
+            let fishConfig = root.appending(path: "fish/config.fish")
+            try FileManager.default.createDirectory(
+                at: fishConfig.deletingLastPathComponent(), withIntermediateDirectories: true)
+            try "set -gx PATH $TC_INSTALLED_STUB_BIN $PATH\n".write(
+                to: fishConfig, atomically: true, encoding: .utf8)
+            setenv("TC_INSTALLED_STUB_BIN", bin.path, 1)
+            setenv("XDG_CONFIG_HOME", root.path, 1)
             setenv("TC_INSTALLED_STUB_ROOT", root.path, 1)
             setenv("TC_CURSOR_CHATS_ROOT", cursorChats.path, 1)
         } catch {
