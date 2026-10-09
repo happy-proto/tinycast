@@ -93,7 +93,7 @@ private struct RoomSettingsRow: View {
             .labelsHidden()
             .toggleStyle(.checkbox)
             .launcherVisibilityHelp()
-            .accessibilityLabel("Show \(room.name) in launcher")
+            .accessibilityLabel(SettingsLocalization.format("Show %@ in launcher", room.name))
         }
     }
 }

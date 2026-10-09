@@ -153,7 +153,7 @@ private struct WindowCommandSettingsRow: View {
             .labelsHidden()
             .toggleStyle(.checkbox)
             .launcherVisibilityHelp()
-            .accessibilityLabel("Show \(command.name) in launcher")
+            .accessibilityLabel(SettingsLocalization.format("Show %@ in launcher", command.name))
         }
     }
 }
