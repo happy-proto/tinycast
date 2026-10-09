@@ -242,8 +242,8 @@ struct CustomCommandEditorPanel: View {
     ) -> some View {
         Toggle(isOn: isOn) {
             VStack(alignment: .leading, spacing: Theme.Spacing.xxs) {
-                Text(title)
-                Text(detail)
+                Text(SettingsLocalization.string(title))
+                Text(SettingsLocalization.string(detail))
                     .font(.caption)
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)

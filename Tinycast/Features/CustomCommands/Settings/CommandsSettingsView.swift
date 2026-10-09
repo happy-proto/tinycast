@@ -22,8 +22,8 @@ struct CommandsSettingsView: View {
                 anchor: .commandsCustomCommands,
                 enableTitle: "Enable custom commands",
                 enableSubtitle:
-                    "Run as you in /bin/zsh, or the interpreter a #! line names. "
-                    + "Use full executable paths.",
+                    SettingsLocalization.string(
+                        "Run as you in /bin/zsh, or the interpreter a #! line names. Use full executable paths."),
                 isEnabled: $settings.customCommandsEnabled,
                 showsInLauncher: $settings.customCommandsShowInLauncher)
 

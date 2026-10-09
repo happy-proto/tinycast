@@ -60,10 +60,11 @@ enum AppActionsMenu {
         // These carry their own Show in root search switch rather than a pane checkbox.
         let hidesFromRoot = app.kind == .quicklink || app.kind == .customCommand
         if isPersistent, app.canHideFromSearch || hidesFromRoot {
-            let title = hidesFromRoot ? "Hide from Root Search" : "Hide from Search"
+            let title = SettingsLocalization.string(
+                hidesFromRoot ? "Hide from Root Search" : "Hide from Search")
             items.append(
                 PopoverMenuItem(
-                    title: SettingsLocalization.string(title), systemImage: "eye.slash", shortcut: "⇧⌘H", action: onHideFromSearch))
+                    title: title, systemImage: "eye.slash", shortcut: "⇧⌘H", action: onHideFromSearch))
         }
         if running, app.kind == .application {
             items.append(
@@ -100,7 +101,8 @@ enum AppActionsMenu {
         if app.kind == .quicklink, let quicklink = core.quicklinks.quicklink(entryID: app.id) {
             items.append(
                 PopoverMenuItem(
-                    title: "Edit Quicklink", systemImage: "pencil", startsSection: true, shortcut: "⌘E"
+                    title: SettingsLocalization.string("Edit Quicklink"), systemImage: "pencil",
+                    startsSection: true, shortcut: "⌘E"
                 ) {
                     core.quicklinkCoordinator.editQuicklink(quicklink)
                 })

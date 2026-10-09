@@ -124,7 +124,7 @@ private struct WindowLayoutSettingsRow: View {
             .labelsHidden()
             .toggleStyle(.checkbox)
             .launcherVisibilityHelp()
-            .accessibilityLabel("Show \(layout.name) in launcher")
+            .accessibilityLabel(SettingsLocalization.format("Show %@ in launcher", layout.name))
         }
     }
 }

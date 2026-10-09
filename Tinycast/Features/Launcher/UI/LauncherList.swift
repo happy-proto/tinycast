@@ -114,7 +114,7 @@ struct LauncherList: View {
             rows.append(contentsOf: suggestions.map { .app($0, slot: nil) })
         }
         if !matches.isEmpty {
-            rows.append(.header("Results"))
+            rows.append(.header(SettingsLocalization.string("Results")))
             rows.append(contentsOf: matches.map { .app($0, slot: nil) })
         }
         // Publication order, so rows match the flat index.
