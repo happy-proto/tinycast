@@ -230,7 +230,7 @@ final class DictationCoordinator {
                             if destination.copies { Paster.copyPlainText(assembled) }
                             reset(cancelTranscription: false)
                             if lost, destination.pastes {
-                                showMessage("Couldn't paste some dictation into this app", .danger)
+                                showMessage(SettingsLocalization.string("Couldn't paste some dictation into this app"), .danger)
                             }
                         },
                         onFailed: { [weak self] in
@@ -256,7 +256,11 @@ final class DictationCoordinator {
         let lost = liveDeliveryFailed
         reset(cancelTranscription: false)
         if !text.isEmpty, destination.copies { Paster.copyPlainText(text) }
-        if lost, destination.pastes { showMessage("Couldn't paste some dictation into this app", .danger) }
+        if lost,
+            destination.pastes {
+            showMessage(SettingsLocalization.string("Couldn't paste some dictation into this app"),
+            .danger)
+        }
     }
 
     /// Chunks already pasted only make sense where text is pasted at all.

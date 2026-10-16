@@ -72,6 +72,11 @@ function checkTranslation(key, relativePath, source, offset) {
 for (const file of swiftSources(path.join(ROOT, "Tinycast"))) {
   const source = fs.readFileSync(file, "utf8");
   const relativePath = path.relative(ROOT, file);
+  if (/\/(?:Event|Snippet|Quicklink|CustomCommand)EditorView\.swift$/.test(relativePath)) {
+    for (const match of source.matchAll(/\b(?:FormRow|fieldTitle|option|placeholder)\(\s*("[^"\\\n]+")|\b(?:placeholder|label|hint):\s*("[^"\\\n]+")/g)) {
+      checkTranslation(JSON.parse(match[1] ?? match[2]), relativePath, source, match.index);
+    }
+  }
   if (relativePath.includes("/Settings/") || relativePath.endsWith("/SettingsComponents.swift")) {
     for (const match of source.matchAll(settingsPattern)) {
       const literal = match[1] ?? match[2] ?? match[3];

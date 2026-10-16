@@ -23,8 +23,13 @@ struct HyperKeySettingsSection: View {
     }
 
     private var hyperSubtitle: String {
-        guard settings.hyperKey != .none else { return "Remap one key to \(hyperGlyphs) held together." }
-        return "\(settings.hyperKey.title) sends \(hyperGlyphs), shown as ✦ in shortcuts."
+        guard settings.hyperKey != .none else {
+            return SettingsLocalization.format("Remap one key to %@ held together.",
+            hyperGlyphs)
+        }
+        return SettingsLocalization.format("%@ sends %@, shown as ✦ in shortcuts.",
+            SettingsLocalization.string(settings.hyperKey.title),
+            hyperGlyphs)
     }
 
     var body: some View {
@@ -32,7 +37,7 @@ struct HyperKeySettingsSection: View {
         Section {
             Picker(selection: hyperKeySelection) {
                 ForEach(HyperKeyPhysicalKey.allCases) { key in
-                    Text(key.title).tag(key)
+                    Text(SettingsLocalization.string(key.title)).tag(key)
                 }
             } label: {
                 SettingsRowTitle(.generalHyperKey, "Hyper Key")
@@ -49,12 +54,13 @@ struct HyperKeySettingsSection: View {
                 Picker(selection: $settings.hyperKeyQuickPress) {
                     Text("Does Nothing").tag(HyperKeyQuickPress.none)
                     if let original = settings.hyperKey.quickPressOriginalTitle {
-                        Text(original).tag(HyperKeyQuickPress.originalKey)
+                        Text(SettingsLocalization.string(original)).tag(HyperKeyQuickPress.originalKey)
                     }
                     Text("Trigger Escape").tag(HyperKeyQuickPress.escape)
                 } label: {
                     SettingsRowTitle(.generalHyperKey, "Quick Press")
-                    Text("When \(settings.hyperKey.title) is pressed alone.")
+                    Text(SettingsLocalization.format("When %@ is pressed alone.",
+                        SettingsLocalization.string(settings.hyperKey.title)))
                 }
             }
 
@@ -68,9 +74,10 @@ struct HyperKeySettingsSection: View {
                 Toggle(isOn: $settings.hyperKeySecureInputCompatibility) {
                     SettingsRowTitle(.generalHyperKey, "Secure Input Compatibility")
                     Text(
-                        "Tinycast's Hyper shortcuts also work in password fields and secure terminals, "
-                            + "where Right Control (⌃) with the same key triggers them. "
-                            + "While on, Right Control (⌃) acts as the Hyper Key too.")
+                        SettingsLocalization.string(
+                            "Tinycast's Hyper shortcuts also work in password fields and secure terminals, where "
+                                + "Right Control (⌃) with the same key triggers them. While on, Right Control (⌃) acts as "
+                                + "the Hyper Key too."))
                 }
             }
         } header: {
@@ -100,12 +107,13 @@ struct HyperKeySettingsSection: View {
             SettingsRow(title: "Status", subtitle: detail, subtitleLineLimit: 2) {
                 HStack(spacing: Theme.Spacing.sm) {
                     ColorDot(color: tint)
-                    Text(title).foregroundStyle(.secondary)
+                    Text(SettingsLocalization.string(title)).foregroundStyle(.secondary)
                     if status == .needsAccessibility {
                         Button("Grant Access…") { Permissions.openAccessibilitySettings() }
                     }
                     Button(
-                        isShowingDiagnostics ? "Hide Diagnostics" : "Diagnostics…", action: toggleDiagnostics)
+                        SettingsLocalization.string(isShowingDiagnostics ? "Hide Diagnostics" : "Diagnostics…"),
+                        action: toggleDiagnostics)
                 }
             }
         }
@@ -113,19 +121,21 @@ struct HyperKeySettingsSection: View {
         private var title: String {
             switch status {
             case .off: return "Off"
-            case .active: return "Active"
-            case .needsAccessibility: return "Needs Accessibility"
-            case .blocked: return "Blocked"
+            case .active: return SettingsLocalization.string("Active")
+            case .needsAccessibility: return SettingsLocalization.string("Needs Accessibility")
+            case .blocked: return SettingsLocalization.string("Blocked")
             case .remapUnavailable: return "Unavailable"
-            case .paused: return "Paused"
+            case .paused: return SettingsLocalization.string("Paused")
             }
         }
 
         private var detail: String? {
             switch status {
-            case .blocked(let appName): return "\(appName) runs its own Hyper Key. Quit it to use this one."
-            case .remapUnavailable: return "macOS refused to remap the keyboard."
-            case .paused: return "Handed back while the Mac sleeps, locks or switches user."
+            case .blocked(let appName):
+                return SettingsLocalization.format("%@ runs its own Hyper Key. Quit it to use this one.",
+                appName)
+            case .remapUnavailable: return SettingsLocalization.string("macOS refused to remap the keyboard.")
+            case .paused: return SettingsLocalization.string("Handed back while the Mac sleeps, locks or switches user.")
             case .off, .active, .needsAccessibility: return nil
             }
         }

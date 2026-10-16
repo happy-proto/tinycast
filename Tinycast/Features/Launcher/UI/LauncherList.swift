@@ -90,7 +90,7 @@ struct LauncherList: View {
 
     private var fileRows: [Row] {
         guard let files else { return [] }
-        return [.header("Files")] + files.results.enumerated().map { Row.file($1, index: $0) }
+        return [.header(SettingsLocalization.string("Files"))] + files.results.enumerated().map { Row.file($1, index: $0) }
     }
 
     /// Every row the fallback section contributes, always after the results.

@@ -116,7 +116,7 @@ struct DictationSettingsView: View {
                                             || coordinator.models.removing == settings.dictationModel)
                             }
                         } label: {
-                            Text(installed ? "Installed" : "Not installed")
+                            Text(SettingsLocalization.string(installed ? "Installed" : "Not installed"))
                             Text(modelDescription)
                         }
                     }
@@ -248,8 +248,10 @@ struct DictationSettingsView: View {
     }
 
     private var modelDescription: String {
-        modelSize.map { "\(ByteCountFormatter.string(fromByteCount: $0, countStyle: .file)) on disk" }
-            ?? "About \(settings.dictationModel.approximateInstalledMegabytes) MB on disk"
+        modelSize.map { SettingsLocalization.format("%@ on disk",
+            ByteCountFormatter.string(fromByteCount: $0,
+            countStyle: .file)) }
+            ?? SettingsLocalization.format("About %lld MB on disk", settings.dictationModel.approximateInstalledMegabytes)
     }
 
     private struct DownloadProgressView: View {
@@ -270,7 +272,7 @@ struct DictationSettingsView: View {
                     HStack {
                         let received = progress.received.formatted(.byteCount(style: .file))
                         let total = progress.total.formatted(.byteCount(style: .file))
-                        Text("\(received) of \(total)")
+                        Text(SettingsLocalization.format("%@ of %@", received, total))
                         Spacer()
                         Text(
                             Double(progress.received) / Double(progress.total),

@@ -18,27 +18,27 @@ struct WindowSwitchScreen: PaletteScreen {
         guard let entry = entry(at: selection) else { return nil }
         let coordinator = core.windowSwitchCoordinator
         var items = [
-            PopoverMenuItem(title: "Switch to Window", systemImage: "macwindow", shortcut: "↵") {
+            PopoverMenuItem(title: SettingsLocalization.string("Switch to Window"), systemImage: "macwindow", shortcut: "↵") {
                 coordinator.activate(entry)
             }
         ]
         if !entry.isMinimized {
             items.append(
                 PopoverMenuItem(
-                    title: "Minimize Window", systemImage: "minus.rectangle", shortcut: "⌃⇧M"
+                    title: SettingsLocalization.string("Minimize Window"), systemImage: "minus.rectangle", shortcut: "⌃⇧M"
                 ) {
                     coordinator.minimize(entry)
                 })
         }
         items.append(
             PopoverMenuItem(
-                title: "Hide Application", systemImage: "eye.slash", startsSection: true,
+                title: SettingsLocalization.string("Hide Application"), systemImage: "eye.slash", startsSection: true,
                 shortcut: "⌃⇧H"
             ) {
                 coordinator.hideApplication(entry)
             })
         items.append(
-            PopoverMenuItem(title: "Quit Application", systemImage: "power", shortcut: "⌃⇧Q") {
+            PopoverMenuItem(title: SettingsLocalization.string("Quit Application"), systemImage: "power", shortcut: "⌃⇧Q") {
                 coordinator.quitApplication(entry)
             })
         return PopoverMenuContent(header: entry.displayTitle, items: items)
@@ -70,7 +70,7 @@ struct WindowSwitchScreen: PaletteScreen {
     @ViewBuilder
     private func content(selection: Int, scroll: ScrollIntent) -> some View {
         if rows.isEmpty {
-            EmptyResults(text: session.snapshot.isEmpty ? "No open windows" : "No windows found")
+            EmptyResults(text: SettingsLocalization.string(session.snapshot.isEmpty ? "No open windows" : "No windows found"))
         } else {
             WindowSwitchList(
                 entries: rows,

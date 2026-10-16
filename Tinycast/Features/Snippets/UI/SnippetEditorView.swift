@@ -56,7 +56,7 @@ struct SnippetEditorView: View {
                     minimumHeight: metrics.size.panelHeight - metrics.size.headerHeight * 4
                         - metrics.spacing.xl - metrics.spacing.md * 2 - metrics.spacing.xs
                         - metrics.typography.textNSFont(.callout).boundingRectForFont.height,
-                    label: "Snippet template", moveFocus: editor.advanceFocus
+                    label: SettingsLocalization.string("Snippet template"), moveFocus: editor.advanceFocus
                 )
                 .accessibilityHint("Enter the text Tinycast expands.")
                 HStack {
@@ -70,7 +70,7 @@ struct SnippetEditorView: View {
             }
             .padding(.bottom, metrics.spacing.md)
             .formFieldChrome(focused: focusedField == .template)
-            Text("Use placeholders for the clipboard, current date, arguments and more.")
+            Text(SettingsLocalization.string("Use placeholders for the clipboard, current date, arguments and more."))
                 .font(metrics.typography.rowTrailing)
                 .foregroundStyle(Theme.Colors.textSecondary)
                 .fixedSize(horizontal: false, vertical: true)
@@ -87,8 +87,8 @@ struct SnippetEditorView: View {
             } action: {
                 placeholderMenuFrame = $0
             }
-            .tooltip("Insert a dynamic placeholder", alignment: .leading, dismissOnPress: true)
-            .accessibilityLabel("Insert a placeholder")
+            .tooltip(SettingsLocalization.string("Insert a dynamic placeholder"), alignment: .leading, dismissOnPress: true)
+            .accessibilityLabel(SettingsLocalization.string("Insert a placeholder"))
     }
 
     private func showPlaceholderMenu() {
@@ -102,7 +102,7 @@ struct SnippetEditorView: View {
         let items = groups.flatMap { group in
             group.tokens.enumerated().map { index, token in
                 PopoverMenuItem(
-                    title: token, icon: .blank, sectionTitle: index == 0 ? group.title : nil,
+                    title: token, icon: .blank, sectionTitle: index == 0 ? SettingsLocalization.string(group.title) : nil,
                     startsSection: index == 0
                 ) {
                     editor.selection = insertionSelection
@@ -118,17 +118,17 @@ struct SnippetEditorView: View {
     private var properties: some View {
         VStack(alignment: .leading, spacing: metrics.spacing.xxl) {
             field(
-                "Name", placeholder: "Snippet name", text: $editor.name,
+                "Name", placeholder: SettingsLocalization.string("Snippet name"), text: $editor.name,
                 focus: .name,
-                hint: "Required. Shown in the library and launcher.")
+                hint: SettingsLocalization.string("Required. Shown in the library and launcher."))
             field(
-                "Keyword", placeholder: "Optional, for example !notes", text: $editor.keyword,
-                focus: .keyword, hint: "Optional. Type this to expand the snippet.")
+                "Keyword", placeholder: SettingsLocalization.string("Optional, for example !notes"), text: $editor.keyword,
+                focus: .keyword, hint: SettingsLocalization.string("Optional. Type this to expand the snippet."))
             option(
-                "Enabled", detail: "Disabled snippets cannot be expanded.",
+                "Enabled", detail: SettingsLocalization.string("Disabled snippets cannot be expanded."),
                 value: $editor.isEnabled, focus: .enabled)
             option(
-                "Show confirmation", detail: "Confirm on screen after this snippet is inserted.",
+                "Show confirmation", detail: SettingsLocalization.string("Confirm on screen after this snippet is inserted."),
                 value: $editor.showsConfirmation, focus: .confirmation)
             if let errorMessage = editor.errorMessage {
                 Text(errorMessage)
@@ -144,7 +144,7 @@ struct SnippetEditorView: View {
     }
 
     private func fieldTitle(_ title: String) -> some View {
-        Text(title)
+        Text(SettingsLocalization.string(title))
             .font(metrics.typography.sectionHeader)
             .foregroundStyle(Theme.Colors.textSecondary)
     }
@@ -157,7 +157,9 @@ struct SnippetEditorView: View {
             fieldTitle(title)
             FormTextInput(
                 text: text, focused: focusBinding(focus), placeholder: placeholder,
-                label: "Snippet \(title.lowercased())", moveFocus: editor.advanceFocus
+                label: SettingsLocalization.format("Snippet %@",
+                    SettingsLocalization.string(title)),
+                    moveFocus: editor.advanceFocus
             )
             .frame(height: metrics.size.dialogButtonHeight)
             .formFieldChrome(focused: focusedField == focus)
@@ -178,8 +180,8 @@ struct SnippetEditorView: View {
     ) -> some View {
         Toggle(isOn: value) {
             VStack(alignment: .leading, spacing: metrics.spacing.xxs) {
-                Text(title)
-                Text(detail)
+                Text(SettingsLocalization.string(title))
+                Text(SettingsLocalization.string(detail))
                     .font(metrics.typography.rowTrailing)
                     .foregroundStyle(Theme.Colors.textSecondary)
                     .fixedSize(horizontal: false, vertical: true)

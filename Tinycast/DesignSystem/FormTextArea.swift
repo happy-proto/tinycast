@@ -61,7 +61,7 @@ struct FormTextArea: NSViewRepresentable {
         if view.textContainerInset != inset { view.textContainerInset = inset }
         if view.isEditable != isEnabled { view.isEditable = isEnabled }
         if view.isSelectable != isEnabled { view.isSelectable = isEnabled }
-        view.setAccessibilityLabel(label)
+        view.setAccessibilityLabel(String(localized: String.LocalizationValue(label)))
         if view.string != text {
             if let storage = view.textStorage {
                 let range = NSRange(location: 0, length: storage.length)

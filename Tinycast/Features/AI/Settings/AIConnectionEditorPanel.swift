@@ -242,7 +242,7 @@ struct AIConnectionEditorPanel: View {
             .accessibilityLabel("Add \(model.name)")
         }
         if offersTypedID {
-            Button("Use “\(query)” anyway") { addModel(query) }
+            Button(SettingsLocalization.format("Use “%@” anyway", query)) { addModel(query) }
         }
     }
 
@@ -280,7 +280,7 @@ struct AIConnectionEditorPanel: View {
         return Menu {
             ForEach(AIConnection.ReasoningOptions.ladder, id: \.self) { level in
                 Toggle(
-                    level.capitalized,
+                    SettingsLocalization.string(level.capitalized),
                     isOn: Binding(
                         get: { declared.contains(level) },
                         set: { isOn in
@@ -294,14 +294,14 @@ struct AIConnectionEditorPanel: View {
         }
         .menuStyle(.borderlessButton)
         .fixedSize()
-        .accessibilityLabel("Reasoning levels for \(model)")
+        .accessibilityLabel(SettingsLocalization.format("Reasoning levels for %@", model))
     }
 
     private func declaredLevelsTitle(_ declared: Set<String>) -> String {
         switch declared.count {
-        case 0: return "Reasoning levels"
-        case 1: return "1 level"
-        default: return "\(declared.count) levels"
+        case 0: return SettingsLocalization.string("Reasoning levels")
+        case 1: return SettingsLocalization.string("1 level")
+        default: return SettingsLocalization.format("%lld levels", declared.count)
         }
     }
 

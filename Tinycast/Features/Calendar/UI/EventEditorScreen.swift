@@ -6,7 +6,7 @@ struct EventEditorScreen: PaletteScreen {
     let openInputMenu: (PopoverMenuContent, MenuPanelCorner, Int) -> Void
 
     var rows: [MeetingEvent] { [] }
-    let primaryActionTitle = "Create Event"
+    let primaryActionTitle = SettingsLocalization.string("Create Event")
     let hidesSearchField = true
     let actsWithoutRows = true
 

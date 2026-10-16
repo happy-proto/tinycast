@@ -21,7 +21,7 @@ struct FormRow<Content: View>: View {
     var body: some View {
         let labelWidth = (metrics.size.panelWidth * 0.16).rounded()
         HStack(alignment: alignment, spacing: metrics.spacing.xxl) {
-            Text(title)
+            Text(String(localized: String.LocalizationValue(title)))
                 .font(metrics.typography.sectionHeader)
                 .foregroundStyle(Theme.Colors.textSecondary)
                 .frame(width: labelWidth, alignment: .trailing)

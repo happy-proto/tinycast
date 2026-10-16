@@ -269,7 +269,7 @@ final class CalendarCoordinator {
     func createEvent() {
         store.refreshAccess()
         guard settings.calendarEnabled, store.access == .granted else {
-            report("Turn Calendar on in Settings first")
+            report(SettingsLocalization.string("Turn Calendar on in Settings first"))
             return
         }
         guard !paletteCoordinator.isShowing(.eventEditor) else { return }
@@ -283,7 +283,7 @@ final class CalendarCoordinator {
         store.refreshAccess()
         guard settings.calendarEnabled, store.access == .granted else {
             cancelEventEditing()
-            report("Turn Calendar on in Settings first")
+            report(SettingsLocalization.string("Turn Calendar on in Settings first"))
             return
         }
         guard store.createEvent(editor.draft, now: Date()) else {
@@ -296,7 +296,7 @@ final class CalendarCoordinator {
             return
         }
         cancelEventEditing()
-        core.showMessage("Event created")
+        core.showMessage(SettingsLocalization.string("Event created"))
     }
 
     func cancelEventEditing() {

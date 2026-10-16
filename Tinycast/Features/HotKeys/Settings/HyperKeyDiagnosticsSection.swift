@@ -7,46 +7,53 @@ struct HyperKeyDiagnosticsSection: View {
 
     var body: some View {
         Section {
-            SettingsRow(title: "Active") { yesNo(diagnostics.isActive) }
-            SettingsRow(title: "Active Key") {
+            SettingsRow(title: SettingsLocalization.string("Active")) { yesNo(diagnostics.isActive) }
+            SettingsRow(title: SettingsLocalization.string("Active Key")) {
                 DiagnosticValue(
-                    text: diagnostics.activeKeyTitle ?? "None",
+                    text: diagnostics.activeKeyTitle.map(SettingsLocalization.string) ?? SettingsLocalization.string("None"),
                     tone: diagnostics.activeKeyTitle == nil ? .invalid : .valid)
             }
-            SettingsRow(title: "Event Tap") { optional(diagnostics.eventTapEnabled) }
-            SettingsRow(title: "Run Loop Source") { optional(diagnostics.runLoopSourceValid) }
+            SettingsRow(title: SettingsLocalization.string("Event Tap")) { optional(diagnostics.eventTapEnabled) }
+            SettingsRow(title: SettingsLocalization.string("Run Loop Source")) { optional(diagnostics.runLoopSourceValid) }
             if let secureInput = diagnostics.secureInput {
-                SettingsRow(title: "Secure Input", subtitle: describe(secureInput), subtitleLineLimit: 4) {
+                SettingsRow(title: SettingsLocalization.string("Secure Input"),
+                    subtitle: describe(secureInput),
+                    subtitleLineLimit: 4) {
                     DiagnosticValue(
-                        text: "Active", tone: diagnostics.secureInputCompatibilityActive ? .valid : .invalid)
+                        text: SettingsLocalization.string("Active"),
+                            tone: diagnostics.secureInputCompatibilityActive ? .valid : .invalid)
                 }
             }
             if diagnostics.isActive {
-                SettingsRow(title: "Remapped Keyboards", alignment: .top) {
-                    DiagnosticList(items: remappedItems, empty: ("None", DiagnosticTone.neutral))
+                SettingsRow(title: SettingsLocalization.string("Remapped Keyboards"), alignment: .top) {
+                    DiagnosticList(items: remappedItems, empty: (SettingsLocalization.string("None"), DiagnosticTone.neutral))
                 }
             }
             SettingsRow(
-                title: "Conflicting Apps", subtitle: "Apps running now that also remap keys.",
+                title: SettingsLocalization.string("Conflicting Apps"),
+                    subtitle: SettingsLocalization.string("Apps running now that also remap keys."),
                 alignment: .top
             ) {
                 DiagnosticList(items: conflictItems, empty: ("None", DiagnosticTone.valid))
             }
-            SettingsRow(title: "Karabiner Conflict", subtitle: karabinerDetail, subtitleLineLimit: 2) {
+            SettingsRow(title: SettingsLocalization.string("Karabiner Conflict"),
+                subtitle: karabinerDetail,
+                subtitleLineLimit: 2) {
                 DiagnosticValue(
-                    text: diagnostics.karabinerConflict ? "Detected" : "None",
+                    text: SettingsLocalization.string(diagnostics.karabinerConflict ? "Detected" : "None"),
                     tone: diagnostics.karabinerConflict ? .invalid : .valid)
             }
             if !diagnostics.capsLockMappingConflicts.isEmpty {
                 SettingsRow(
-                    title: "Caps Lock Mapping Conflicts",
+                    title: SettingsLocalization.string("Caps Lock Mapping Conflicts"),
                     subtitle:
-                        "Modifier Keys in System Settings remaps Caps Lock, which blocks the Hyper Key.",
+                        SettingsLocalization.string(
+                            "Modifier Keys in System Settings remaps Caps Lock, which blocks the Hyper Key."),
                     subtitleLineLimit: 2, alignment: .top
                 ) {
                     VStack(alignment: .trailing, spacing: Theme.Spacing.xs) {
                         DiagnosticList(items: capsLockConflictItems, empty: nil)
-                        Button("Open Keyboard Settings…") {
+                        Button(SettingsLocalization.string("Open Keyboard Settings…")) {
                             AppLauncher.openSettingsPane(bundleID: "com.apple.Keyboard-Settings.extension")
                         }
                     }
@@ -54,9 +61,9 @@ struct HyperKeyDiagnosticsSection: View {
             }
         } header: {
             HStack {
-                Text("Hyper Key Diagnostics")
+                Text(SettingsLocalization.string("Hyper Key Diagnostics"))
                 Spacer()
-                Button("Restart Hyper Key", action: restart)
+                Button(SettingsLocalization.string("Restart Hyper Key"), action: restart)
                 Button("Refresh", action: refresh)
             }
         }
@@ -65,8 +72,8 @@ struct HyperKeyDiagnosticsSection: View {
     private var karabinerDetail: String {
         let keyboards = diagnostics.karabinerVirtualKeyboards
         return keyboards.isEmpty
-            ? "No Karabiner keyboard found."
-            : "Karabiner keyboards: \(keyboards.joined(separator: ", "))"
+            ? SettingsLocalization.string("No Karabiner keyboard found.")
+            : SettingsLocalization.format("Karabiner keyboards: %@", keyboards.joined(separator: ", "))
     }
 
     private var remappedItems: [(String, DiagnosticTone)] {
@@ -84,7 +91,7 @@ struct HyperKeyDiagnosticsSection: View {
     }
 
     private func yesNo(_ flag: Bool) -> DiagnosticValue {
-        DiagnosticValue(text: flag ? "Yes" : "No", tone: flag ? .valid : .invalid)
+        DiagnosticValue(text: SettingsLocalization.string(flag ? "Yes" : "No"), tone: flag ? .valid : .invalid)
     }
 
     private func optional(_ flag: Bool?) -> DiagnosticValue {
@@ -96,20 +103,21 @@ struct HyperKeyDiagnosticsSection: View {
     private func describe(_ secureInput: HyperKeyDiagnostics.SecureInput) -> String {
         var sentences = [
             diagnostics.secureInputCompatibilityActive
-                ? "Tinycast's Hyper shortcuts use Right Control while Secure Input is on."
-                : "Key presses can't reach the Hyper Key while Secure Input is on."
+                ? SettingsLocalization.string("Tinycast's Hyper shortcuts use Right Control while Secure Input is on.")
+                : SettingsLocalization.string("Key presses can't reach the Hyper Key while Secure Input is on.")
         ]
         if !secureInput.likelyOwners.isEmpty {
-            sentences.append("Probably \(secureInput.likelyOwners.joined(separator: " or ")).")
+            sentences.append(SettingsLocalization.format("Probably %@.",
+                secureInput.likelyOwners.joined(separator: SettingsLocalization.string(" or "))))
         }
         if let owner = secureInput.reportedOwner {
-            sentences.append("macOS names \(owner), which isn't always right.")
+            sentences.append(SettingsLocalization.format("macOS names %@, which isn't always right.", owner))
         }
         if !diagnostics.secureInputCompatibilityActive {
             sentences.append(
                 secureInput.ownerIsLoginWindow
-                    ? "Logging out and back in turns it off."
-                    : "Closing that app turns it off.")
+                    ? SettingsLocalization.string("Logging out and back in turns it off.")
+                    : SettingsLocalization.string("Closing that app turns it off."))
         }
         return sentences.joined(separator: " ")
     }

@@ -10,7 +10,7 @@ struct FileSearchSettingsView: View {
             FeatureSwitchSection(
                 anchor: .fileSearchFileSearch,
                 enableTitle: "Enable File Search",
-                enableSubtitle: "Indexes your disk for instant results. Needs Full Disk Access.",
+                enableSubtitle: SettingsLocalization.string("Indexes your disk for instant results. Needs Full Disk Access."),
                 isEnabled: $settings.fileSearchEnabled,
                 showsInLauncher: $settings.fileSearchShowInLauncher,
                 showsIcon: true,
@@ -44,18 +44,19 @@ private struct FileSearchAccessSection: View {
                     HStack(spacing: Theme.Spacing.xs) {
                         Image(systemName: granted ? "checkmark.circle.fill" : "exclamationmark.triangle.fill")
                             .accessibilityHidden(true)
-                        Text(granted ? "Granted" : "Required")
+                        Text(SettingsLocalization.string(granted ? "Granted" : "Required"))
                     }
                     .foregroundStyle(granted ? Color.green : Color.orange)
-                    Button(granted ? "Open…" : "Open Privacy Settings…") {
+                    Button(SettingsLocalization.string(granted ? "Open…" : "Open Privacy Settings…")) {
                         Permissions.openFullDiskAccessSettings()
                     }
-                    .help("Opens Privacy & Security › Full Disk Access.")
+                    .help(SettingsLocalization.string("Opens Privacy & Security › Full Disk Access."))
                 }
             } label: {
                 VStack(alignment: .leading, spacing: Theme.Spacing.xxs) {
                     SettingsRowTitle(.fileSearchFullDiskAccess, "Full Disk Access")
-                    Text(granted ? "Tinycast can index every folder." : "File Search can’t index without it.")
+                    Text(SettingsLocalization.string(
+                        granted ? "Tinycast can index every folder." : "File Search can’t index without it."))
                         .foregroundStyle(.secondary)
                 }
             }
@@ -64,10 +65,11 @@ private struct FileSearchAccessSection: View {
         } footer: {
             if !granted {
                 Text(
-                    "File Search reads your disk directly to build a private index on this Mac. "
-                        + "In System Settings › Privacy & Security › Full Disk Access, turn on "
-                        + "Tinycast. If it isn’t listed, click + and choose Tinycast from "
-                        + "Applications. If access still shows as required, quit and reopen Tinycast."
+                    SettingsLocalization.string(
+                            "File Search reads your disk directly to build a private index on this Mac. In System "
+                                + "Settings › Privacy & Security › Full Disk Access, turn on Tinycast. If it isn’t listed, "
+                                + "click + and choose Tinycast from Applications. If access still shows as required, quit "
+                                + "and reopen Tinycast.")
                 )
                 .font(.caption)
                 .foregroundStyle(.secondary)
@@ -93,9 +95,9 @@ private struct FileSearchIndexSection: View {
     var body: some View {
         Section {
             LabeledContent {
-                Button("Rebuild Index") { core.fileSearchCoordinator.rebuildIndex() }
+                Button(SettingsLocalization.string("Rebuild Index")) { core.fileSearchCoordinator.rebuildIndex() }
                     .disabled(!canRebuild)
-                    .help("Crawls every scope again from scratch.")
+                    .help(SettingsLocalization.string("Crawls every scope again from scratch."))
             } label: {
                 VStack(alignment: .leading, spacing: Theme.Spacing.xxs) {
                     SettingsRowTitle(.fileSearchIndex, "Indexed Items")
@@ -107,8 +109,8 @@ private struct FileSearchIndexSection: View {
             SettingsSectionHeader(.fileSearchIndex)
         } footer: {
             Text(
-                "Built once, then kept current as files change. Indexing uses extra memory only "
-                    + "while it runs."
+                SettingsLocalization.string(
+                    "Built once, then kept current as files change. Indexing uses extra memory only while it runs.")
             )
             .font(.caption)
             .foregroundStyle(.secondary)
@@ -126,20 +128,22 @@ private struct FileSearchIndexSection: View {
     private var summary: some View {
         switch indexer.status {
         case .off:
-            Text("Not indexed")
+            Text(SettingsLocalization.string("Not indexed"))
         case .needsAccess:
-            Text("Waiting for Full Disk Access")
+            Text(SettingsLocalization.string("Waiting for Full Disk Access"))
         case .building(let items):
             HStack(spacing: Theme.Spacing.xs) {
                 ProgressView().controlSize(.mini)
-                Text("Indexing… \(items.formatted()) items")
+                Text(SettingsLocalization.format("Indexing… %@ items", items.formatted()))
                     .monospacedDigit()
             }
         case .ready(let items, let builtAt):
-            Text("\(items.formatted()) items · Built \(builtAt, format: .relative(presentation: .named))")
+            Text(SettingsLocalization.format("%@ items · Built %@",
+                items.formatted(),
+                builtAt.formatted(.relative(presentation: .named))))
                 .monospacedDigit()
         case .failed:
-            Text("The last build failed")
+            Text(SettingsLocalization.string("The last build failed"))
         }
     }
 }
@@ -167,18 +171,19 @@ private struct FileSearchScopesSection: View {
 
             HStack(spacing: Theme.Spacing.lg) {
                 Button("Add…", action: addScopes)
-                    .help("Add a folder to index and search.")
+                    .help(SettingsLocalization.string("Add a folder to index and search."))
                 if !isDefault {
                     Button("Restore Defaults") {
                         settings.fileSearchScopes = FileSearchScope.defaultScopes
                     }
-                    .help("Index the whole disk.")
+                    .help(SettingsLocalization.string("Index the whole disk."))
                 }
             }
         } header: {
             SettingsSectionHeader(.fileSearchSearchScopes)
         } footer: {
-            Text("Only these folders are indexed and searched. A folder inside another is merged into it.")
+            Text(SettingsLocalization.string(
+                "Only these folders are indexed and searched. A folder inside another is merged into it."))
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }
@@ -202,7 +207,9 @@ private struct FileSearchScopesSection: View {
     }
 
     private func addScopes() {
-        guard let urls = chooseFolders(message: "Choose folders to index and search.") else { return }
+        guard let urls = chooseFolders(message: SettingsLocalization.string("Choose folders to index and search.")) else {
+            return
+        }
         settings.fileSearchScopes = FileSearchScope.normalize(
             settings.fileSearchScopes + urls.map(\.path), homeDirectory: home)
     }
@@ -227,20 +234,21 @@ private struct FileSearchIgnoreSection: View {
 
             // Titled, a grouped form squeezes the field into a sliver too narrow to click.
             HStack(spacing: Theme.Spacing.lg) {
-                TextField("Pattern", text: $draft, prompt: Text("node_modules, *.tmp or ~/Movies"))
+                TextField("Pattern", text: $draft, prompt: Text(SettingsLocalization.string("node_modules, *.tmp or ~/Movies")))
                     .labelsHidden()
                     .onSubmit { add(draft) }
                 Button("Add") { add(draft) }
                     .disabled(draft.trimmingCharacters(in: .whitespaces).isEmpty)
-                Button("Add Folder…", action: addFolders)
-                    .help("Skip a folder and everything in it.")
+                Button(SettingsLocalization.string("Add Folder…"), action: addFolders)
+                    .help(SettingsLocalization.string("Skip a folder and everything in it."))
             }
         } header: {
             SettingsSectionHeader(.fileSearchIgnorePatterns)
         } footer: {
             Text(
-                "Matching folders are skipped while indexing. A name like node_modules or *.tmp "
-                    + "matches anywhere; a path like ~/Movies skips that folder."
+                SettingsLocalization.string(
+                            "Matching folders are skipped while indexing. A name like node_modules or *.tmp matches "
+                                + "anywhere; a path like ~/Movies skips that folder.")
             )
             .font(.caption)
             .foregroundStyle(.secondary)
@@ -248,7 +256,7 @@ private struct FileSearchIgnoreSection: View {
     }
 
     private func addFolders() {
-        guard let urls = chooseFolders(message: "Choose folders to leave out of the index.") else {
+        guard let urls = chooseFolders(message: SettingsLocalization.string("Choose folders to leave out of the index.")) else {
             return
         }
         for url in urls {
@@ -273,7 +281,7 @@ private func chooseFolders(message: String) -> [URL]? {
     panel.canChooseDirectories = true
     panel.canChooseFiles = false
     panel.allowsMultipleSelection = true
-    panel.prompt = "Add"
+    panel.prompt = SettingsLocalization.string("Add")
     panel.message = message
     // Tinycast is an accessory app, so the panel opens behind the frontmost app without this.
     NSApp.activate()

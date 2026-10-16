@@ -12,12 +12,16 @@
 `AppleLanguages` 覆盖只读写当前 bundle 的 persistent domain，跟随系统时移除应用覆盖。
 搜索目标和设置 anchor 保留未翻译的稳定身份；扩展相关本地化 helper 留在 Extensions 内部。
 翻译之外保留品牌、技术示例和用户内容的原文语义。
+启动器原生编辑表单的标签、占位符、说明和菜单同样本地化；共享原生输入控件通过 Foundation
+解析标签和占位符，不依赖 feature helper。文件索引权限、进度、Hyper 键诊断及模型推理等级
+等动态文字使用显式格式化 key，避免组件拆分后绕过翻译。
 
 ## 入口和验证
 
 - [String Catalog](../../Tinycast/Localizable.xcstrings)、[语言设置与 helper](../../Tinycast/Features/Settings/SettingsLocalization.swift)。
 - [扩展 helper](../../Tinycast/Features/Extensions/Settings/ExtensionLocalization.swift)、[设置身份与语言测试](../../Tests/settings-history-test.swift)。
 - [本地化检查](../../Scripts/check-localized-text.js) 由 [lint](../../Scripts/lint.sh) 调用；设置测试使用 `./Scripts/run-tests.sh settings-history-test`。
+- 检查脚本还覆盖日程、片段、快捷链接和自定义命令原生编辑器的固定表单 key；共享输入控件由 [表单测试](../../Tests/form-input-test.swift) 验证。
 - 静态检查不能证明全部文字已翻译；安装后回读语言资源并验收代表性的动态、条件和间接呈现文本。
 
 ## 上游同步

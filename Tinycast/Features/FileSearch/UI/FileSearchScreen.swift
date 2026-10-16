@@ -22,9 +22,9 @@ struct FileSearchScreen: PaletteScreen {
     var actsWithoutRows: Bool { needsAccess }
 
     var primaryActionTitle: String {
-        if needsAccess { return "Open Privacy Settings" }
-        guard let result = result(at: vm.selection) else { return "Open File" }
-        return result.isDirectory ? "Open Folder" : "Open File"
+        if needsAccess { return SettingsLocalization.string("Open Privacy Settings") }
+        guard let result = result(at: vm.selection) else { return SettingsLocalization.string("Open File") }
+        return result.isDirectory ? SettingsLocalization.string("Open Folder") : SettingsLocalization.string("Open File")
     }
 
     private func result(at selection: Int) -> FileSearchResult? {
@@ -70,7 +70,7 @@ struct FileSearchScreen: PaletteScreen {
             let selected = result(at: selection)
             HStack(spacing: 0) {
                 FileSearchList(
-                    title: isShowingRecents ? "Recent" : "Results",
+                    title: SettingsLocalization.string(isShowingRecents ? "Recent" : "Results"),
                     results: rows,
                     selectedID: selected?.id,
                     scroll: scroll,
@@ -96,26 +96,27 @@ struct FileSearchScreen: PaletteScreen {
     private var emptyState: some View {
         if needsAccess {
             EmptyResults(
-                text: "Full Disk Access required",
-                detail: "File Search indexes your whole disk. Press ↵ to open Privacy & Security, "
-                    + "then turn on Tinycast under Full Disk Access.",
+                text: SettingsLocalization.string("Full Disk Access required"),
+                detail: SettingsLocalization.string(
+                            "File Search indexes your whole disk. Press ↵ to open Privacy & Security, then turn on "
+                                + "Tinycast under Full Disk Access."),
                 systemImage: "lock.shield")
         } else if !indexer.hasIndex, case .building(let items) = indexer.status {
             EmptyResults(
-                text: "Indexing your disk…",
-                detail: "\(items.formatted()) items so far. Results appear when it finishes.",
+                text: SettingsLocalization.string("Indexing your disk…"),
+                detail: SettingsLocalization.format("%@ items so far. Results appear when it finishes.", items.formatted()),
                 systemImage: "externaldrive")
         } else if !indexer.hasIndex, indexer.status == .failed {
             EmptyResults(
-                text: "Couldn’t build the file index",
-                detail: "Try Rebuild Index in Settings ▸ File Search.",
+                text: SettingsLocalization.string("Couldn’t build the file index"),
+                detail: SettingsLocalization.string("Try Rebuild Index in Settings ▸ File Search."),
                 systemImage: "exclamationmark.triangle")
         } else if session.state != .ready {
             Color.clear
         } else if isShowingRecents {
-            EmptyResults(text: "Type to search files and folders")
+            EmptyResults(text: SettingsLocalization.string("Type to search files and folders"))
         } else {
-            EmptyResults(text: vm.fileSearchFilter.emptyMessage)
+            EmptyResults(text: SettingsLocalization.string(vm.fileSearchFilter.emptyMessage))
         }
     }
 }
@@ -128,31 +129,32 @@ enum FileSearchActionsMenu {
         let coordinator = core.fileSearchCoordinator
         let items = [
             PopoverMenuItem(
-                title: result.isDirectory ? "Open Folder" : "Open File",
+                title: result.isDirectory ? SettingsLocalization.string("Open Folder") : SettingsLocalization.string("Open File"),
                 systemImage: result.isDirectory ? "folder" : "doc", shortcut: "↵"
             ) { coordinator.open(result) },
             PopoverMenuItem(
-                title: "Show in Finder", systemImage: "folder", shortcut: "⌘↵"
+                title: SettingsLocalization.string("Show in Finder"), systemImage: "folder", shortcut: "⌘↵"
             ) { coordinator.showInFinder(result) },
-            PopoverMenuItem(title: "Share…", systemImage: "square.and.arrow.up") {
+            PopoverMenuItem(title: SettingsLocalization.string("Share…"), systemImage: "square.and.arrow.up") {
                 coordinator.share(result)
             },
             PopoverMenuItem(
-                title: "Copy File", systemImage: "doc.on.clipboard", startsSection: true,
+                title: SettingsLocalization.string("Copy File"), systemImage: "doc.on.clipboard", startsSection: true,
                 shortcut: "⇧⌘C"
             ) { coordinator.copyFile(result) },
             PopoverMenuItem(
-                title: target.map { "Paste File to \($0.name)" } ?? "Paste File",
+                title: target.map { SettingsLocalization.format("Paste File to %@",
+                    $0.name) } ?? SettingsLocalization.string("Paste File"),
                 icon: .paste(target, fallback: "doc.on.clipboard"), shortcut: "⇧⌘V"
             ) { coordinator.pasteFile(result) },
             PopoverMenuItem(
-                title: "Copy Name", systemImage: "doc.on.clipboard", shortcut: "⌥⌘C"
+                title: SettingsLocalization.string("Copy Name"), systemImage: "doc.on.clipboard", shortcut: "⌥⌘C"
             ) { coordinator.copyName(result) },
             PopoverMenuItem(
-                title: "Copy Path", systemImage: "doc.on.clipboard", shortcut: "⌃⌘C"
+                title: SettingsLocalization.string("Copy Path"), systemImage: "doc.on.clipboard", shortcut: "⌃⌘C"
             ) { coordinator.copyPath(result) },
             PopoverMenuItem(
-                title: "Move to Trash", systemImage: "trash", startsSection: true,
+                title: SettingsLocalization.string("Move to Trash"), systemImage: "trash", startsSection: true,
                 shortcut: "⌃X", isDestructive: true
             ) { coordinator.trash(result) }
         ]

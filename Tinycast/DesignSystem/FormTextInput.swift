@@ -38,7 +38,7 @@ struct FormTextInput: NSViewRepresentable {
         let color = NSColor(Theme.Colors.textPrimary)
         if view.textColor != color { view.textColor = color }
         let placeholder = NSAttributedString(
-            string: placeholder,
+            string: String(localized: String.LocalizationValue(placeholder)),
             attributes: [.font: font, .foregroundColor: NSColor(Theme.Colors.textTertiary)])
         if view.placeholderAttributedString != placeholder {
             view.placeholderAttributedString = placeholder
@@ -47,7 +47,7 @@ struct FormTextInput: NSViewRepresentable {
         if view.isEditable != isEnabled { view.isEditable = isEnabled }
         if view.isSelectable != isEnabled { view.isSelectable = isEnabled }
         if view.stringValue != text { view.stringValue = text }
-        view.setAccessibilityLabel(label)
+        view.setAccessibilityLabel(String(localized: String.LocalizationValue(label)))
         view.wantsFocus = focused
         view.updateFocus()
     }

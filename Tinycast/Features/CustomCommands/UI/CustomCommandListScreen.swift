@@ -8,7 +8,7 @@ struct CustomCommandListScreen: PaletteScreen {
     let openActions: () -> Void
 
     let rows: [CustomCommand]
-    var primaryActionTitle: String { rows.isEmpty ? "Create Custom Command" : "Run Command" }
+    var primaryActionTitle: String { rows.isEmpty ? SettingsLocalization.string("Create Custom Command") : "Run Command" }
     let actsWithoutRows = true
 
     init(
@@ -41,7 +41,7 @@ struct CustomCommandListScreen: PaletteScreen {
                 }
             } ?? []
         items.append(
-            PopoverMenuItem(title: "Create Custom Command", systemImage: "plus", shortcut: "⌘N") {
+            PopoverMenuItem(title: SettingsLocalization.string("Create Custom Command"), systemImage: "plus", shortcut: "⌘N") {
                 coordinator.editCustomCommand(nil)
             })
         if let command = selected {
@@ -102,7 +102,7 @@ struct CustomCommandListScreen: PaletteScreen {
         if rows.isEmpty {
             EmptyResults(
                 text: store.commands.contains(where: \.isEnabled)
-                    ? "No matching commands" : "No custom commands yet")
+                    ? SettingsLocalization.string("No matching commands") : SettingsLocalization.string("No custom commands yet"))
         } else {
             let selected = command(at: selection)
             HStack(spacing: 0) {

@@ -27,15 +27,16 @@ struct EventEditorView: View {
                 FormRow("Start") {
                     choice(
                         "Start", field: .start, selection: $editor.draft.startOffsetMinutes,
-                        values: EventDraft.startOffsets, label: EventDraft.label(startOffset:))
+                        values: EventDraft.startOffsets,
+                        label: { $0 == 0 ? SettingsLocalization.string("Now") : durationLabel($0) })
                 }
                 FormRow("Duration") {
                     choice(
                         "Duration", field: .duration, selection: $editor.draft.durationMinutes,
-                        values: EventDraft.durations, label: EventDraft.label(duration:))
+                        values: EventDraft.durations, label: durationLabel)
                 }
                 FormRow("") {
-                    Text("It goes on the calendar new events go to.")
+                    Text(SettingsLocalization.string("It goes on the calendar new events go to."))
                         .font(metrics.typography.rowTrailing)
                         .foregroundStyle(Theme.Colors.textSecondary)
                         .fixedSize(horizontal: false, vertical: true)
@@ -67,6 +68,12 @@ struct EventEditorView: View {
             coordinator.editorDidClose(editor)
             palette.noteEditingField(false)
         }
+    }
+
+    private func durationLabel(_ minutes: Int) -> String {
+        minutes < 60
+            ? SettingsLocalization.format("%lld min", minutes)
+            : SettingsLocalization.format("%lld hr", minutes / 60)
     }
 
     private var titleFocused: Binding<Bool> {
@@ -118,7 +125,7 @@ struct EventEditorView: View {
         }
         .formFieldChrome(focused: focusedField == field)
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel(title)
+        .accessibilityLabel(SettingsLocalization.string(title))
         .accessibilityValue(label(selection.wrappedValue))
         .accessibilityAddTraits(.isButton)
         .accessibilityAction { open() }
