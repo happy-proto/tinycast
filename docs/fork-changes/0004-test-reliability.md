@@ -11,6 +11,8 @@
 
 CI 串行运行 harness，减少编译争用影响；本地保留 runner 的默认并行度。
 原生输入表单测试固定测试进程的深色外观，使浅色文字的像素测量不受系统外观影响。
+文件搜索的 Recent 刷新返回可等待的任务；测试等待预取完成再检查缓存即时显示，避免固定
+150ms 等待在远端失效。200ms 的模拟延迟覆盖旧断言失败的情况，前台搜索行为保持不变。
 
 上游 `8d0d6b68` 已包含按状态等待的扩展生命周期测试，并删除旧 Codex 与已安装 CLI harness
 及其 stub。原 fork 的 fish 隔离和旧异步断言补丁已退役，保留上游测试结构，不恢复被删除的文件。
@@ -18,6 +20,7 @@ CI 串行运行 harness，减少编译争用影响；本地保留 runner 的默�
 ## 入口和验证
 
 - [原生输入表单测试](../../Tests/form-input-test.swift)、[输入控件](../../Tinycast/DesignSystem/FormTextInput.swift)。
+- [文件搜索会话测试](../../Tests/file-search-session-test.swift)、[会话服务](../../Tinycast/Features/FileSearch/Service/FileSearchSession.swift)。
 - [扩展菜单栏 harness](../../Tests/ext-menu-bar-test.swift)、[CI](../../.github/workflows/ci.yml)。
 - 按对应 harness 名称运行 [runner](../../Scripts/run-tests.sh)；完整同步运行全套测试。
 
