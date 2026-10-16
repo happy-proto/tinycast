@@ -6,11 +6,13 @@
 ## 建立基线
 
 1. 确认当前为 `main`，工作区干净；不要 stash 或覆盖无关用户改动。
-2. Fetch `origin` 和 `upstream`，记录当前 head、`origin/main` 的 SHA 和旧上游基线。
+2. Fetch `origin` 和 `upstream`，记录当前 head、`origin/main` 的 SHA。读取
+   [upstream-commit](../../../../docs/fork-changes/upstream-commit) 作为旧上游基线并确认它是当前 head 的祖先。
    核对本地与远端关系，先纳入远端新增提交，不用本地旧历史覆盖它们。
 3. 在仓库外创建并验证 Git bundle，保留旧 main 和上游引用；记录用于推送 lease 的远端 SHA。
 4. 用旧上游基线到新 `upstream/main` 的增量审阅功能、重构、删除、生成物、测试和治理变化。
-   用 `git log --reverse <旧基线>..main` 阅读 fork 提交及其目的，不从旧 PR 或固定编号推断职责。
+   结合 [改造记录](../../../../docs/fork-changes/README.md) 和
+   `git log --reverse <旧基线>..main` 阅读 fork 提交及其目的，不从旧 PR 或固定编号推断职责。
 
 若上游改写过公开历史，先比较旧、新基线，确认语义等价的分界点。使用
 `git rebase --onto upstream/main <确认的旧上游边界> main` 只移植 fork 提交，避免重放旧上游历史。
@@ -47,7 +49,8 @@
 
 ## 验证与推送
 
-完成 rebase 和适配后运行项目验证。安装验收按 [dev-app.md](dev-app.md) 执行。
+逐项复核改造记录，更新适配、吸收或退役状态。完成 rebase 和适配后运行项目验证，通过后将
+`upstream-commit` 更新为本次采用的精确上游 SHA，并提交记录变更。安装验收按 [dev-app.md](dev-app.md) 执行。
 用户授权推送后，用基线阶段记录的精确 SHA 保护远端：
 
 ```sh

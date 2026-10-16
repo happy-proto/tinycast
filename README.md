@@ -6,7 +6,7 @@ Tinycast 是原生 macOS 启动器。功能介绍、安装方式、构建方法�
 这里仅记录这个 fork 为什么存在，以及它如何维护。
 
 [查看上游](https://github.com/abue-ammar/tinycast) ·
-[查看自维护修改](https://github.com/abue-ammar/tinycast/compare/main...happy-proto:tinycast:main) ·
+[改造记录](docs/fork-changes/README.md) ·
 [AGPL-3.0](LICENSE)
 
 ## 当前关注
@@ -65,3 +65,5 @@ upstream/main → fork 自有 commits → main
 i18n 等修改需要每次重新检查上游新增或重构的界面、动态文字和翻译资源；没有文本冲突也可能
 遗漏翻译。同步时按提交目的检查净变化，保留仍然需要的定制，移除已被上游完整吸收的修改。
 具体流程见[同步约定](.agents/skills/tinycast-fork-maintenance/references/upstream-sync.md)。
+各项改造的目的、代码入口和长期维护边界见[改造记录](docs/fork-changes/README.md)，已验证的上游
+基线单独记录，便于检查实际剩余差异。
