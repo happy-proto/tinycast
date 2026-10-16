@@ -9,6 +9,8 @@ Read [fork changes](docs/fork-changes/README.md) before modifying or syncing for
 relevant record in the same commit, assign new changes the next unused number, and retain retired
 records with their status. After a verified sync, update [the upstream baseline](docs/fork-changes/upstream-commit).
 Use the [maintenance skill](.agents/skills/tinycast-fork-maintenance/SKILL.md) for the detailed workflow.
+Keep only validation CI in this fork: tests, lint, project generation, model imports and a Debug build.
+Do not restore upstream release, website deployment or PR automation workflows during a sync.
 
 ## Project
 

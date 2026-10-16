@@ -14,6 +14,7 @@ description: 维护 happy-proto/tinycast 个人 fork；在开发或修复 fork �
 - 以 commit 作为修改单元，按目的区分应用名称本地化、i18n、工具等修改；适配提交也保持目的明确。
 - [改造记录](../../../docs/fork-changes/README.md) 是长期维护索引；修改时更新对应记录，新增改造使用下一个编号，退役时保留记录并更新状态。
 - 同步时将 fork 自有 commits rebase 到最新 `upstream/main`，解决冲突并检查语义及覆盖面。
+- fork 只保留测试和 Debug 构建 CI，不发布 Release、不部署网站，也不运行上游的 PR 自动处理工作流；同步后检查新增或恢复的 workflow。
 - 同步授权包含上述必要 rebase；提交、推送和安装 App 仍分别受用户当前任务授权范围约束。
 
 ## 按需读取
