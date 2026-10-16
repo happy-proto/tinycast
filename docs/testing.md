@@ -15,9 +15,9 @@ The mechanical bar, in one place so it cannot drift. All five pass before a chan
 | A clean build | `xcodebuild … -configuration Debug CODE_SIGNING_ALLOWED=NO`, zero **new** warnings |
 | Docs still true | any doc your change made wrong, fixed in the same commit |
 
-There is no CI: every item is on you, run locally. CodeRabbit reviews each PR, but it is a reviewer,
-not a gate. Each is expanded below; the manual sweep at the end of this file is the sixth, judged by
-what you touched.
+CI runs these checks on pushes to `main`, pull requests targeting `main`, and manual dispatch.
+Run them locally before pushing too. CodeRabbit reviews PRs; the manual sweep at the end of this
+file is judged by what you touched.
 
 ## The harnesses
 
@@ -63,8 +63,8 @@ which is worth it only where the run dominates the compile — `raycast-test` sp
 scrypt at `-Onone` and one second at `-O`. `slow` dispatches it in the first wave, so the longest
 harnesses are not still running after everything else has finished.
 
-The script is the **only** place the harness set is written down. Nothing runs it for you, so run it
-before you open a PR. Adding a harness means adding one `run` line.
+The script is the **only** place the harness set is written down. Run it locally before pushing;
+CI runs it again on the pushed commit. Adding a harness means adding one `run` line.
 
 Each harness compiles the **shipped sources** it guards rather than a copy of them, which is what makes
 the pure-layer boundary real: a harness that stops *compiling* means AppKit or SwiftUI has leaked into a

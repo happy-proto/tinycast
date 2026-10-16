@@ -1,11 +1,11 @@
 #!/bin/bash
-# Build the complete fork stack and install its single Dev app copy.
+# Build main and install its single Dev app copy.
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
-if [ "$(git branch --show-current)" != "fork" ]; then
-    echo "✗ switch to fork before installing the Dev app" >&2
+if [ "$(git branch --show-current)" != "main" ]; then
+    echo "✗ switch to main before installing the Dev app" >&2
     exit 1
 fi
 
