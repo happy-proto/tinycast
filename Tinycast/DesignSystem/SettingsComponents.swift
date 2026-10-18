@@ -56,7 +56,7 @@ struct SettingsRow<Icon: View, Trailing: View>: View {
     var alignment: VerticalAlignment = .center
     var labelOpacity = 1.0
     /// Set when a search result points at this row, so its title can carry the pulse.
-    var anchor: SettingsAnchor?
+    var searchLabel: (anchor: SettingsAnchor, title: LocalizedStringResource)?
     @ViewBuilder var icon: Icon
     @ViewBuilder var trailing: Trailing
 
@@ -65,8 +65,8 @@ struct SettingsRow<Icon: View, Trailing: View>: View {
             icon.opacity(labelOpacity)
             VStack(alignment: .leading, spacing: Theme.Spacing.xxs) {
                 Group {
-                    if let anchor {
-                        SettingsRowTitle(anchor, verbatim: title)
+                    if let searchLabel {
+                        SettingsRowTitle(searchLabel.anchor, searchLabel.title)
                     } else {
                         Text(title)
                     }
@@ -93,6 +93,19 @@ enum SettingsListMetrics {
     static let iconSize = Theme.Size.settingsRowIcon + Theme.Spacing.xs
 }
 
+extension SettingsRow {
+    init(
+        title: LocalizedStringResource, subtitle: String? = nil, subtitleLineLimit: Int = 1,
+        alignment: VerticalAlignment = .center, labelOpacity: Double = 1, anchor: SettingsAnchor,
+        @ViewBuilder icon: () -> Icon, @ViewBuilder trailing: () -> Trailing
+    ) {
+        self.init(
+            title: title.resolved(), subtitle: subtitle,
+            subtitleLineLimit: subtitleLineLimit, alignment: alignment, labelOpacity: labelOpacity,
+            searchLabel: (anchor, title), icon: icon, trailing: trailing)
+    }
+}
+
 extension SettingsRow where Icon == EmptyView {
     init(
         title: String, subtitle: String? = nil, subtitleLineLimit: Int = 1,
@@ -112,7 +125,7 @@ extension SettingsRow where Icon == EmptyView {
         @ViewBuilder trailing: () -> Trailing
     ) {
         self.init(
-            title: title.resolved(), subtitle: subtitle,
+            title: title, subtitle: subtitle,
             subtitleLineLimit: subtitleLineLimit, alignment: alignment, anchor: anchor,
             icon: { EmptyView() }, trailing: trailing)
     }
