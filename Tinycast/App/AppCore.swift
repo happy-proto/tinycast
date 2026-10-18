@@ -781,7 +781,9 @@ final class AppCore {
         }
     }
 
-    private var isLanguagePending: Bool { settings.language.rawValue != launchLocalization }
+    private var isLanguagePending: Bool {
+        settings.language.localization(systemLanguages: SystemLanguages.preferred) != launchLocalization
+    }
 
     private func offerLanguageRelaunch() {
         guard isLanguagePending else { return }
