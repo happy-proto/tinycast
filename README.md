@@ -1,159 +1,71 @@
-# Tinycast
+# Tinycast · 个人 Fork
 
-**A tiny, fully native macOS launcher. One hotkey, everything you reach for all day, under 100 MB of
-RAM.**
+> 一个面向个人日常使用的 [Tinycast](https://github.com/abue-ammar/tinycast) 定制版本。
 
-<p align="center">
-  <a href="https://github.com/abue-ammar/tinycast/releases/latest">
-    <img alt="Latest release"
-         src="https://img.shields.io/github/v/release/abue-ammar/tinycast?sort=semver&style=flat&label=release&color=1F6FEB"></a>
-  <img alt="Swift 6.0"
-       src="https://img.shields.io/badge/Swift-6.0-F05138?style=flat&logo=swift&logoColor=white">
-  <img alt="macOS 26 or later"
-       src="https://img.shields.io/badge/macOS-26%2B-000000?style=flat&logo=apple&logoColor=white">
-  <a href="LICENSE">
-    <img alt="License: AGPL-3.0"
-         src="https://img.shields.io/badge/License-AGPL--3.0-3DA639?style=flat"></a>
-  <a href="https://discord.gg/v2Eeb4QQy3">
-    <img alt="Join the Tinycast Discord"
-         src="https://img.shields.io/badge/Discord-Join-5865F2?style=flat&logo=discord&logoColor=white"></a>
-</p>
+Tinycast 是原生 macOS 启动器。功能介绍、安装方式、构建方法和项目文档均以上游仓库为准；
+这里仅记录这个 fork 为什么存在，以及它如何维护。
 
-SwiftUI and AppKit, **zero third-party dependencies**, no Electron and no telemetry. It also **runs
-real Raycast extensions**, rendered as native SwiftUI. Free, open source, and staying that way.
+[查看上游](https://github.com/abue-ammar/tinycast) ·
+[改造记录](docs/fork-changes/README.md) ·
+[AGPL-3.0](LICENSE)
 
-For anything private, email [iabueammar@gmail.com](mailto:iabueammar@gmail.com).
+## 当前关注
 
-<p align="center">
-  <img src="docs/screenshot.png" alt="Tinycast command palette" width="720">
-</p>
+| 功能 | 目的 |
+| --- | --- |
+| 应用名称本地化 | 按用户首选语言识别和搜索应用名称 |
+| 跟随系统语言 | 让界面默认使用系统语言，同时保留显式语言选择 |
+| 设置搜索定位 | 使用稳定标识区分同译文分区，准确跳转和高亮搜索结果 |
 
-## Support
+这个 fork 只处理我实际遇到的问题，并加入少量符合个人习惯的定制。它不是面向所有用户的
+通用发行版；如果你的需求不同，建议从上游创建自己的 fork。
 
-Tinycast is **free, and it stays that way**. If you enjoy it, consider buying a wallpaper pack and get a discord role. It would help me a lot.
+## 安装与更新
 
-<p align="center">
-  <a href="https://tinycast.dev/support">
-    <img alt="Support Tinycast" width="188" height="44" src="docs/support-button.svg"></a><br>
-  <sub>Payments are handled securely by <a href="https://polar.sh">Polar.sh</a>.</sub>
-</p>
-
-## Features
-
-- **App launcher** — fuzzy-search and launch anything, pin favorites, see what's running, quit an app
-  or every app at once.
-- **Global hotkey** — one shortcut summons the palette from anywhere.
-- **Per-app hotkeys** — bind a key to an app; press it to toggle (focus/hide).
-- **Search Files** — open files and folders from the folders you choose, through Spotlight, with no
-  index of our own.
-- **Dictionary** — look a word up with the Define Word command, or define whatever you typed from the
-  launcher's fallbacks, read from the Mac's own dictionaries.
-- **Clipboard history** — text and images, searchable, pasted back into the app you were using.
-- **Calculator** — do math, unit, live currency and crypto conversions inline, right in the palette.
-- **Quicklinks** — turn a URL, search, file or deeplink into a command, with placeholders for typed
-  input, the clipboard or the date.
-- **Apple Shortcuts** — search and run the shortcuts you built in the Shortcuts app, with aliases and
-  global hotkeys.
-- **Snippets** — reusable Markdown templates with dynamic placeholders, arguments, nested references
-  and optional keyword expansion.
-- **Custom commands** — run named shell commands through fuzzy search or their own global hotkeys.
-- **Window management** — 34 Rectangle-style actions: halves, quarters, thirds, sizing, nudging,
-  display moves, fullscreen and Spaces.
-- **System actions** — lock, sleep, restart, empty trash, toggle appearance, Bluetooth, mute, hidden
-  files, and more.
-- **Calendar and meetings** — your next meeting on the empty palette and in the menu bar, one key to
-  join it, or let it join itself.
-- **Notes** — an unlimited collection of plain Markdown files in one floating editor, searchable from
-  the palette and rendered as you write.
-- **Emoji picker** — a searchable emoji grid, one keystroke away.
-- **AI chat** — use your own key or an installed AI account: ask Quick AI from the palette, or keep
-  longer conversations in the AI Chat window, with a searchable, pinnable history. Off out of the box,
-  like every AI feature.
-- **Quick Actions** — fix grammar, rewrite, translate or summarize the selected text in any app.
-- **Raycast extensions** — run the ones you already have natively, rendered as SwiftUI.
-- **Backup and import** — export your settings to a file, or import your setup from Raycast.
-
-## Install
-
-First, add the tap:
+这个 fork 不发布预编译版本，通过 Xcode 构建独立的 `Tinycast Dev.app`。需要 macOS 26 和
+Xcode 26；第一次构建前，按照[签名说明](docs/signing.md#1-create-the-tinycast-self-signed-identity-once)
+创建一次本地签名证书。
 
 ```sh
-brew trust --tap abue-ammar/tinycast   # required for third-party taps
-brew tap abue-ammar/tinycast
+git clone https://github.com/happy-proto/tinycast.git
+cd tinycast
+open Tinycast.xcodeproj
 ```
 
-Then run the one line that matches your Mac:
+在 `main` 分支上运行安装脚本：
 
-| Your Mac                         | Install                                  |
-| -------------------------------- | ---------------------------------------- |
-| Apple silicon, macOS 26 or newer | `brew install --cask tinycast`           |
-| Intel, macOS 26                  | `brew install --cask tinycast-universal` |
+```sh
+./Scripts/install-dev-app.sh
+```
 
-Not sure which you have? **Apple menu → About This Mac.** Homebrew checks too, and refuses the
-wrong one.
+脚本会使用固定的 DerivedData 路径构建并签名 App，然后覆盖安装到
+`/Applications/Tinycast Dev.app`。Dev App 使用独立的应用名称、设置和系统权限，可以与正式版
+同时存在；不要再从 DerivedData 启动第二份同 Bundle ID 的 Dev App。
 
-Want early builds? `brew install --cask tinycast@beta` puts `Tinycast Beta.app` beside the stable
-app, with its own settings and permissions. Apple silicon, macOS 26+.
+更新时，将本地 `main` 同步到远端最新状态，再次运行安装脚本。稳定的安装路径和
+本地签名会让 macOS 保留已经授予的辅助功能权限。更多细节见[开发文档](docs/development.md)。
 
-Homebrew clears the macOS quarantine flag on every install and update, so there is nothing else to
-run. Downloading a DMG from [Releases](https://github.com/abue-ammar/tinycast/releases) instead?
-Tinycast is self-signed, so clear the flag once:
-`xattr -dr com.apple.quarantine "/Applications/Tinycast.app"`.
+## 使用风险
 
-## Permissions
+> [!WARNING]
+> 我不了解 macOS 开发。这个 fork 的专属代码全部由 AI 编写，我不会对具体实现进行代码审查。
+> 这些修改未经专业维护或安全审计，请自行判断使用风险。
 
-**Accessibility** — needed when Tinycast pastes or expands text into another app, and the only
-permission snippet keyword expansion needs. You're prompted when you first use a feature that needs
-it; grant access in **System Settings → Privacy & Security → Accessibility**. Snippets ship
-disabled, and keystrokes are matched locally, never stored and never sent anywhere.
+## 维护方式
 
-## Using it
+这个 fork 只维护一个 `main` 分支。每项独立改造对应一个完整 commit，包含实现、测试和文档，
+便于逐项适配或撤销。
 
-1. Open **Settings → General** and record a global shortcut to summon Tinycast.
-2. Press it anywhere → the palette floats in. Type to filter, **↵** to launch.
-3. **Tab** switches between Apps and Clipboard; **↑/↓** move, **Esc** dismisses.
-4. **Settings → Shortcuts** — search an app or custom command and record a global shortcut.
-5. **Settings → Snippets** — enable the feature, then create templates with expansion keywords.
+```text
+upstream/main → fork 自有 commits → main
+```
 
-## Building from source
+同步上游时，获取最新 `upstream/main`，把 fork 自有提交 rebase 到它之上，解决冲突并适配
+上游变化，验证后默认使用带明确旧 SHA 的 `--force-with-lease` 更新 `origin/main`，无需额外确认；
+明确要求仅本地同步或不推送时除外。
 
-See **[docs/development.md](docs/development.md)** for the toolchain, build, packaging, release and
-website workflows. **[docs/](docs/README.md)** indexes everything else — architecture, engineering
-standards, the design system and one document per feature.
-
-## Contributing
-
-> [!IMPORTANT]
-> **Open an issue before you write code — this is mandatory.** Get the bug or the feature agreed on
-> first; discussing it in the issue (or on [Discord](https://discord.gg/v2Eeb4QQy3)) is strongly
-> encouraged. A PR that doesn't close an issue marked `approved` is closed automatically however good
-> the patch is, and the work is wasted. Docs-only fixes are the one exception.
->
-> Tinycast's feature set is deliberately closed, and "another launcher has it" is not a reason on its
-> own. Ask whether a feature is wanted before you ask for it.
-
-Read **[CONTRIBUTING.md](CONTRIBUTING.md)** first — it covers the memory budget every PR is held to,
-the before/after video requirement for visual changes, and why features get declined. Every PR fills
-in the **[pull request template](.github/PULL_REQUEST_TEMPLATE.md)**. Security issues go through
-[SECURITY.md](SECURITY.md), not the issue tracker.
-
-Questions, ideas, or just want to follow along? **[Join the Discord](https://discord.gg/v2Eeb4QQy3)**.
-
-## Star History
-
-<a href="https://www.star-history.com/?repos=abue-ammar%2Ftinycast&type=date&legend=top-left">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=abue-ammar/tinycast&type=date&theme=dark&legend=top-left" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=abue-ammar/tinycast&type=date&legend=top-left" />
-   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=abue-ammar/tinycast&type=date&legend=top-left" />
- </picture>
-</a>
-
-## Shoutout
-
-Big thanks to **[Rueya Supply](https://rueya.supply)**, which makes wallpapers and graphics for your
-desktop. Go check them out.
-
-## License
-
-[AGPL-3.0](LICENSE)
+同步适配归入对应改造的 commit；上游已完整覆盖的改造，其实现、提交和记录一起移除。
+文档只解释当前需要维护的行为，不记录废弃方案和迁移过程。界面翻译使用上游原生资源。
+具体流程见[同步约定](.agents/skills/tinycast-fork-maintenance/references/upstream-sync.md)。
+各项改造的目的、代码入口和长期维护边界见[改造记录](docs/fork-changes/README.md)，已验证的上游
+基线单独记录，便于检查实际剩余差异。
