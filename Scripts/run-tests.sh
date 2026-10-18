@@ -41,7 +41,8 @@ if [ "${1:-}" = "--exec" ]; then
     done
     wait "$pid"
     status=$?
-    took=$(< "$BIN/$name.time")
+    took=$(tail -n 1 "$BIN/$name.time")
+    sed '$d' "$BIN/$name.time" >> "$BIN/$name.log"
     if [ "$status" -gt 128 ]; then fail "crashed (signal $((status - 128))) after ${took}s"; fi
     if [ "$status" -ne 0 ]; then fail "assertion failed after ${took}s"; fi
     printf '\033[32mok\033[0m    %-25s %5ss  \033[2m(compile %ss)\033[0m\n' "$name" "$took" "$compiled"
@@ -88,6 +89,7 @@ run() {
     local name=$1
     shift
     if [ -n "$only" ] && [ "$name" != "$only" ]; then return 0; fi
+    if [ "$emit_db" -eq 0 ] && [ "$name" = "${TINYCAST_TEST_EXCLUDE:-}" ]; then return 0; fi
     if [ "$index_only" -eq 1 ] && [ "$emit_db" -eq 0 ]; then return 0; fi
     ran=$((ran + 1))
 

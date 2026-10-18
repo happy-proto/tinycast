@@ -15,14 +15,20 @@ The mechanical bar, in one place so it cannot drift. All five pass before a chan
 | A clean build | `xcodebuild … -configuration Debug CODE_SIGNING_ALLOWED=NO`, zero **new** warnings |
 | Docs still true | any doc your change made wrong, fixed in the same commit |
 
-There is no CI: every item is on you, run locally. Each is expanded below; the manual sweep at the
-end of this file is the sixth, judged by what you touched.
+CI runs these checks on pushes to `main`, pull requests targeting `main`, and manual dispatch.
+Run them locally before pushing too. The manual sweep at the end of this file is judged by what you
+touched.
+
+CI runs real OCR on macOS 26; the remaining checks use Xcode 27. The macOS 27 hosted VM cannot
+compile Vision’s accurate text model. This split keeps the shipped recognition behavior and real
+OCR assertions intact.
 
 ## The harnesses
 
 ```sh
 ./Scripts/run-tests.sh              # all of them
 ./Scripts/run-tests.sh calc-test    # just one, while iterating
+bash Scripts/test-runner-test.sh    # crash reporting and single-harness exclusion
 ```
 
 `apple-intelligence-test` runs deterministic checks by default. Its real model generation is opt-in:
@@ -49,6 +55,9 @@ runtime fixture suite runs both as well.
 `ext-test` exercises `SharedArrayBuffer` allocation at command load and finite waits in JavaScriptCore
 through the shipped synchronous host bridge.
 
+`TINYCAST_TEST_EXCLUDE` omits one named harness from execution; CI uses it only for the OCR harness
+covered by its separate job. It does not change editor indexing.
+
 The suite runs four harnesses at a time by default to reduce CPU usage. `TINYCAST_TEST_JOBS` overrides
 that limit; `TINYCAST_TEST_JOBS=1` runs one at a time. Each result is numbered
 against the total and shows its run and compile time, a quiet stretch names the harnesses still running, and a harness that runs longer
@@ -70,8 +79,8 @@ which is worth it only where the run dominates the compile — `raycast-test` sp
 scrypt at `-Onone` and one second at `-O`. `slow` dispatches it in the first wave, so the longest
 harnesses are not still running after everything else has finished.
 
-The script is the **only** place the harness set is written down. Nothing runs it for you, so run it
-before you open a PR. Adding a harness means adding one `run` line.
+The script is the **only** place the harness set is written down. Run it locally before pushing;
+CI runs it again on the pushed commit. Adding a harness means adding one `run` line.
 
 Each harness compiles the **shipped sources** it guards rather than a copy of them, which is what makes
 the pure-layer boundary real: a harness that stops *compiling* means AppKit or SwiftUI has leaked into a
