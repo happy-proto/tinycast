@@ -187,8 +187,8 @@ Xcode's re-indent (⌃I), as it always has been. Two consequences worth knowing:
 - `force_try` is an error; `force_cast` only warns, because the AX and AppKit bridges have four
   legitimate ones.
 
-Errors block, warnings do not. No CI runs this script; CodeRabbit runs SwiftLint on each PR but not
-the settings-search check, so run it locally before you open one.
+Errors block, warnings do not. CI runs this script on `main` pushes and PRs targeting `main`;
+run it locally before pushing too.
 
 ## Generated data
 
