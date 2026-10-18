@@ -18,28 +18,34 @@ struct LanguageTests {
 
     static func main() {
         print("# a stored list reads back as the choice that wrote it")
-        check("nothing stored is English", AppLanguage(storedPreferences: nil) == .english)
-        check("an empty list is English", AppLanguage(storedPreferences: []) == .english)
-        check(
-            "a fresh installation selects the system language",
-            AppLanguage(storedPreferences: nil, systemPreferences: ["fr-FR"]) == .french)
-        check(
-            "an unsupported system language falls back to English",
-            AppLanguage(storedPreferences: nil, systemPreferences: ["it-IT", "fr-FR"]) == .english)
-        check(
-            "a stored choice overrides the system language",
-            AppLanguage(storedPreferences: ["de"], systemPreferences: ["fr-FR"]) == .german)
-        check(
-            "an empty stored choice keeps the English fallback",
-            AppLanguage(storedPreferences: [], systemPreferences: ["fr-FR"]) == .english)
+        check("nothing stored follows macOS", AppLanguage(storedPreferences: nil).rawValue == "system")
+        check("an empty list follows macOS", AppLanguage(storedPreferences: []).rawValue == "system")
         for language in AppLanguage.allCases {
             check(
-                "a fresh installation supports \(language.rawValue)",
-                AppLanguage(storedPreferences: nil, systemPreferences: [language.rawValue]) == language)
-            check(
                 "\(language.rawValue) round-trips",
-                AppLanguage(storedPreferences: [language.rawValue]) == language)
+                AppLanguage(storedPreferences: language.storedPreferences) == language)
         }
+        check("following macOS removes the app override", AppLanguage.system.storedPreferences == nil)
+        check(
+            "following macOS resolves the system's supported language",
+            AppLanguage.system.localization(systemLanguages: ["zh-Hans-CN", "en"]) == "zh-Hans")
+        check(
+            "an unsupported system language falls back to English",
+            AppLanguage.system.localization(systemLanguages: ["it"]) == "en")
+        check(
+            "an explicit choice overrides the system language",
+            AppLanguage.english.localization(systemLanguages: ["zh-Hans"]) == "en")
+        let domain = "tinycast-language-tests-\(UUID().uuidString)"
+        let defaults = UserDefaults(suiteName: domain)!
+        defer { defaults.removePersistentDomain(forName: domain) }
+        defaults.set(AppLanguage.chineseSimplified.storedPreferences, forKey: "AppleLanguages")
+        check(
+            "an explicit choice is stored in the app domain",
+            defaults.persistentDomain(forName: domain)?["AppleLanguages"] as? [String] == ["zh-Hans"])
+        defaults.set(AppLanguage.system.storedPreferences, forKey: "AppleLanguages")
+        check(
+            "following macOS clears a previous app override",
+            defaults.persistentDomain(forName: domain)?["AppleLanguages"] == nil)
 
         print("# System Settings' regional tags land on the shipped language")
         check("de-DE is German", AppLanguage(storedPreferences: ["de-DE"]) == .german)
@@ -52,7 +58,7 @@ struct LanguageTests {
 
         print("# each choice launches into its own localization")
         let shipped = ["en", "de", "es", "fr", "ja", "ko", "pt", "ru", "zh-Hans"]
-        for language in AppLanguage.allCases {
+        for language in AppLanguage.allCases where language != .system {
             check(
                 "\(language.rawValue) resolves to its bundled localization",
                 Bundle.preferredLocalizations(from: shipped, forPreferences: [language.rawValue]).first
@@ -146,7 +152,7 @@ struct LanguageTests {
                 ]
             )
         ]
-        for language in AppLanguage.allCases {
+        for language in AppLanguage.allCases where language != .system {
             let code = language.rawValue
             guard let bundle = Bundle(url: root.appendingPathComponent("\(code).lproj")),
                 let expected = windows[code]
