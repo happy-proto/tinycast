@@ -1,5 +1,20 @@
 # Tinycast
 
+## Personal fork maintenance
+
+`main` is the only maintained branch and contains all fork changes. Develop directly on it; sync by
+rebasing fork commits onto `upstream/main`, resolving conflicts and adapting behavior as needed.
+Each maintained change has one commit containing its implementation, tests and documentation.
+Read [fork changes](docs/fork-changes/README.md) before modifying or syncing fork behavior. Fold sync
+adaptations into the owning commit. Remove changes fully covered by upstream, including their commits
+and records. Document current behavior rather than discarded implementations or maintenance history.
+After a verified sync, update [the upstream baseline](docs/fork-changes/upstream-commit).
+Use the [maintenance skill](.agents/skills/tinycast-fork-maintenance/SKILL.md) for the detailed workflow.
+Keep only validation CI in this fork: tests, lint, project generation, model imports and a Debug build.
+Do not restore upstream release, website deployment or PR automation workflows during a sync.
+
+## Project
+
 A native macOS menu-bar launcher: fuzzy app launcher, global and per-app hotkeys, a text/image
 clipboard history, an inline calculator, a floating note, snippets, quicklinks, window management
 and an emoji picker. It also **runs Raycast extensions** natively, in JavaScriptCore.
