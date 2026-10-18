@@ -4,12 +4,23 @@ import Foundation
 /// result carries the anchor, the pane's `.settingsAnchor(_:)` marks the section it scrolls to.
 struct SettingsAnchor: Hashable, Sendable {
     let tab: SettingsTab
+    let key: String
     /// The `Section`'s own header text, which is also what a result's breadcrumb reads.
     let title: String
 
     init(tab: SettingsTab, title: LocalizedStringResource) {
         self.tab = tab
+        self.key = title.key
         self.title = title.resolved()
+    }
+
+    static func == (lhs: Self, rhs: Self) -> Bool {
+        lhs.tab == rhs.tab && lhs.key == rhs.key
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(tab)
+        hasher.combine(key)
     }
 }
 
@@ -134,7 +145,6 @@ extension SettingsAnchor {
 
 enum SettingsTarget: Hashable, Sendable {
     case section(SettingsAnchor)
-    /// The row's visible title, which is also the catalog entry's — they are the same string.
     case row(SettingsAnchor, String)
 
     var anchor: SettingsAnchor {
