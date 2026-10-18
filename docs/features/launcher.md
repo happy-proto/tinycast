@@ -199,16 +199,16 @@ matches, and is learned, under the same key. ASCII text skips ICU entirely on a 
 macOS's own languages (`SystemLanguages.preferred`) plus English — not `Locale.preferredLanguages`,
 which turns into Tinycast's interface language once one is picked, and would rename every app. This matters because `CFBundle` resolves only
 `InfoPlist.strings`, and every app under `/System/Applications` translates in the loctable alone — so
-all 65 of them read English on every Mac, whatever language it is set to.
+all 65 of them read English on every Mac, whatever language it is set to. Foundation's bundle
+localization selection ranks the codes that actually exist: `zh-Hans-CN` reaches both Apple's
+`zh_CN` tables and the `zh-Hans.lproj` folders common in third-party bundles.
 
-A tag carrying a script is read under more codes, because no one folder name covers it: a
-`zh-Hans-US` Mac also reads `zh-Hans`, the folder most third-party apps ship, then its own region
-`zh_US`, then `zh_CN`, the script's home region and the key Apple's own loctables use. A region is read
-only when it writes the tag's script, so `zh-Hans-HK` skips the Traditional `zh_HK`, and `zh-Hant-HK`
-reads `zh_HK` before `zh_TW`. A tag without a script otherwise keeps its exact, underscore and
-bare-language forms. Bokmål (`nb`) additionally reads `no` after `nb`, because Apple's Norwegian
-loctables use that key; an explicit `nb.lproj` still wins. Other languages, including Nynorsk (`nn`),
-gain no alias.
+The scanner reads the localization codes each app actually ships, then uses Foundation to rank
+matching language and script candidates for each preferred language. It does not synthesize folder
+names from language tags. A preference the app does not support leaves the next preference in place.
+
+Bokmål (`nb`) also reads Apple's `no` resources after explicit `nb` resources. Nynorsk (`nn`)
+remains separate, and a translated development name suppresses the base filename across both codes.
 
 The user's own language wins the **display name**, so a row reads the way Finder reads it. The rest,
 English included, ride along as alternate titles, matched as typed and never transliterated.
