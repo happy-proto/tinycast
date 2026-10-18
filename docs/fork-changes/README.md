@@ -8,5 +8,6 @@
 | 0002 | [跟随系统语言](0002-system-language.md) |
 | 0003 | [设置搜索定位](0003-settings-search-identity.md) |
 | 0004 | [表单测试外观](0004-form-test-appearance.md) |
+| 0005 | [等待文件搜索 Recent 刷新](0005-recent-refresh.md) |
 
 同步适配归入所属 commit；上游完整覆盖的改造，其实现、提交和记录一起移除。

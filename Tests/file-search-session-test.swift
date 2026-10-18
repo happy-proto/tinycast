@@ -5,11 +5,13 @@ actor FileSearchProbe {
     private var calls: [String] = []
     private var maximumActive = 0
     private let pausedQuery: String?
+    private let delay: Duration
     private var pauseEnabled: Bool
     private var pausedContinuation: CheckedContinuation<Void, Never>?
 
-    init(pausing query: String? = nil) {
+    init(pausing query: String? = nil, delay: Duration = .milliseconds(80)) {
         pausedQuery = query
+        self.delay = delay
         pauseEnabled = query != nil
     }
 
@@ -22,7 +24,7 @@ actor FileSearchProbe {
                 pausedContinuation = continuation
             }
         } else {
-            try? await Task.sleep(for: .milliseconds(80))
+            try? await Task.sleep(for: delay)
         }
         active -= 1
         let home = URL(fileURLWithPath: "/Users/test")
@@ -157,10 +159,9 @@ struct FileSearchSessionTests {
     }
 
     static func blankScreenOpensOnKeptRecents() async {
-        let probe = FileSearchProbe()
+        let probe = FileSearchProbe(delay: .milliseconds(200))
         let session = makeSession(probe: probe)
-        session.refresh()
-        try? await Task.sleep(for: .milliseconds(150))
+        await session.refreshRecent().value
         session.search("")
         expect(
             session.state == .ready && !session.results.isEmpty,
@@ -180,8 +181,7 @@ struct FileSearchSessionTests {
         let session = makeSession(probe: probe)
         session.search("report")
         await waitUntil { session.state == .ready }
-        session.refreshRecent()
-        try? await Task.sleep(for: .milliseconds(150))
+        await session.refreshRecent().value
         expect(session.results.first?.name == "report", "a Recent refresh leaves the open list alone")
         session.cancel()
         session.search("")
