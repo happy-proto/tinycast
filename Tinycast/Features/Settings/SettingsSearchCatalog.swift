@@ -18,7 +18,7 @@ struct SettingsSearchEntry: Identifiable, Hashable, Sendable {
     /// One setting, which its pane marks with a matching `SettingsRowTitle`.
     init(_ anchor: SettingsAnchor, _ title: LocalizedStringResource, keywords: [String] = []) {
         let localized = title.resolved()
-        self.init(.row(anchor, localized), localized, keywords + [title.key])
+        self.init(.row(anchor, title.key), localized, keywords + [title.key])
     }
 
     /// A whole group, for a result no single row answers — a list, or a section's master switch.
@@ -35,7 +35,13 @@ struct SettingsSearchEntry: Identifiable, Hashable, Sendable {
 
     var anchor: SettingsAnchor? { target?.anchor }
 
-    var id: String { "\(tab.title)/\(anchor?.title ?? "")/\(title)" }
+    var id: String {
+        switch target {
+        case nil: "pane/\(tab.id)"
+        case .section(let anchor): "section/\(tab.id)/\(anchor.key)"
+        case .row(let anchor, let key): "row/\(tab.id)/\(anchor.key)/\(key)"
+        }
+    }
 
     var breadcrumb: String {
         guard let anchor, anchor.title != tab.title else { return tab.title }

@@ -30,6 +30,7 @@ struct SettingsHistoryTests {
         catalogFindsKnownRows()
         catalogRanksTitlesFirst()
         catalogAnchorsMatchTheirPane()
+        localizationPreservesTargetIdentity()
         revealingRecordsANewRequestEachTime()
         flashOutlivesThePaneThatLitIt()
 
@@ -180,6 +181,22 @@ struct SettingsHistoryTests {
         expect(
             SettingsSearchCatalog.results(for: "nothing here matches at all").isEmpty,
             "and an unmatched query returns nothing")
+    }
+
+    static func localizationPreservesTargetIdentity() {
+        let calendar = SettingsAnchor(
+            tab: .calendar, title: LocalizedStringResource("Calendar", defaultValue: "日历"))
+        let calendars = SettingsAnchor(
+            tab: .calendar, title: LocalizedStringResource("Calendars", defaultValue: "日历"))
+        expect(calendar.title == calendars.title, "the fixture has identical displayed section titles")
+        expect(calendar != calendars, "equal translations keep distinct section targets")
+
+        let english = SettingsSearchEntry(.generalGeneral, "Language")
+        let chinese = SettingsSearchEntry(
+            .generalGeneral, LocalizedStringResource("Language", defaultValue: "语言"))
+        expect(english.title != chinese.title, "the fixture changes the displayed row title")
+        expect(english.target == chinese.target, "row targets survive a translation change")
+        expect(english.id == chinese.id, "search selection identity survives a translation change")
     }
 
     // MARK: - Revealing a section
