@@ -18,5 +18,11 @@ If GitHub shows no run for a pushed commit, check the Actions page for a disable
 The repository permissions API can report Actions enabled while this separate restriction is active.
 After enabling Actions, dispatch CI for the current `main` and verify its terminal result.
 
+## Local installation
+
+Run `./Scripts/install-dev-app.sh` from a clean `main`. It builds, signs, installs and starts the Dev
+app, then verifies the installed process. See the [Dev App workflow](../.agents/skills/tinycast-fork-maintenance/references/dev-app.md)
+and [installation scope](fork-changes/0007-dev-app-installation.md).
+
 Local DMG packaging scripts remain available for development. Official distribution and release
 channels are maintained in the [upstream repository](https://github.com/abue-ammar/tinycast).
